@@ -1,0 +1,50 @@
+{
+  "Chapter_05_Modern_Transformer_Variants_Complete.md": {
+    "Chapter_05_Modern_Transformer_Variants_Complete.html": "c6a8ae43"
+  },
+  "Chapter_14_Production_Deployment.md": {
+    "Chapter_14_Production_Deployment.html": "de715cc4"
+  },
+  "Chapter_17_Cutting_Edge_Research_Future.md": {
+    "Chapter_17_Cutting_Edge_Research_Future.html": "b88d9d4f"
+  },
+  "Chapter_03_NLP_Fundamentals.md": {
+    "Chapter_03_NLP_Fundamentals.html": "ab3758e9"
+  },
+  "Chapter_04_Transformer_Architecture.md": {
+    "Chapter_04_Transformer_Architecture.html": "30d93f02"
+  },
+  "Chapter_02_Math_Foundations.md": {
+    "Chapter_02_Math_Foundations.html": "2b00516e"
+  },
+  "Chapter_12_LLM_Agents_Tool_Use.md": {
+    "Chapter_12_LLM_Agents_Tool_Use.html": "943af6e1"
+  },
+  "Chapter_01_Introduction_LLMs.md": {
+    "Chapter_01_Introduction_LLMs.html": "c6cd5d64"
+  },
+  "Chapter_10_Prompting_InContext_Learning.md": {
+    "Chapter_10_Prompting_InContext_Learning.html": "0a6793a2"
+  },
+  "Chapter_08_Fine_Tuning.md": {
+    "Chapter_08_Fine_Tuning.html": "d774f673"
+  },
+  "Chapter_11_RAG.md": {
+    "Chapter_11_RAG.html": "ebd15eb7"
+  },
+  "index.md": {
+    "index.html": "72ca1bed"
+  },
+  "Chapter_15_Multimodal_LLMs.md": {
+    "Chapter_15_Multimodal_LLMs.html": "eea942c5"
+  },
+  "Chapter_09_Alignment_RLHF.md": {
+    "Chapter_09_Alignment_RLHF.html": "f98296f1"
+  },
+  "Chapter_13_Optimization_Inference.md": {
+    "Chapter_13_Optimization_Inference.html": "96bc2447"
+  },
+  "Chapter_16_Evaluation_Benchmarking.md": {
+    "Chapter_16_Evaluation_Benchmarking.html": "0cadaefc"
+  }
+}

@@ -1,0 +1,51 @@
+project:
+  type: website
+  output-dir: docs
+
+website:
+  title: "Large Language Models 教程"
+  navbar:
+    left:
+      - href: index.md
+        text: 首页
+      - text: "章节"
+        menu:
+          - href: Chapter_01_Introduction_LLMs.md
+            text: "01 - LLM 介绍"
+          - href: Chapter_02_Math_Foundations.md
+            text: "02 - 数学基础"
+          - href: Chapter_03_NLP_Fundamentals.md
+            text: "03 - NLP 基础"
+          - href: Chapter_04_Transformer_Architecture.md
+            text: "04 - Transformer 架构"
+          - href: Chapter_05_Modern_Transformer_Variants_Complete.md
+            text: "05 - 现代 Transformer"
+          - href: Chapter_08_Fine_Tuning.md
+            text: "08 - 微调"
+          - href: Chapter_09_Alignment_RLHF.md
+            text: "09 - 对齐与 RLHF"
+          - href: Chapter_10_Prompting_InContext_Learning.md
+            text: "10 - Prompt 工程"
+          - href: Chapter_11_RAG.md
+            text: "11 - RAG"
+          - href: Chapter_12_LLM_Agents_Tool_Use.md
+            text: "12 - LLM Agents"
+          - href: Chapter_13_Optimization_Inference.md
+            text: "13 - 优化推理"
+          - href: Chapter_14_Production_Deployment.md
+            text: "14 - 生产部署"
+          - href: Chapter_15_Multimodal_LLMs.md
+            text: "15 - 多模态 LLM"
+          - href: Chapter_16_Evaluation_Benchmarking.md
+            text: "16 - 评估基准"
+          - href: Chapter_17_Cutting_Edge_Research_Future.md
+            text: "17 - 前沿研究"
+
+format:
+  html:
+    theme: cosmo
+    toc: true
+    toc-depth: 3
+    code-copy: true
+    code-fold: false
+

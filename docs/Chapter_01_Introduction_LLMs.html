@@ -1,0 +1,1090 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.8.25">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>chapter_01_introduction_llms – Large Language Models 教程</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<script src="site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="site_libs/quarto-html/axe/axe-check.js" type="module"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-7b89279ff1a6dce999919e0e67d4d9ec.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap-a8976c3e89df70b272bdfba3d2fda974.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+
+</head>
+
+<body class="nav-fixed quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a href="./index.html" class="navbar-brand navbar-brand-logo">
+    </a>
+    <a class="navbar-brand" href="./index.html">
+    <span class="navbar-title">Large Language Models 教程</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="./index.html"> 
+<span class="menu-text">首页</span></a>
+  </li>  
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">章节</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-">    
+        <li>
+    <a class="dropdown-item" href="./Chapter_01_Introduction_LLMs.html">
+ <span class="dropdown-text">01 - LLM 介绍</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./Chapter_02_Math_Foundations.html">
+ <span class="dropdown-text">02 - 数学基础</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./Chapter_03_NLP_Fundamentals.html">
+ <span class="dropdown-text">03 - NLP 基础</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./Chapter_04_Transformer_Architecture.html">
+ <span class="dropdown-text">04 - Transformer 架构</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./Chapter_05_Modern_Transformer_Variants_Complete.html">
+ <span class="dropdown-text">05 - 现代 Transformer</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./Chapter_08_Fine_Tuning.html">
+ <span class="dropdown-text">08 - 微调</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./Chapter_09_Alignment_RLHF.html">
+ <span class="dropdown-text">09 - 对齐与 RLHF</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./Chapter_10_Prompting_InContext_Learning.html">
+ <span class="dropdown-text">10 - Prompt 工程</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./Chapter_11_RAG.html">
+ <span class="dropdown-text">11 - RAG</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./Chapter_12_LLM_Agents_Tool_Use.html">
+ <span class="dropdown-text">12 - LLM Agents</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./Chapter_13_Optimization_Inference.html">
+ <span class="dropdown-text">13 - 优化推理</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./Chapter_14_Production_Deployment.html">
+ <span class="dropdown-text">14 - 生产部署</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./Chapter_15_Multimodal_LLMs.html">
+ <span class="dropdown-text">15 - 多模态 LLM</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./Chapter_16_Evaluation_Benchmarking.html">
+ <span class="dropdown-text">16 - 评估基准</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./Chapter_17_Cutting_Edge_Research_Future.html">
+ <span class="dropdown-text">17 - 前沿研究</span></a>
+  </li>  
+    </ul>
+  </li>
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#chapter-1-introduction-to-large-language-models" id="toc-chapter-1-introduction-to-large-language-models" class="nav-link active" data-scroll-target="#chapter-1-introduction-to-large-language-models">Chapter 1: Introduction to Large Language Models</a>
+  <ul class="collapse">
+  <li><a href="#what-well-learn-today" id="toc-what-well-learn-today" class="nav-link" data-scroll-target="#what-well-learn-today">What We’ll Learn Today 🎯</a></li>
+  <li><a href="#what-is-a-large-language-model" id="toc-what-is-a-large-language-model" class="nav-link" data-scroll-target="#what-is-a-large-language-model">1.1 What is a Large Language Model? 🤔</a>
+  <ul class="collapse">
+  <li><a href="#lets-start-with-an-analogy" id="toc-lets-start-with-an-analogy" class="nav-link" data-scroll-target="#lets-start-with-an-analogy">Let’s Start with an Analogy 📚</a></li>
+  <li><a href="#the-technical-definition-made-simple" id="toc-the-technical-definition-made-simple" class="nav-link" data-scroll-target="#the-technical-definition-made-simple">The Technical Definition (Made Simple)</a></li>
+  <li><a href="#why-large" id="toc-why-large" class="nav-link" data-scroll-target="#why-large">Why “Large”? 📊</a></li>
+  </ul></li>
+  <li><a href="#the-journey-from-simple-to-sophisticated" id="toc-the-journey-from-simple-to-sophisticated" class="nav-link" data-scroll-target="#the-journey-from-simple-to-sophisticated">1.2 The Journey: From Simple to Sophisticated 🚀</a>
+  <ul class="collapse">
+  <li><a href="#step-1-the-old-days-1990s-2010s" id="toc-step-1-the-old-days-1990s-2010s" class="nav-link" data-scroll-target="#step-1-the-old-days-1990s-2010s">Step 1: The Old Days (1990s-2010s)</a></li>
+  <li><a href="#step-2-the-neural-network-revolution-2010s" id="toc-step-2-the-neural-network-revolution-2010s" class="nav-link" data-scroll-target="#step-2-the-neural-network-revolution-2010s">Step 2: The Neural Network Revolution (2010s)</a></li>
+  <li><a href="#step-3-the-attention-mechanism-2017" id="toc-step-3-the-attention-mechanism-2017" class="nav-link" data-scroll-target="#step-3-the-attention-mechanism-2017">Step 3: The Attention Mechanism (2017) 💡</a></li>
+  <li><a href="#step-4-the-transformer-2017" id="toc-step-4-the-transformer-2017" class="nav-link" data-scroll-target="#step-4-the-transformer-2017">Step 4: The Transformer (2017) ⚡</a></li>
+  <li><a href="#step-5-the-scaling-era-2018-present" id="toc-step-5-the-scaling-era-2018-present" class="nav-link" data-scroll-target="#step-5-the-scaling-era-2018-present">Step 5: The Scaling Era (2018-Present) 📈</a></li>
+  </ul></li>
+  <li><a href="#key-milestones-the-hall-of-fame" id="toc-key-milestones-the-hall-of-fame" class="nav-link" data-scroll-target="#key-milestones-the-hall-of-fame">1.3 Key Milestones: The Hall of Fame 🏆</a>
+  <ul class="collapse">
+  <li><a href="#bert-2018-the-understanding-champion" id="toc-bert-2018-the-understanding-champion" class="nav-link" data-scroll-target="#bert-2018-the-understanding-champion">BERT (2018): The Understanding Champion</a></li>
+  <li><a href="#gpt-series-the-generation-dynasty" id="toc-gpt-series-the-generation-dynasty" class="nav-link" data-scroll-target="#gpt-series-the-generation-dynasty">GPT Series: The Generation Dynasty</a></li>
+  <li><a href="#t5-2019-the-multi-tool" id="toc-t5-2019-the-multi-tool" class="nav-link" data-scroll-target="#t5-2019-the-multi-tool">T5 (2019): The Multi-Tool</a></li>
+  <li><a href="#claude-anthropic-the-safety-first-model" id="toc-claude-anthropic-the-safety-first-model" class="nav-link" data-scroll-target="#claude-anthropic-the-safety-first-model">Claude (Anthropic): The Safety-First Model</a></li>
+  <li><a href="#llama-meta-the-open-source-hero" id="toc-llama-meta-the-open-source-hero" class="nav-link" data-scroll-target="#llama-meta-the-open-source-hero">LLaMA (Meta): The Open Source Hero</a></li>
+  </ul></li>
+  <li><a href="#what-can-llms-actually-do" id="toc-what-can-llms-actually-do" class="nav-link" data-scroll-target="#what-can-llms-actually-do">1.4 What Can LLMs Actually Do? 🛠️</a>
+  <ul class="collapse">
+  <li><a href="#the-core-ability-text-completion" id="toc-the-core-ability-text-completion" class="nav-link" data-scroll-target="#the-core-ability-text-completion">The Core Ability: Text Completion</a></li>
+  <li><a href="#emergent-abilities-things-nobody-explicitly-taught-them" id="toc-emergent-abilities-things-nobody-explicitly-taught-them" class="nav-link" data-scroll-target="#emergent-abilities-things-nobody-explicitly-taught-them">Emergent Abilities (Things Nobody Explicitly Taught Them!)</a></li>
+  <li><a href="#real-world-applications" id="toc-real-world-applications" class="nav-link" data-scroll-target="#real-world-applications">Real-World Applications 🌍</a></li>
+  </ul></li>
+  <li><a href="#what-cant-llms-do-important-limitations" id="toc-what-cant-llms-do-important-limitations" class="nav-link" data-scroll-target="#what-cant-llms-do-important-limitations">1.5 What CAN’T LLMs Do? (Important Limitations!) ⚠️</a>
+  <ul class="collapse">
+  <li><a href="#the-fundamental-limitations" id="toc-the-fundamental-limitations" class="nav-link" data-scroll-target="#the-fundamental-limitations">The Fundamental Limitations</a></li>
+  </ul></li>
+  <li><a href="#why-should-we-care-about-risks" id="toc-why-should-we-care-about-risks" class="nav-link" data-scroll-target="#why-should-we-care-about-risks">1.6 Why Should We Care About Risks? 🚨</a>
+  <ul class="collapse">
+  <li><a href="#the-good-news-first" id="toc-the-good-news-first" class="nav-link" data-scroll-target="#the-good-news-first">The Good News First 😊</a></li>
+  <li><a href="#but-we-need-to-be-careful" id="toc-but-we-need-to-be-careful" class="nav-link" data-scroll-target="#but-we-need-to-be-careful">But We Need to Be Careful… 😰</a></li>
+  <li><a href="#the-importance-of-ai-safety-research" id="toc-the-importance-of-ai-safety-research" class="nav-link" data-scroll-target="#the-importance-of-ai-safety-research">The Importance of AI Safety Research</a></li>
+  </ul></li>
+  <li><a href="#the-current-state-and-future" id="toc-the-current-state-and-future" class="nav-link" data-scroll-target="#the-current-state-and-future">1.7 The Current State and Future 🔮</a>
+  <ul class="collapse">
+  <li><a href="#where-we-are-now-2025" id="toc-where-we-are-now-2025" class="nav-link" data-scroll-target="#where-we-are-now-2025">Where We Are Now (2025)</a></li>
+  <li><a href="#where-were-heading" id="toc-where-were-heading" class="nav-link" data-scroll-target="#where-were-heading">Where We’re Heading</a></li>
+  </ul></li>
+  <li><a href="#key-takeaways" id="toc-key-takeaways" class="nav-link" data-scroll-target="#key-takeaways">Key Takeaways 🎯</a></li>
+  <li><a href="#think-about-this" id="toc-think-about-this" class="nav-link" data-scroll-target="#think-about-this">Think About This 🤔</a></li>
+  <li><a href="#whats-next" id="toc-whats-next" class="nav-link" data-scroll-target="#whats-next">What’s Next? 📚</a></li>
+  </ul></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content"><header id="title-block-header" class="quarto-title-block"></header>
+
+
+
+
+<section id="chapter-1-introduction-to-large-language-models" class="level1">
+<h1>Chapter 1: Introduction to Large Language Models</h1>
+<p><em>Teaching Style: Clear, Intuitive, Step-by-Step</em></p>
+<section id="what-well-learn-today" class="level2">
+<h2 class="anchored" data-anchor-id="what-well-learn-today">What We’ll Learn Today 🎯</h2>
+<ul>
+<li>What exactly ARE Large Language Models? (No jargon, I promise!)</li>
+<li>How did we get from simple programs to ChatGPT?</li>
+<li>What can they do? What can’t they do?</li>
+<li>Why should we care about the risks?</li>
+</ul>
+<hr>
+</section>
+<section id="what-is-a-large-language-model" class="level2">
+<h2 class="anchored" data-anchor-id="what-is-a-large-language-model">1.1 What is a Large Language Model? 🤔</h2>
+<section id="lets-start-with-an-analogy" class="level3">
+<h3 class="anchored" data-anchor-id="lets-start-with-an-analogy">Let’s Start with an Analogy 📚</h3>
+<p>Imagine you’re learning a new language by reading LOTS of books: - You read millions of books in that language - You start noticing patterns: which words go together, grammar rules, common phrases - Eventually, you can predict what word comes next in a sentence - You become so good that you can write new sentences that sound natural</p>
+<p><strong>That’s essentially what an LLM does!</strong> But instead of you reading books, it’s a computer program that has “read” most of the internet.</p>
+</section>
+<section id="the-technical-definition-made-simple" class="level3">
+<h3 class="anchored" data-anchor-id="the-technical-definition-made-simple">The Technical Definition (Made Simple)</h3>
+<p>A Large Language Model is:</p>
+<pre><code>A computer program that:
+1. Has been trained on massive amounts of text
+2. Learns to predict the next word in a sentence
+3. Can generate human-like text
+4. Has billions (or trillions!) of parameters</code></pre>
+</section>
+<section id="why-large" class="level3">
+<h3 class="anchored" data-anchor-id="why-large">Why “Large”? 📊</h3>
+<p>Let’s put this in perspective:</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Model</th>
+<th>Year</th>
+<th>Parameters</th>
+<th>Comparison</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>GPT-1</td>
+<td>2018</td>
+<td>117 million</td>
+<td>Size of a large book</td>
+</tr>
+<tr class="even">
+<td>GPT-2</td>
+<td>2019</td>
+<td>1.5 billion</td>
+<td>Size of a library</td>
+</tr>
+<tr class="odd">
+<td>GPT-3</td>
+<td>2020</td>
+<td>175 billion</td>
+<td>Size of many libraries</td>
+</tr>
+<tr class="even">
+<td>GPT-4</td>
+<td>2023</td>
+<td>~1 trillion</td>
+<td>Size of… well, really big!</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Key Insight:</strong> As models get larger, they don’t just get better at existing tasks - they develop NEW abilities they weren’t explicitly trained for!</p>
+<hr>
+</section>
+</section>
+<section id="the-journey-from-simple-to-sophisticated" class="level2">
+<h2 class="anchored" data-anchor-id="the-journey-from-simple-to-sophisticated">1.2 The Journey: From Simple to Sophisticated 🚀</h2>
+<section id="step-1-the-old-days-1990s-2010s" class="level3">
+<h3 class="anchored" data-anchor-id="step-1-the-old-days-1990s-2010s">Step 1: The Old Days (1990s-2010s)</h3>
+<p><strong>How computers used to handle language:</strong></p>
+<pre><code>Traditional Approach:
+1. Lots of hand-written rules
+2. "If this word appears, then..."
+3. Limited vocabulary
+4. Very specific tasks only</code></pre>
+<p><strong>Problems:</strong> - Required experts to write rules for everything - Couldn’t handle new situations - Different program needed for each language task</p>
+</section>
+<section id="step-2-the-neural-network-revolution-2010s" class="level3">
+<h3 class="anchored" data-anchor-id="step-2-the-neural-network-revolution-2010s">Step 2: The Neural Network Revolution (2010s)</h3>
+<p><strong>The Big Idea:</strong> What if we let the computer learn the rules by itself?</p>
+<pre><code>Neural Network Approach:
+1. Show the computer lots of examples
+2. Let it find patterns automatically
+3. No hand-written rules needed!</code></pre>
+<p><strong>But there was still a problem:</strong> Neural networks were like students with very short attention spans - they couldn’t remember what happened at the beginning of a long sentence.</p>
+</section>
+<section id="step-3-the-attention-mechanism-2017" class="level3">
+<h3 class="anchored" data-anchor-id="step-3-the-attention-mechanism-2017">Step 3: The Attention Mechanism (2017) 💡</h3>
+<p>This is where things got really interesting!</p>
+<p><strong>The Problem:</strong> How do you help a computer “pay attention” to the right parts of a sentence?</p>
+<p><strong>The Solution - Attention Mechanism:</strong> Think of it like highlighting important parts of a text: - When processing the word “it”, pay attention to what “it” refers to - When translating, focus on relevant words in the source language - Give different weights to different words based on importance</p>
+<p><strong>Real Example:</strong></p>
+<pre><code>Sentence: "The cat sat on the mat because it was comfortable"
+When processing "it":
+- Pay HIGH attention to "mat" (it refers to the mat)
+- Pay LOW attention to "cat", "sat", etc.</code></pre>
+</section>
+<section id="step-4-the-transformer-2017" class="level3">
+<h3 class="anchored" data-anchor-id="step-4-the-transformer-2017">Step 4: The Transformer (2017) ⚡</h3>
+<p>The paper “Attention Is All You Need” changed everything:</p>
+<p><strong>Key Innovation:</strong> Self-Attention - Every word can directly connect to every other word - No more forgetting what happened earlier - Can process all words in parallel (much faster!)</p>
+<p><strong>Why This Mattered:</strong> - Could handle much longer texts - Much faster to train - Could capture complex relationships</p>
+</section>
+<section id="step-5-the-scaling-era-2018-present" class="level3">
+<h3 class="anchored" data-anchor-id="step-5-the-scaling-era-2018-present">Step 5: The Scaling Era (2018-Present) 📈</h3>
+<p><strong>The Discovery:</strong> Bigger is (often) better!</p>
+<pre><code>The Scaling Recipe:
+1. More parameters → Better performance
+2. More training data → Better performance  
+3. More compute → Better performance</code></pre>
+<p><strong>Timeline of Major Breakthroughs:</strong></p>
+<p><strong>2018 - GPT-1 &amp; BERT:</strong> - “Hey, this transformer thing works pretty well!” - Showed that pre-training then fine-tuning works</p>
+<p><strong>2019 - GPT-2:</strong> - “Wait, bigger models can do multiple tasks!” - First hints of emergent abilities</p>
+<p><strong>2020 - GPT-3:</strong> - “Whoa, it can do things we never taught it!” - Few-shot learning emerged - Could write code, solve math problems, be creative</p>
+<p><strong>2022-2023 - ChatGPT &amp; GPT-4:</strong> - “Now it can have conversations like a human!” - Multimodal capabilities (text + images) - Reasoning abilities</p>
+<hr>
+</section>
+</section>
+<section id="key-milestones-the-hall-of-fame" class="level2">
+<h2 class="anchored" data-anchor-id="key-milestones-the-hall-of-fame">1.3 Key Milestones: The Hall of Fame 🏆</h2>
+<section id="bert-2018-the-understanding-champion" class="level3">
+<h3 class="anchored" data-anchor-id="bert-2018-the-understanding-champion">BERT (2018): The Understanding Champion</h3>
+<pre><code>Specialty: Reading comprehension
+Key Innovation: Bidirectional reading (reads left-to-right AND right-to-left)
+Analogy: Like a student who reads the whole paragraph before answering questions</code></pre>
+</section>
+<section id="gpt-series-the-generation-dynasty" class="level3">
+<h3 class="anchored" data-anchor-id="gpt-series-the-generation-dynasty">GPT Series: The Generation Dynasty</h3>
+<pre><code>GPT-1 (2018): "I can complete your sentences"
+GPT-2 (2019): "I can write short stories"  
+GPT-3 (2020): "I can do many tasks just from examples"
+GPT-4 (2023): "I can see images and reason about them"</code></pre>
+</section>
+<section id="t5-2019-the-multi-tool" class="level3">
+<h3 class="anchored" data-anchor-id="t5-2019-the-multi-tool">T5 (2019): The Multi-Tool</h3>
+<pre><code>Philosophy: "Everything is text-to-text"
+Examples:
+- Translation: "translate English to French: Hello" → "Bonjour"
+- Summary: "summarize: [long text]" → [short summary]</code></pre>
+</section>
+<section id="claude-anthropic-the-safety-first-model" class="level3">
+<h3 class="anchored" data-anchor-id="claude-anthropic-the-safety-first-model">Claude (Anthropic): The Safety-First Model</h3>
+<pre><code>Focus: Helpful, Harmless, Honest
+Innovation: Constitutional AI (teaching AI to follow principles)</code></pre>
+</section>
+<section id="llama-meta-the-open-source-hero" class="level3">
+<h3 class="anchored" data-anchor-id="llama-meta-the-open-source-hero">LLaMA (Meta): The Open Source Hero</h3>
+<pre><code>Philosophy: "Great models should be available to researchers"
+Impact: Sparked tons of open-source innovation</code></pre>
+<hr>
+</section>
+</section>
+<section id="what-can-llms-actually-do" class="level2">
+<h2 class="anchored" data-anchor-id="what-can-llms-actually-do">1.4 What Can LLMs Actually Do? 🛠️</h2>
+<section id="the-core-ability-text-completion" class="level3">
+<h3 class="anchored" data-anchor-id="the-core-ability-text-completion">The Core Ability: Text Completion</h3>
+<pre><code>You type: "The weather today is"
+LLM thinks: "What words typically come after this?"
+LLM responds: "sunny and warm"</code></pre>
+</section>
+<section id="emergent-abilities-things-nobody-explicitly-taught-them" class="level3">
+<h3 class="anchored" data-anchor-id="emergent-abilities-things-nobody-explicitly-taught-them">Emergent Abilities (Things Nobody Explicitly Taught Them!)</h3>
+<section id="few-shot-learning" class="level4">
+<h4 class="anchored" data-anchor-id="few-shot-learning">1. Few-Shot Learning</h4>
+<pre><code>Example:
+Input: "translate: cat → gato, dog → perro, bird → ?"
+Output: "pájaro"</code></pre>
+<p><em>The model learns the pattern from just a few examples!</em></p>
+</section>
+<section id="chain-of-thought-reasoning" class="level4">
+<h4 class="anchored" data-anchor-id="chain-of-thought-reasoning">2. Chain-of-Thought Reasoning</h4>
+<pre><code>Problem: "Sarah has 3 apples. She gives 1 to John. How many does she have left?"
+
+Model's thinking:
+"Let me think step by step:
+- Sarah starts with 3 apples
+- She gives away 1 apple  
+- 3 - 1 = 2
+- Therefore, Sarah has 2 apples left"</code></pre>
+</section>
+<section id="code-generation" class="level4">
+<h4 class="anchored" data-anchor-id="code-generation">3. Code Generation</h4>
+<pre><code>Request: "Write a function to calculate factorial"
+Model generates:
+def factorial(n):
+    if n &lt;= 1:
+        return 1
+    return n * factorial(n-1)</code></pre>
+</section>
+<section id="creative-writing" class="level4">
+<h4 class="anchored" data-anchor-id="creative-writing">4. Creative Writing</h4>
+<ul>
+<li>Stories, poems, scripts</li>
+<li>Different styles and genres</li>
+<li>Character development</li>
+</ul>
+</section>
+<section id="language-translation" class="level4">
+<h4 class="anchored" data-anchor-id="language-translation">5. Language Translation</h4>
+<ul>
+<li>Between dozens of languages</li>
+<li>Maintains context and nuance</li>
+<li>Handles idioms and cultural references</li>
+</ul>
+</section>
+</section>
+<section id="real-world-applications" class="level3">
+<h3 class="anchored" data-anchor-id="real-world-applications">Real-World Applications 🌍</h3>
+<section id="content-creation" class="level4">
+<h4 class="anchored" data-anchor-id="content-creation">Content Creation</h4>
+<ul>
+<li>Blog posts and articles</li>
+<li>Marketing copy</li>
+<li>Social media content</li>
+<li>Technical documentation</li>
+</ul>
+</section>
+<section id="programming-assistant" class="level4">
+<h4 class="anchored" data-anchor-id="programming-assistant">Programming Assistant</h4>
+<ul>
+<li>Code completion</li>
+<li>Bug finding</li>
+<li>Code explanation</li>
+<li>Different programming languages</li>
+</ul>
+</section>
+<section id="education" class="level4">
+<h4 class="anchored" data-anchor-id="education">Education</h4>
+<ul>
+<li>Personalized tutoring</li>
+<li>Homework help</li>
+<li>Concept explanation</li>
+<li>Practice problem generation</li>
+</ul>
+</section>
+<section id="customer-service" class="level4">
+<h4 class="anchored" data-anchor-id="customer-service">Customer Service</h4>
+<ul>
+<li>24/7 availability</li>
+<li>Multi-language support</li>
+<li>Consistent responses</li>
+<li>Escalation to humans when needed</li>
+</ul>
+</section>
+<section id="research-and-analysis" class="level4">
+<h4 class="anchored" data-anchor-id="research-and-analysis">Research and Analysis</h4>
+<ul>
+<li>Literature reviews</li>
+<li>Data analysis interpretation</li>
+<li>Report generation</li>
+<li>Hypothesis generation</li>
+</ul>
+<hr>
+</section>
+</section>
+</section>
+<section id="what-cant-llms-do-important-limitations" class="level2">
+<h2 class="anchored" data-anchor-id="what-cant-llms-do-important-limitations">1.5 What CAN’T LLMs Do? (Important Limitations!) ⚠️</h2>
+<section id="the-fundamental-limitations" class="level3">
+<h3 class="anchored" data-anchor-id="the-fundamental-limitations">The Fundamental Limitations</h3>
+<section id="they-dont-actually-understand" class="level4">
+<h4 class="anchored" data-anchor-id="they-dont-actually-understand">1. They Don’t Actually “Understand”</h4>
+<pre><code>Think of it like a very sophisticated autocomplete:
+- They predict patterns they've seen before
+- No real comprehension of meaning
+- No true understanding of the world</code></pre>
+</section>
+<section id="they-cant-learn-new-information" class="level4">
+<h4 class="anchored" data-anchor-id="they-cant-learn-new-information">2. They Can’t Learn New Information</h4>
+<pre><code>After training:
+- Knowledge is "frozen" at training time
+- Can't update their knowledge from conversations
+- Don't remember previous conversations</code></pre>
+</section>
+<section id="they-can-hallucinate-make-things-up" class="level4">
+<h4 class="anchored" data-anchor-id="they-can-hallucinate-make-things-up">3. They Can Hallucinate (Make Things Up!)</h4>
+<pre><code>Problem: They might confidently state false "facts"
+Example: "The capital of Australia is Sydney" (It's actually Canberra!)
+Why: They predict what sounds plausible, not what's true</code></pre>
+</section>
+<section id="no-real-time-information" class="level4">
+<h4 class="anchored" data-anchor-id="no-real-time-information">4. No Real-Time Information</h4>
+<pre><code>- Don't know current events
+- Can't browse the internet (unless explicitly given that ability)
+- Knowledge cutoff date</code></pre>
+</section>
+<section id="struggle-with-precise-calculations" class="level4">
+<h4 class="anchored" data-anchor-id="struggle-with-precise-calculations">5. Struggle with Precise Calculations</h4>
+<pre><code>Good at: "Approximately how much is 23 x 47?"
+Bad at: "What exactly is 1,234,567 x 9,876,543?"</code></pre>
+<hr>
+</section>
+</section>
+</section>
+<section id="why-should-we-care-about-risks" class="level2">
+<h2 class="anchored" data-anchor-id="why-should-we-care-about-risks">1.6 Why Should We Care About Risks? 🚨</h2>
+<section id="the-good-news-first" class="level3">
+<h3 class="anchored" data-anchor-id="the-good-news-first">The Good News First 😊</h3>
+<p>LLMs can: - Democratize access to information - Boost productivity - Help with education - Assist people with disabilities - Accelerate scientific research</p>
+</section>
+<section id="but-we-need-to-be-careful" class="level3">
+<h3 class="anchored" data-anchor-id="but-we-need-to-be-careful">But We Need to Be Careful… 😰</h3>
+<section id="misinformation-spread" class="level4">
+<h4 class="anchored" data-anchor-id="misinformation-spread">1. Misinformation Spread</h4>
+<pre><code>Problem: LLMs can generate convincing but false information
+Risk: People might believe and spread false facts
+Solution: Always verify important information from reliable sources</code></pre>
+</section>
+<section id="bias-and-fairness" class="level4">
+<h4 class="anchored" data-anchor-id="bias-and-fairness">2. Bias and Fairness</h4>
+<pre><code>Problem: Training data contains human biases
+Result: Models might perpetuate stereotypes
+Example: Assuming certain professions are gender-specific</code></pre>
+</section>
+<section id="privacy-concerns" class="level4">
+<h4 class="anchored" data-anchor-id="privacy-concerns">3. Privacy Concerns</h4>
+<pre><code>Issue: Models might have memorized private information from training data
+Risk: Could accidentally reveal personal details</code></pre>
+</section>
+<section id="economic-disruption" class="level4">
+<h4 class="anchored" data-anchor-id="economic-disruption">4. Economic Disruption</h4>
+<pre><code>Reality: Some jobs might be automated
+Need: Retraining and adaptation strategies
+Opportunity: New jobs and skills will emerge</code></pre>
+</section>
+<section id="misuse-potential" class="level4">
+<h4 class="anchored" data-anchor-id="misuse-potential">5. Misuse Potential</h4>
+<pre><code>Concerns:
+- Generating spam or scam content
+- Creating deepfakes
+- Academic dishonesty
+- Spreading propaganda</code></pre>
+</section>
+</section>
+<section id="the-importance-of-ai-safety-research" class="level3">
+<h3 class="anchored" data-anchor-id="the-importance-of-ai-safety-research">The Importance of AI Safety Research</h3>
+<section id="what-researchers-are-working-on" class="level4">
+<h4 class="anchored" data-anchor-id="what-researchers-are-working-on">What Researchers Are Working On:</h4>
+<ol type="1">
+<li><strong>Alignment:</strong> Making sure AI does what humans actually want</li>
+<li><strong>Robustness:</strong> Making sure AI works reliably</li>
+<li><strong>Interpretability:</strong> Understanding how AI makes decisions</li>
+<li><strong>Fairness:</strong> Ensuring AI treats everyone fairly</li>
+</ol>
+<hr>
+</section>
+</section>
+</section>
+<section id="the-current-state-and-future" class="level2">
+<h2 class="anchored" data-anchor-id="the-current-state-and-future">1.7 The Current State and Future 🔮</h2>
+<section id="where-we-are-now-2025" class="level3">
+<h3 class="anchored" data-anchor-id="where-we-are-now-2025">Where We Are Now (2025)</h3>
+<section id="capabilities" class="level4">
+<h4 class="anchored" data-anchor-id="capabilities">Capabilities:</h4>
+<ul>
+<li>Conversational AI that feels natural</li>
+<li>Code generation and debugging</li>
+<li>Creative writing and content creation</li>
+<li>Multimodal understanding (text + images)</li>
+<li>Reasoning about complex problems</li>
+</ul>
+</section>
+<section id="limitations-were-still-working-on" class="level4">
+<h4 class="anchored" data-anchor-id="limitations-were-still-working-on">Limitations We’re Still Working On:</h4>
+<ul>
+<li>Factual accuracy</li>
+<li>Consistency across conversations</li>
+<li>Understanding of physical world</li>
+<li>Long-term memory</li>
+<li>Real-time learning</li>
+</ul>
+</section>
+</section>
+<section id="where-were-heading" class="level3">
+<h3 class="anchored" data-anchor-id="where-were-heading">Where We’re Heading</h3>
+<section id="short-term-1-2-years" class="level4">
+<h4 class="anchored" data-anchor-id="short-term-1-2-years">Short-term (1-2 years):</h4>
+<ul>
+<li>Better reasoning capabilities</li>
+<li>Longer context windows</li>
+<li>More efficient models</li>
+<li>Better safety measures</li>
+<li>Integration with other tools</li>
+</ul>
+</section>
+<section id="medium-term-3-5-years" class="level4">
+<h4 class="anchored" data-anchor-id="medium-term-3-5-years">Medium-term (3-5 years):</h4>
+<ul>
+<li>True multimodal models (text, image, audio, video)</li>
+<li>Scientific research assistants</li>
+<li>Personalized education systems</li>
+<li>Advanced coding assistants</li>
+</ul>
+</section>
+<section id="long-term-5-years" class="level4">
+<h4 class="anchored" data-anchor-id="long-term-5-years">Long-term (5+ years):</h4>
+<ul>
+<li>General artificial intelligence?</li>
+<li>Scientific discovery acceleration</li>
+<li>Complex problem solving</li>
+<li>Unknown capabilities that might emerge</li>
+</ul>
+<hr>
+</section>
+</section>
+</section>
+<section id="key-takeaways" class="level2">
+<h2 class="anchored" data-anchor-id="key-takeaways">Key Takeaways 🎯</h2>
+<ol type="1">
+<li><p><strong>LLMs are pattern recognition systems</strong> that learned from massive amounts of text to predict what comes next</p></li>
+<li><p><strong>The transformer architecture</strong> (especially attention) was the key breakthrough that made modern LLMs possible</p></li>
+<li><p><strong>Scaling up</strong> (more parameters, data, compute) has consistently led to new emergent abilities</p></li>
+<li><p><strong>They’re incredibly useful</strong> but have important limitations - they don’t truly understand and can make mistakes</p></li>
+<li><p><strong>We need to develop them responsibly</strong> with attention to safety, bias, and societal impact</p></li>
+</ol>
+<hr>
+</section>
+<section id="think-about-this" class="level2">
+<h2 class="anchored" data-anchor-id="think-about-this">Think About This 🤔</h2>
+<ol type="1">
+<li><p><strong>Personal Reflection:</strong> How do you currently use or encounter LLMs in your daily life?</p></li>
+<li><p><strong>Future Impact:</strong> What jobs or tasks do you think will be most transformed by LLMs in the next 5 years?</p></li>
+<li><p><strong>Ethical Considerations:</strong> How can we ensure LLMs are developed and used in ways that benefit everyone?</p></li>
+<li><p><strong>Technical Curiosity:</strong> What aspect of how LLMs work seems most mysterious or interesting to you?</p></li>
+</ol>
+<hr>
+</section>
+<section id="whats-next" class="level2">
+<h2 class="anchored" data-anchor-id="whats-next">What’s Next? 📚</h2>
+<p>In the next chapter, we’ll dive into the mathematical foundations that make LLMs work. Don’t worry - we’ll keep it intuitive and practical!</p>
+<p><strong>Preview:</strong> We’ll learn about: - Why matrix multiplication is everywhere in AI - How probability helps computers understand language - The optimization magic that makes training possible - Neural networks explained simply</p>
+<p>Remember: You don’t need to be a math genius to understand these concepts. We’ll build everything step by step! 🚀</p>
+
+
+</section>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>
