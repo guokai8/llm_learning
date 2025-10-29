@@ -198,16 +198,30 @@
   {
     "objectID": "index.html",
     "href": "index.html",
-    "title": "Large Language Models 完整教程",
+    "title": "Large Language Models: A Complete Tutorial",
     "section": "",
-    "text": "这是一个全面的大语言模型（LLM）教程，涵盖从基础到前沿的所有内容。\n\n\n\nLLM 介绍\n数学基础\nNLP 基础\nTransformer 架构\n现代 Transformer 变体\n微调技术\n对齐与 RLHF\nPrompt 工程\nRAG 系统\nLLM Agents\n优化推理\n生产部署\n多模态 LLM\n评估基准\n前沿研究\n\n\n开始学习吧！🚀"
+    "text": "A comprehensive and in-depth guide to understanding Large Language Models, from theoretical foundations to practical applications.\n\n\n\n\n\nIntroduction to LLMs - What are LLMs and why they matter\nMathematical Foundations - Essential math for deep learning\nNLP Fundamentals - Core concepts in natural language processing\n\n\n\n\n\nTransformer Architecture - The backbone of modern LLMs\nModern Transformer Variants - Evolution and improvements\n\n\n\n\n\nFine-Tuning - Adapting LLMs for specific tasks\nAlignment & RLHF - Making LLMs safe and aligned\nPrompting & In-Context Learning - Effective prompt engineering\n\n\n\n\n\nRetrieval-Augmented Generation (RAG) - Combining LLMs with external knowledge\nLLM Agents & Tool Use - Autonomous LLM systems\nOptimization & Inference - Efficient deployment\nProduction & Deployment - Building production systems\n\n\n\n\n\nMultimodal LLMs - Beyond text: vision and audio\nEvaluation & Benchmarking - Measuring LLM performance\nCutting-Edge Research & Future - Latest developments\n\n\n\n\n\n\n\nDeep understanding of how LLMs work\nMathematical and architectural foundations\nPractical techniques for fine-tuning and deployment\nAdvanced applications like RAG and agents\nState-of-the-art research and trends\n\n\n\n\n\nStart from Chapter 1 for a solid foundation\nJump to specific chapters based on your interests\nUse the search feature (top-right) to find specific topics\nEach chapter includes theory, examples, and practical insights\n\n\nHappy Learning! 🌟\nLast updated: October 2024"
   },
   {
-    "objectID": "index.html#课程章节",
-    "href": "index.html#课程章节",
-    "title": "Large Language Models 完整教程",
+    "objectID": "index.html#course-chapters",
+    "href": "index.html#course-chapters",
+    "title": "Large Language Models: A Complete Tutorial",
     "section": "",
-    "text": "LLM 介绍\n数学基础\nNLP 基础\nTransformer 架构\n现代 Transformer 变体\n微调技术\n对齐与 RLHF\nPrompt 工程\nRAG 系统\nLLM Agents\n优化推理\n生产部署\n多模态 LLM\n评估基准\n前沿研究\n\n\n开始学习吧！🚀"
+    "text": "Introduction to LLMs - What are LLMs and why they matter\nMathematical Foundations - Essential math for deep learning\nNLP Fundamentals - Core concepts in natural language processing\n\n\n\n\n\nTransformer Architecture - The backbone of modern LLMs\nModern Transformer Variants - Evolution and improvements\n\n\n\n\n\nFine-Tuning - Adapting LLMs for specific tasks\nAlignment & RLHF - Making LLMs safe and aligned\nPrompting & In-Context Learning - Effective prompt engineering\n\n\n\n\n\nRetrieval-Augmented Generation (RAG) - Combining LLMs with external knowledge\nLLM Agents & Tool Use - Autonomous LLM systems\nOptimization & Inference - Efficient deployment\nProduction & Deployment - Building production systems\n\n\n\n\n\nMultimodal LLMs - Beyond text: vision and audio\nEvaluation & Benchmarking - Measuring LLM performance\nCutting-Edge Research & Future - Latest developments"
+  },
+  {
+    "objectID": "index.html#what-youll-learn",
+    "href": "index.html#what-youll-learn",
+    "title": "Large Language Models: A Complete Tutorial",
+    "section": "",
+    "text": "Deep understanding of how LLMs work\nMathematical and architectural foundations\nPractical techniques for fine-tuning and deployment\nAdvanced applications like RAG and agents\nState-of-the-art research and trends"
+  },
+  {
+    "objectID": "index.html#how-to-use-this-tutorial",
+    "href": "index.html#how-to-use-this-tutorial",
+    "title": "Large Language Models: A Complete Tutorial",
+    "section": "",
+    "text": "Start from Chapter 1 for a solid foundation\nJump to specific chapters based on your interests\nUse the search feature (top-right) to find specific topics\nEach chapter includes theory, examples, and practical insights\n\n\nHappy Learning! 🌟\nLast updated: October 2024"
   },
   {
     "objectID": "Chapter_08_Fine_Tuning.html",
