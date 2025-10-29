@@ -1,0 +1,1387 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.8.25">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>chapter_03_nlp_fundamentals – Large Language Models 教程</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<script src="site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="site_libs/quarto-html/axe/axe-check.js" type="module"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-7b89279ff1a6dce999919e0e67d4d9ec.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap-a8976c3e89df70b272bdfba3d2fda974.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+
+</head>
+
+<body class="nav-fixed quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a href="./index.html" class="navbar-brand navbar-brand-logo">
+    </a>
+    <a class="navbar-brand" href="./index.html">
+    <span class="navbar-title">Large Language Models 教程</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="./index.html"> 
+<span class="menu-text">首页</span></a>
+  </li>  
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">章节</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-">    
+        <li>
+    <a class="dropdown-item" href="./Chapter_01_Introduction_LLMs.html">
+ <span class="dropdown-text">01 - LLM 介绍</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./Chapter_02_Math_Foundations.html">
+ <span class="dropdown-text">02 - 数学基础</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./Chapter_03_NLP_Fundamentals.html">
+ <span class="dropdown-text">03 - NLP 基础</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./Chapter_04_Transformer_Architecture.html">
+ <span class="dropdown-text">04 - Transformer 架构</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./Chapter_05_Modern_Transformer_Variants_Complete.html">
+ <span class="dropdown-text">05 - 现代 Transformer</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./Chapter_08_Fine_Tuning.html">
+ <span class="dropdown-text">08 - 微调</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./Chapter_09_Alignment_RLHF.html">
+ <span class="dropdown-text">09 - 对齐与 RLHF</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./Chapter_10_Prompting_InContext_Learning.html">
+ <span class="dropdown-text">10 - Prompt 工程</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./Chapter_11_RAG.html">
+ <span class="dropdown-text">11 - RAG</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./Chapter_12_LLM_Agents_Tool_Use.html">
+ <span class="dropdown-text">12 - LLM Agents</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./Chapter_13_Optimization_Inference.html">
+ <span class="dropdown-text">13 - 优化推理</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./Chapter_14_Production_Deployment.html">
+ <span class="dropdown-text">14 - 生产部署</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./Chapter_15_Multimodal_LLMs.html">
+ <span class="dropdown-text">15 - 多模态 LLM</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./Chapter_16_Evaluation_Benchmarking.html">
+ <span class="dropdown-text">16 - 评估基准</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./Chapter_17_Cutting_Edge_Research_Future.html">
+ <span class="dropdown-text">17 - 前沿研究</span></a>
+  </li>  
+    </ul>
+  </li>
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#chapter-3-natural-language-processing-fundamentals" id="toc-chapter-3-natural-language-processing-fundamentals" class="nav-link active" data-scroll-target="#chapter-3-natural-language-processing-fundamentals">Chapter 3: Natural Language Processing Fundamentals</a>
+  <ul class="collapse">
+  <li><a href="#what-well-learn-today" id="toc-what-well-learn-today" class="nav-link" data-scroll-target="#what-well-learn-today">What We’ll Learn Today 🎯</a></li>
+  <li><a href="#tokenization-chopping-up-text" id="toc-tokenization-chopping-up-text" class="nav-link" data-scroll-target="#tokenization-chopping-up-text">3.1 Tokenization: Chopping Up Text 🔪</a>
+  <ul class="collapse">
+  <li><a href="#the-fundamental-challenge" id="toc-the-fundamental-challenge" class="nav-link" data-scroll-target="#the-fundamental-challenge">The Fundamental Challenge</a></li>
+  <li><a href="#method-1-word-level-tokenization" id="toc-method-1-word-level-tokenization" class="nav-link" data-scroll-target="#method-1-word-level-tokenization">Method 1: Word-Level Tokenization 📝</a></li>
+  <li><a href="#method-2-character-level-tokenization" id="toc-method-2-character-level-tokenization" class="nav-link" data-scroll-target="#method-2-character-level-tokenization">Method 2: Character-Level Tokenization 🔤</a></li>
+  <li><a href="#method-3-subword-tokenization-the-sweet-spot" id="toc-method-3-subword-tokenization-the-sweet-spot" class="nav-link" data-scroll-target="#method-3-subword-tokenization-the-sweet-spot">Method 3: Subword Tokenization (The Sweet Spot!) 🎯</a></li>
+  <li><a href="#byte-pair-encoding-bpe-the-most-popular-method" id="toc-byte-pair-encoding-bpe-the-most-popular-method" class="nav-link" data-scroll-target="#byte-pair-encoding-bpe-the-most-popular-method">Byte Pair Encoding (BPE): The Most Popular Method</a></li>
+  <li><a href="#other-subword-methods" id="toc-other-subword-methods" class="nav-link" data-scroll-target="#other-subword-methods">Other Subword Methods</a></li>
+  <li><a href="#practical-example-how-gpt-tokenizes" id="toc-practical-example-how-gpt-tokenizes" class="nav-link" data-scroll-target="#practical-example-how-gpt-tokenizes">Practical Example: How GPT Tokenizes</a></li>
+  <li><a href="#choosing-vocabulary-size-the-trade-off" id="toc-choosing-vocabulary-size-the-trade-off" class="nav-link" data-scroll-target="#choosing-vocabulary-size-the-trade-off">Choosing Vocabulary Size: The Trade-off</a></li>
+  </ul></li>
+  <li><a href="#word-embeddings-from-words-to-vectors" id="toc-word-embeddings-from-words-to-vectors" class="nav-link" data-scroll-target="#word-embeddings-from-words-to-vectors">3.2 Word Embeddings: From Words to Vectors 🔢</a>
+  <ul class="collapse">
+  <li><a href="#the-core-problem" id="toc-the-core-problem" class="nav-link" data-scroll-target="#the-core-problem">The Core Problem</a></li>
+  <li><a href="#attempt-1-one-hot-encoding-the-naive-approach" id="toc-attempt-1-one-hot-encoding-the-naive-approach" class="nav-link" data-scroll-target="#attempt-1-one-hot-encoding-the-naive-approach">Attempt 1: One-Hot Encoding (The Naive Approach)</a></li>
+  <li><a href="#the-distributional-hypothesis" id="toc-the-distributional-hypothesis" class="nav-link" data-scroll-target="#the-distributional-hypothesis">The Distributional Hypothesis 💡</a></li>
+  <li><a href="#word2vec-the-breakthrough" id="toc-word2vec-the-breakthrough" class="nav-link" data-scroll-target="#word2vec-the-breakthrough">Word2Vec: The Breakthrough</a></li>
+  <li><a href="#glove-global-vectors" id="toc-glove-global-vectors" class="nav-link" data-scroll-target="#glove-global-vectors">GloVe: Global Vectors</a></li>
+  <li><a href="#fasttext-handling-rare-words" id="toc-fasttext-handling-rare-words" class="nav-link" data-scroll-target="#fasttext-handling-rare-words">FastText: Handling Rare Words</a></li>
+  <li><a href="#evaluating-word-embeddings" id="toc-evaluating-word-embeddings" class="nav-link" data-scroll-target="#evaluating-word-embeddings">Evaluating Word Embeddings</a></li>
+  </ul></li>
+  <li><a href="#language-modeling-predicting-what-comes-next" id="toc-language-modeling-predicting-what-comes-next" class="nav-link" data-scroll-target="#language-modeling-predicting-what-comes-next">3.3 Language Modeling: Predicting What Comes Next 🔮</a>
+  <ul class="collapse">
+  <li><a href="#what-is-language-modeling" id="toc-what-is-language-modeling" class="nav-link" data-scroll-target="#what-is-language-modeling">What is Language Modeling?</a></li>
+  <li><a href="#n-gram-language-models-the-classical-approach" id="toc-n-gram-language-models-the-classical-approach" class="nav-link" data-scroll-target="#n-gram-language-models-the-classical-approach">N-gram Language Models (The Classical Approach)</a></li>
+  <li><a href="#neural-language-models-the-revolution" id="toc-neural-language-models-the-revolution" class="nav-link" data-scroll-target="#neural-language-models-the-revolution">Neural Language Models: The Revolution</a></li>
+  <li><a href="#modern-language-models-transformers" id="toc-modern-language-models-transformers" class="nav-link" data-scroll-target="#modern-language-models-transformers">Modern Language Models: Transformers</a></li>
+  </ul></li>
+  <li><a href="#evaluation-metrics-how-good-is-our-model" id="toc-evaluation-metrics-how-good-is-our-model" class="nav-link" data-scroll-target="#evaluation-metrics-how-good-is-our-model">3.4 Evaluation Metrics: How Good is Our Model? 📊</a>
+  <ul class="collapse">
+  <li><a href="#intrinsic-evaluation-perplexity" id="toc-intrinsic-evaluation-perplexity" class="nav-link" data-scroll-target="#intrinsic-evaluation-perplexity">Intrinsic Evaluation: Perplexity</a></li>
+  <li><a href="#extrinsic-evaluation-downstream-tasks" id="toc-extrinsic-evaluation-downstream-tasks" class="nav-link" data-scroll-target="#extrinsic-evaluation-downstream-tasks">Extrinsic Evaluation: Downstream Tasks</a></li>
+  <li><a href="#the-evaluation-challenge" id="toc-the-evaluation-challenge" class="nav-link" data-scroll-target="#the-evaluation-challenge">The Evaluation Challenge</a></li>
+  </ul></li>
+  <li><a href="#putting-it-all-together-the-nlp-pipeline" id="toc-putting-it-all-together-the-nlp-pipeline" class="nav-link" data-scroll-target="#putting-it-all-together-the-nlp-pipeline">Putting It All Together: The NLP Pipeline 🔄</a>
+  <ul class="collapse">
+  <li><a href="#from-raw-text-to-model-predictions" id="toc-from-raw-text-to-model-predictions" class="nav-link" data-scroll-target="#from-raw-text-to-model-predictions">From Raw Text to Model Predictions</a></li>
+  </ul></li>
+  <li><a href="#common-student-questions" id="toc-common-student-questions" class="nav-link" data-scroll-target="#common-student-questions">Common Student Questions 🙋‍♀️</a>
+  <ul class="collapse">
+  <li><a href="#q-why-do-we-need-so-many-different-tokenization-methods" id="toc-q-why-do-we-need-so-many-different-tokenization-methods" class="nav-link" data-scroll-target="#q-why-do-we-need-so-many-different-tokenization-methods">Q: “Why do we need so many different tokenization methods?”</a></li>
+  <li><a href="#q-how-do-embeddings-actually-capture-meaning" id="toc-q-how-do-embeddings-actually-capture-meaning" class="nav-link" data-scroll-target="#q-how-do-embeddings-actually-capture-meaning">Q: “How do embeddings actually capture meaning?”</a></li>
+  <li><a href="#q-why-is-language-modeling-so-important" id="toc-q-why-is-language-modeling-so-important" class="nav-link" data-scroll-target="#q-why-is-language-modeling-so-important">Q: “Why is language modeling so important?”</a></li>
+  <li><a href="#q-which-evaluation-metric-should-i-use" id="toc-q-which-evaluation-metric-should-i-use" class="nav-link" data-scroll-target="#q-which-evaluation-metric-should-i-use">Q: “Which evaluation metric should I use?”</a></li>
+  </ul></li>
+  <li><a href="#key-takeaways" id="toc-key-takeaways" class="nav-link" data-scroll-target="#key-takeaways">Key Takeaways 🎯</a></li>
+  <li><a href="#fun-exercises" id="toc-fun-exercises" class="nav-link" data-scroll-target="#fun-exercises">Fun Exercises 🎮</a>
+  <ul class="collapse">
+  <li><a href="#exercise-1-tokenization-practice" id="toc-exercise-1-tokenization-practice" class="nav-link" data-scroll-target="#exercise-1-tokenization-practice">Exercise 1: Tokenization Practice</a></li>
+  <li><a href="#exercise-2-embedding-intuition" id="toc-exercise-2-embedding-intuition" class="nav-link" data-scroll-target="#exercise-2-embedding-intuition">Exercise 2: Embedding Intuition</a></li>
+  <li><a href="#exercise-3-language-modeling" id="toc-exercise-3-language-modeling" class="nav-link" data-scroll-target="#exercise-3-language-modeling">Exercise 3: Language Modeling</a></li>
+  </ul></li>
+  <li><a href="#whats-next" id="toc-whats-next" class="nav-link" data-scroll-target="#whats-next">What’s Next? 📚</a></li>
+  <li><a href="#final-thought" id="toc-final-thought" class="nav-link" data-scroll-target="#final-thought">Final Thought 💭</a></li>
+  </ul></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content"><header id="title-block-header" class="quarto-title-block"></header>
+
+
+
+
+<section id="chapter-3-natural-language-processing-fundamentals" class="level1">
+<h1>Chapter 3: Natural Language Processing Fundamentals</h1>
+<p><em>From Words to Vectors: The Journey Begins</em></p>
+<section id="what-well-learn-today" class="level2">
+<h2 class="anchored" data-anchor-id="what-well-learn-today">What We’ll Learn Today 🎯</h2>
+<ul>
+<li>How computers “chop up” text (tokenization)</li>
+<li>Turning words into numbers that computers understand (embeddings)</li>
+<li>Teaching computers to predict language (language modeling)</li>
+<li>How to measure if our model is actually good (evaluation)</li>
+</ul>
+<p><strong>Big Idea:</strong> Computers don’t understand words - they only understand numbers. So we need to convert language into math!</p>
+<hr>
+</section>
+<section id="tokenization-chopping-up-text" class="level2">
+<h2 class="anchored" data-anchor-id="tokenization-chopping-up-text">3.1 Tokenization: Chopping Up Text 🔪</h2>
+<section id="the-fundamental-challenge" class="level3">
+<h3 class="anchored" data-anchor-id="the-fundamental-challenge">The Fundamental Challenge</h3>
+<section id="the-problem" class="level4">
+<h4 class="anchored" data-anchor-id="the-problem">The Problem</h4>
+<pre><code>Humans read: "I love machine learning!"
+Computers see: A string of meaningless characters
+
+We need to break text into meaningful pieces (tokens)</code></pre>
+</section>
+<section id="what-is-a-token" class="level4">
+<h4 class="anchored" data-anchor-id="what-is-a-token">What is a Token?</h4>
+<pre><code>Think of tokens as "LEGO blocks" of language:
+- Each block represents a meaningful unit
+- We can build sentences by combining blocks
+- The key question: How big should each block be?</code></pre>
+</section>
+</section>
+<section id="method-1-word-level-tokenization" class="level3">
+<h3 class="anchored" data-anchor-id="method-1-word-level-tokenization">Method 1: Word-Level Tokenization 📝</h3>
+<section id="how-it-works" class="level4">
+<h4 class="anchored" data-anchor-id="how-it-works">How It Works</h4>
+<pre><code>Input: "I love cats and dogs"
+Output: ["I", "love", "cats", "and", "dogs"]
+
+Simple rule: Split on spaces and punctuation</code></pre>
+</section>
+<section id="analogy-cutting-a-sentence-like-a-pizza" class="level4">
+<h4 class="anchored" data-anchor-id="analogy-cutting-a-sentence-like-a-pizza">Analogy: Cutting a Sentence Like a Pizza 🍕</h4>
+<pre><code>Imagine each word is a pizza slice:
+- Easy to understand what each slice represents
+- Each slice has clear meaning
+- You can eat (process) each slice independently</code></pre>
+</section>
+<section id="advantages" class="level4">
+<h4 class="anchored" data-anchor-id="advantages">Advantages ✅</h4>
+<ul>
+<li><strong>Intuitive:</strong> Each token has clear meaning</li>
+<li><strong>Interpretable:</strong> Easy for humans to understand<br>
+</li>
+<li><strong>Semantic preservation:</strong> Meaning of words is kept intact</li>
+</ul>
+</section>
+<section id="problems" class="level4">
+<h4 class="anchored" data-anchor-id="problems">Problems ❌</h4>
+<p><strong>Problem 1: Vocabulary Explosion</strong></p>
+<pre><code>English has ~170,000 words in current use
+Add proper nouns, technical terms, slang...
+Result: HUGE vocabulary = HUGE memory requirements</code></pre>
+<p><strong>Problem 2: Out-of-Vocabulary (OOV) Words</strong></p>
+<pre><code>Training data: "I like cats"
+New text: "I like GPU" 
+Model: "What the heck is a GPU??" 🤔</code></pre>
+<p><strong>Problem 3: Morphological Variants</strong></p>
+<pre><code>The model treats these as completely different:
+- "run", "running", "runs", "ran"
+- But they're clearly related!</code></pre>
+</section>
+</section>
+<section id="method-2-character-level-tokenization" class="level3">
+<h3 class="anchored" data-anchor-id="method-2-character-level-tokenization">Method 2: Character-Level Tokenization 🔤</h3>
+<section id="how-it-works-1" class="level4">
+<h4 class="anchored" data-anchor-id="how-it-works-1">How It Works</h4>
+<pre><code>Input: "I love cats"
+Output: ["I", " ", "l", "o", "v", "e", " ", "c", "a", "t", "s"]</code></pre>
+</section>
+<section id="analogy-reading-letter-by-letter" class="level4">
+<h4 class="anchored" data-anchor-id="analogy-reading-letter-by-letter">Analogy: Reading Letter by Letter 📚</h4>
+<pre><code>Like reading a book one letter at a time:
+- You never encounter an "unknown" letter
+- But it takes forever to get to the meaning
+- Hard to understand what's going on</code></pre>
+</section>
+<section id="advantages-1" class="level4">
+<h4 class="anchored" data-anchor-id="advantages-1">Advantages ✅</h4>
+<ul>
+<li><strong>No OOV problem:</strong> Fixed, small vocabulary (26 letters + punctuation)</li>
+<li><strong>Language agnostic:</strong> Works for any language</li>
+<li><strong>Handles typos:</strong> Can process any character combination</li>
+</ul>
+</section>
+<section id="problems-1" class="level4">
+<h4 class="anchored" data-anchor-id="problems-1">Problems ❌</h4>
+<ul>
+<li><strong>Very long sequences:</strong> “Hello” becomes 5 tokens instead of 1</li>
+<li><strong>Lost semantics:</strong> Hard to capture word-level meaning</li>
+<li><strong>Computational cost:</strong> Much longer sequences to process</li>
+</ul>
+</section>
+</section>
+<section id="method-3-subword-tokenization-the-sweet-spot" class="level3">
+<h3 class="anchored" data-anchor-id="method-3-subword-tokenization-the-sweet-spot">Method 3: Subword Tokenization (The Sweet Spot!) 🎯</h3>
+<section id="the-big-idea" class="level4">
+<h4 class="anchored" data-anchor-id="the-big-idea">The Big Idea</h4>
+<pre><code>"What if we could have the best of both worlds?"
+- Keep common words as single tokens (like word-level)
+- Break rare words into smaller pieces (like character-level)</code></pre>
+</section>
+<section id="analogy-smart-text-compression" class="level4">
+<h4 class="anchored" data-anchor-id="analogy-smart-text-compression">Analogy: Smart Text Compression 📦</h4>
+<pre><code>Think of a smart compression algorithm:
+- Frequent patterns get short codes
+- Rare patterns get longer codes
+- But everything can still be represented!</code></pre>
+</section>
+</section>
+<section id="byte-pair-encoding-bpe-the-most-popular-method" class="level3">
+<h3 class="anchored" data-anchor-id="byte-pair-encoding-bpe-the-most-popular-method">Byte Pair Encoding (BPE): The Most Popular Method</h3>
+<section id="the-algorithm-step-by-step" class="level4">
+<h4 class="anchored" data-anchor-id="the-algorithm-step-by-step">The Algorithm (Step by Step)</h4>
+<p><strong>Step 1: Start with characters</strong></p>
+<pre><code>Text: "low lower lowest"
+Initial vocab: {"l", "o", "w", "e", "r", "s", "t", "&lt;/w&gt;"}
+Note: &lt;/w&gt; marks word endings</code></pre>
+<p><strong>Step 2: Count all adjacent pairs</strong></p>
+<pre><code>Text: "l o w &lt;/w&gt; l o w e r &lt;/w&gt; l o w e s t &lt;/w&gt;"
+
+Pair counts:
+- "l o": 3 times
+- "o w": 3 times  
+- "w e": 2 times
+- "e r": 1 time
+- ... and so on</code></pre>
+<p><strong>Step 3: Merge the most frequent pair</strong></p>
+<pre><code>Most frequent: "l o" (appears 3 times)
+Merge: "l o" → "lo"
+
+New text: "lo w &lt;/w&gt; lo w e r &lt;/w&gt; lo w e s t &lt;/w&gt;"
+Add "lo" to vocabulary</code></pre>
+<p><strong>Step 4: Repeat until desired vocabulary size</strong></p>
+<pre><code>Next iteration: "o w" is most frequent
+Merge: "o w" → "ow"
+Result: "low &lt;/w&gt; low e r &lt;/w&gt; low e s t &lt;/w&gt;"
+
+Continue until we have enough tokens...</code></pre>
+<p><strong>Final Result:</strong></p>
+<pre><code>Vocabulary: {"l", "o", "w", "e", "r", "s", "t", "&lt;/w&gt;", "lo", "ow", "low", "er", "est"}
+Text: ["low&lt;/w&gt;", "low", "er&lt;/w&gt;", "low", "est&lt;/w&gt;"]</code></pre>
+</section>
+<section id="why-bpe-is-brilliant" class="level4">
+<h4 class="anchored" data-anchor-id="why-bpe-is-brilliant">Why BPE is Brilliant 🧠</h4>
+<pre><code>✅ Common words stay together: "the", "and", "because"
+✅ Rare words get broken down: "antidisestablishmentarianism" 
+✅ No OOV problem: Any new word can be broken into known subwords
+✅ Balances vocabulary size vs sequence length</code></pre>
+</section>
+</section>
+<section id="other-subword-methods" class="level3">
+<h3 class="anchored" data-anchor-id="other-subword-methods">Other Subword Methods</h3>
+<section id="wordpiece-used-by-bert" class="level4">
+<h4 class="anchored" data-anchor-id="wordpiece-used-by-bert">WordPiece (Used by BERT)</h4>
+<pre><code>Similar to BPE but:
+- Uses likelihood-based scoring instead of frequency
+- Adds "##" prefix for continuation subwords
+- Example: "playing" → ["play", "##ing"]</code></pre>
+</section>
+<section id="sentencepiece-used-by-t5-many-modern-models" class="level4">
+<h4 class="anchored" data-anchor-id="sentencepiece-used-by-t5-many-modern-models">SentencePiece (Used by T5, many modern models)</h4>
+<pre><code>Key innovations:
+- Treats spaces as regular characters
+- No pre-tokenization required
+- Reversible: can perfectly reconstruct original text
+- Language-independent</code></pre>
+</section>
+</section>
+<section id="practical-example-how-gpt-tokenizes" class="level3">
+<h3 class="anchored" data-anchor-id="practical-example-how-gpt-tokenizes">Practical Example: How GPT Tokenizes</h3>
+<pre><code>Input: "Hello, how are you today?"
+
+GPT tokenization:
+["Hello", ",", " how", " are", " you", " today", "?"]
+
+Notice:
+- Spaces are included with words (" how")  
+- Punctuation often separate tokens
+- Common words stay together</code></pre>
+</section>
+<section id="choosing-vocabulary-size-the-trade-off" class="level3">
+<h3 class="anchored" data-anchor-id="choosing-vocabulary-size-the-trade-off">Choosing Vocabulary Size: The Trade-off</h3>
+<pre><code>Small vocabulary (1K tokens):
+✅ Less memory 
+❌ Longer sequences
+❌ Less semantic preservation
+
+Large vocabulary (100K tokens):  
+✅ Shorter sequences
+✅ Better semantic preservation
+❌ More memory
+❌ Sparse training signal
+
+Sweet spot: 30K-50K tokens for most models</code></pre>
+<hr>
+</section>
+</section>
+<section id="word-embeddings-from-words-to-vectors" class="level2">
+<h2 class="anchored" data-anchor-id="word-embeddings-from-words-to-vectors">3.2 Word Embeddings: From Words to Vectors 🔢</h2>
+<section id="the-core-problem" class="level3">
+<h3 class="anchored" data-anchor-id="the-core-problem">The Core Problem</h3>
+<section id="how-do-we-represent-words-to-computers" class="level4">
+<h4 class="anchored" data-anchor-id="how-do-we-represent-words-to-computers">How Do We Represent Words to Computers?</h4>
+<pre><code>Humans: "cat" and "dog" are similar (both animals)
+Computer: "cat" = ? and "dog" = ?
+
+We need a way to represent words as numbers that capture meaning!</code></pre>
+</section>
+</section>
+<section id="attempt-1-one-hot-encoding-the-naive-approach" class="level3">
+<h3 class="anchored" data-anchor-id="attempt-1-one-hot-encoding-the-naive-approach">Attempt 1: One-Hot Encoding (The Naive Approach)</h3>
+<section id="how-it-works-2" class="level4">
+<h4 class="anchored" data-anchor-id="how-it-works-2">How It Works</h4>
+<pre><code>Vocabulary: ["cat", "dog", "bird", "car"]
+
+"cat"  = [1, 0, 0, 0]
+"dog"  = [0, 1, 0, 0]  
+"bird" = [0, 0, 1, 0]
+"car"  = [0, 0, 0, 1]</code></pre>
+</section>
+<section id="problems-with-one-hot" class="level4">
+<h4 class="anchored" data-anchor-id="problems-with-one-hot">Problems with One-Hot</h4>
+<pre><code>❌ No semantic similarity:
+   - Distance between "cat" and "dog" = distance between "cat" and "car"
+   - Computer can't tell that cat and dog are both animals!
+
+❌ Huge vectors:
+   - 50K vocabulary = 50K dimensional vectors
+   - Mostly zeros (sparse and inefficient)</code></pre>
+</section>
+</section>
+<section id="the-distributional-hypothesis" class="level3">
+<h3 class="anchored" data-anchor-id="the-distributional-hypothesis">The Distributional Hypothesis 💡</h3>
+<section id="the-key-insight" class="level4">
+<h4 class="anchored" data-anchor-id="the-key-insight">The Key Insight</h4>
+<pre><code>"You shall know a word by the company it keeps" - J.R. Firth
+
+Words that appear in similar contexts have similar meanings.</code></pre>
+</section>
+<section id="examples" class="level4">
+<h4 class="anchored" data-anchor-id="examples">Examples</h4>
+<pre><code>Context: "The ___ is sleeping on the couch"
+Likely words: cat, dog, baby, person
+→ These words are similar!
+
+Context: "The ___ flew over the trees"  
+Likely words: bird, plane, helicopter
+→ These words are similar!</code></pre>
+</section>
+</section>
+<section id="word2vec-the-breakthrough" class="level3">
+<h3 class="anchored" data-anchor-id="word2vec-the-breakthrough">Word2Vec: The Breakthrough</h3>
+<section id="two-flavors-cbow-vs-skip-gram" class="level4">
+<h4 class="anchored" data-anchor-id="two-flavors-cbow-vs-skip-gram">Two Flavors: CBOW vs Skip-gram</h4>
+<p><strong>CBOW (Continuous Bag of Words):</strong></p>
+<pre><code>Given context words → Predict center word
+
+Input: ["the", "cat", "on", "the"]
+Target: "sat"
+
+Think: "Given these surrounding words, what's the missing word?"</code></pre>
+<p><strong>Skip-gram:</strong></p>
+<pre><code>Given center word → Predict context words
+
+Input: "sat"  
+Target: ["the", "cat", "on", "the"]
+
+Think: "Given this word, what words should appear around it?"</code></pre>
+</section>
+<section id="skip-gram-in-detail-more-popular" class="level4">
+<h4 class="anchored" data-anchor-id="skip-gram-in-detail-more-popular">Skip-gram in Detail (More Popular)</h4>
+<p><strong>Step 1: Set up the problem</strong></p>
+<pre><code>Sentence: "The cat sat on the mat"
+Window size: 2
+
+For word "sat":
+Context: ["The", "cat", "on", "the"]</code></pre>
+<p><strong>Step 2: The neural network</strong></p>
+<pre><code>Input: One-hot vector for "sat"
+↓
+Hidden layer: Dense vector (embedding!)
+↓
+Output: Probability distribution over all words
+
+Goal: High probability for context words, low for others</code></pre>
+<p><strong>Step 3: Training</strong></p>
+<pre><code>For each (center, context) pair:
+1. Forward pass: Get predicted probabilities
+2. Calculate loss: How wrong were we?
+3. Backpropagation: Update embeddings
+4. Repeat millions of times!</code></pre>
+</section>
+<section id="the-magic-result" class="level4">
+<h4 class="anchored" data-anchor-id="the-magic-result">The Magic Result 🪄</h4>
+<pre><code>After training, similar words have similar embeddings:
+
+"king" ≈ [0.2, 0.8, -0.1, 0.5, ...]
+"queen" ≈ [0.3, 0.7, -0.2, 0.4, ...]
+"car" ≈ [-0.1, 0.1, 0.9, -0.3, ...]
+
+Distance between king and queen &lt; Distance between king and car!</code></pre>
+</section>
+<section id="famous-word2vec-results" class="level4">
+<h4 class="anchored" data-anchor-id="famous-word2vec-results">Famous Word2Vec Results</h4>
+<pre><code>Vector arithmetic that actually works:
+"king" - "man" + "woman" ≈ "queen"
+"Paris" - "France" + "Italy" ≈ "Rome"
+"walking" - "walk" + "swim" ≈ "swimming"
+
+This blew everyone's minds! 🤯</code></pre>
+</section>
+</section>
+<section id="glove-global-vectors" class="level3">
+<h3 class="anchored" data-anchor-id="glove-global-vectors">GloVe: Global Vectors</h3>
+<section id="the-motivation" class="level4">
+<h4 class="anchored" data-anchor-id="the-motivation">The Motivation</h4>
+<pre><code>Word2Vec problem: Only uses local context windows
+GloVe idea: Use global corpus statistics!</code></pre>
+</section>
+<section id="how-glove-works" class="level4">
+<h4 class="anchored" data-anchor-id="how-glove-works">How GloVe Works</h4>
+<pre><code>1. Build global co-occurrence matrix
+   - Count how often word i appears with word j
+   
+2. Optimize objective function:
+   - Want: dot product of embeddings ≈ log(co-occurrence count)
+   - With weights to handle rare/frequent words
+   
+3. Result: Embeddings that capture global statistics</code></pre>
+</section>
+<section id="glove-vs-word2vec" class="level4">
+<h4 class="anchored" data-anchor-id="glove-vs-word2vec">GloVe vs Word2Vec</h4>
+<pre><code>Word2Vec: Local context, prediction-based
+GloVe: Global statistics, count-based
+Performance: Similar, but GloVe often faster to train</code></pre>
+</section>
+</section>
+<section id="fasttext-handling-rare-words" class="level3">
+<h3 class="anchored" data-anchor-id="fasttext-handling-rare-words">FastText: Handling Rare Words</h3>
+<section id="the-innovation" class="level4">
+<h4 class="anchored" data-anchor-id="the-innovation">The Innovation</h4>
+<pre><code>Problem: Word2Vec can't handle words not seen in training
+Solution: Represent words as sum of character n-grams!</code></pre>
+</section>
+<section id="example" class="level4">
+<h4 class="anchored" data-anchor-id="example">Example</h4>
+<pre><code>Word: "where"
+Character 3-grams: ["&lt;wh", "whe", "her", "ere", "re&gt;"]
+Plus the full word: "where"
+
+Final embedding = sum of all n-gram embeddings</code></pre>
+</section>
+<section id="benefits" class="level4">
+<h4 class="anchored" data-anchor-id="benefits">Benefits</h4>
+<pre><code>✅ Can handle OOV words (break into n-grams)
+✅ Captures morphological relationships
+✅ Works great for morphologically rich languages
+✅ Same speed as Word2Vec</code></pre>
+</section>
+</section>
+<section id="evaluating-word-embeddings" class="level3">
+<h3 class="anchored" data-anchor-id="evaluating-word-embeddings">Evaluating Word Embeddings</h3>
+<section id="intrinsic-evaluation" class="level4">
+<h4 class="anchored" data-anchor-id="intrinsic-evaluation">Intrinsic Evaluation</h4>
+<p><strong>Word Similarity Tasks:</strong></p>
+<pre><code>Human judgment: "cat" and "dog" similarity = 7/10
+Model similarity: cosine(cat_vector, dog_vector) = 0.73
+Correlation: How well do model scores match human scores?</code></pre>
+<p><strong>Analogy Tasks:</strong></p>
+<pre><code>Question: "man" : "king" :: "woman" : ?
+Method: king - man + woman = ?
+Correct if closest word is "queen"</code></pre>
+</section>
+<section id="extrinsic-evaluation" class="level4">
+<h4 class="anchored" data-anchor-id="extrinsic-evaluation">Extrinsic Evaluation</h4>
+<pre><code>Use embeddings in downstream tasks:
+- Sentiment analysis
+- Named entity recognition  
+- Text classification
+
+Better embeddings → Better downstream performance</code></pre>
+<hr>
+</section>
+</section>
+</section>
+<section id="language-modeling-predicting-what-comes-next" class="level2">
+<h2 class="anchored" data-anchor-id="language-modeling-predicting-what-comes-next">3.3 Language Modeling: Predicting What Comes Next 🔮</h2>
+<section id="what-is-language-modeling" class="level3">
+<h3 class="anchored" data-anchor-id="what-is-language-modeling">What is Language Modeling?</h3>
+<section id="the-core-task" class="level4">
+<h4 class="anchored" data-anchor-id="the-core-task">The Core Task</h4>
+<pre><code>Given: "The cat sat on the"
+Predict: "mat" (most likely), "floor", "chair", etc.
+
+Language model assigns probabilities to sequences of words</code></pre>
+</section>
+<section id="why-this-matters" class="level4">
+<h4 class="anchored" data-anchor-id="why-this-matters">Why This Matters</h4>
+<pre><code>If you can predict the next word well:
+✅ You understand grammar
+✅ You understand semantics  
+✅ You understand context
+✅ You can generate coherent text!
+
+This is the foundation of GPT, ChatGPT, and all modern LLMs!</code></pre>
+</section>
+</section>
+<section id="n-gram-language-models-the-classical-approach" class="level3">
+<h3 class="anchored" data-anchor-id="n-gram-language-models-the-classical-approach">N-gram Language Models (The Classical Approach)</h3>
+<section id="the-markov-assumption" class="level4">
+<h4 class="anchored" data-anchor-id="the-markov-assumption">The Markov Assumption</h4>
+<pre><code>Assumption: Next word depends only on previous N words
+P(word | entire history) ≈ P(word | previous N words)</code></pre>
+</section>
+<section id="bigram-model-n2" class="level4">
+<h4 class="anchored" data-anchor-id="bigram-model-n2">Bigram Model (N=2)</h4>
+<pre><code>P(word_i | word_1, ..., word_{i-1}) ≈ P(word_i | word_{i-1})
+
+Example:
+P("cat" | "The") = Count("The cat") / Count("The")
+
+If we saw "The cat" 100 times and "The" 1000 times:
+P("cat" | "The") = 100/1000 = 0.1</code></pre>
+</section>
+<section id="training-n-gram-models" class="level4">
+<h4 class="anchored" data-anchor-id="training-n-gram-models">Training N-gram Models</h4>
+<pre><code>1. Count all N-gram occurrences in training data
+2. Estimate probabilities using counts
+3. Apply smoothing for unseen N-grams</code></pre>
+</section>
+<section id="problems-with-n-gram-models" class="level4">
+<h4 class="anchored" data-anchor-id="problems-with-n-gram-models">Problems with N-gram Models</h4>
+<pre><code>❌ Can't capture long-range dependencies
+❌ Sparse data problem (many N-grams never seen)
+❌ No semantic understanding
+❌ Exponential parameter growth with N</code></pre>
+</section>
+</section>
+<section id="neural-language-models-the-revolution" class="level3">
+<h3 class="anchored" data-anchor-id="neural-language-models-the-revolution">Neural Language Models: The Revolution</h3>
+<section id="the-big-idea-1" class="level4">
+<h4 class="anchored" data-anchor-id="the-big-idea-1">The Big Idea</h4>
+<pre><code>Instead of counting N-grams:
+Use neural networks to predict next word!
+
+Benefits:
+✅ Distributed representations
+✅ Automatic feature learning
+✅ Better generalization
+✅ Can handle longer contexts</code></pre>
+</section>
+<section id="feed-forward-neural-language-model" class="level4">
+<h4 class="anchored" data-anchor-id="feed-forward-neural-language-model">Feed-forward Neural Language Model</h4>
+<p><strong>Architecture:</strong></p>
+<pre><code>Input: Previous N words
+↓
+Embedding layer: Convert words to vectors
+↓  
+Concatenate: Combine all word vectors
+↓
+Hidden layers: Learn complex patterns
+↓
+Output layer: Probability distribution over vocabulary</code></pre>
+<p><strong>Example:</strong></p>
+<pre><code>Context: "The cat sat"
+Word embeddings: [e_the, e_cat, e_sat]
+Concatenated: [e_the || e_cat || e_sat]  
+Hidden layer: Learn patterns like "animals sit on things"
+Output: P(next_word = "on") = 0.8</code></pre>
+</section>
+<section id="recurrent-neural-language-models" class="level4">
+<h4 class="anchored" data-anchor-id="recurrent-neural-language-models">Recurrent Neural Language Models</h4>
+<p><strong>The Innovation: Memory!</strong></p>
+<pre><code>Problem with feed-forward: Fixed context window
+Solution: RNN can theoretically handle unlimited context!</code></pre>
+<p><strong>How RNNs Work:</strong></p>
+<pre><code>hidden_0 = initial_state
+for each word in sequence:
+    hidden_i = RNN(word_i, hidden_{i-1})
+    predict_next = output_layer(hidden_i)</code></pre>
+<p><strong>Benefits:</strong></p>
+<pre><code>✅ Variable-length sequences
+✅ Shared parameters across positions  
+✅ Theoretical unlimited memory
+✅ Sequential processing matches language nature</code></pre>
+<p><strong>Problems:</strong></p>
+<pre><code>❌ Vanishing gradients (forgets long-term info)
+❌ Sequential processing (can't parallelize)
+❌ Still struggles with very long dependencies</code></pre>
+</section>
+</section>
+<section id="modern-language-models-transformers" class="level3">
+<h3 class="anchored" data-anchor-id="modern-language-models-transformers">Modern Language Models: Transformers</h3>
+<section id="the-transformer-revolution" class="level4">
+<h4 class="anchored" data-anchor-id="the-transformer-revolution">The Transformer Revolution</h4>
+<pre><code>Key insight: We don't need recurrence!
+Self-attention can capture all relationships directly!
+
+Every word can directly "talk" to every other word
+No more forgetting long-term dependencies!</code></pre>
+</section>
+<section id="autoregressive-generation" class="level4">
+<h4 class="anchored" data-anchor-id="autoregressive-generation">Autoregressive Generation</h4>
+<pre><code>How GPT generates text:
+
+1. Start with prompt: "The cat"
+2. Predict next word: P(sat | The cat) → "sat"  
+3. Add to sequence: "The cat sat"
+4. Predict next: P(on | The cat sat) → "on"
+5. Continue: "The cat sat on the mat"</code></pre>
+<hr>
+</section>
+</section>
+</section>
+<section id="evaluation-metrics-how-good-is-our-model" class="level2">
+<h2 class="anchored" data-anchor-id="evaluation-metrics-how-good-is-our-model">3.4 Evaluation Metrics: How Good is Our Model? 📊</h2>
+<section id="intrinsic-evaluation-perplexity" class="level3">
+<h3 class="anchored" data-anchor-id="intrinsic-evaluation-perplexity">Intrinsic Evaluation: Perplexity</h3>
+<section id="what-is-perplexity" class="level4">
+<h4 class="anchored" data-anchor-id="what-is-perplexity">What is Perplexity?</h4>
+<pre><code>Perplexity measures: "How surprised is the model by the actual text?"
+
+Low perplexity = Model predicts text well
+High perplexity = Model is confused by the text</code></pre>
+</section>
+<section id="mathematical-definition" class="level4">
+<h4 class="anchored" data-anchor-id="mathematical-definition">Mathematical Definition</h4>
+<pre><code>Perplexity = 2^(-average log probability)
+
+Example:
+If model assigns probability 0.25 to each word:
+Perplexity = 1/0.25 = 4
+
+Interpretation: "Model is as confused as random choice among 4 options"</code></pre>
+</section>
+<section id="intuitive-example" class="level4">
+<h4 class="anchored" data-anchor-id="intuitive-example">Intuitive Example</h4>
+<pre><code>Text: "The cat sat on the mat"
+Good model: P = [0.9, 0.8, 0.7, 0.9, 0.8, 0.9]
+Bad model: P = [0.1, 0.2, 0.3, 0.1, 0.2, 0.1]
+
+Good model → Low perplexity
+Bad model → High perplexity</code></pre>
+</section>
+</section>
+<section id="extrinsic-evaluation-downstream-tasks" class="level3">
+<h3 class="anchored" data-anchor-id="extrinsic-evaluation-downstream-tasks">Extrinsic Evaluation: Downstream Tasks</h3>
+<section id="text-generation-quality" class="level4">
+<h4 class="anchored" data-anchor-id="text-generation-quality">Text Generation Quality</h4>
+<p><strong>BLEU Score (for Translation):</strong></p>
+<pre><code>Measures N-gram overlap between generated and reference text
+
+Example:
+Reference: "The cat is sleeping"
+Generated: "The cat sleeps"  
+BLEU considers: How many 1-grams, 2-grams, etc. match?</code></pre>
+<p><strong>Problems with BLEU:</strong></p>
+<pre><code>❌ Only surface-level matching
+❌ Doesn't understand semantic equivalence
+❌ "The cat sleeps" vs "The feline rests" = low BLEU but same meaning!</code></pre>
+<p><strong>ROUGE (for Summarization):</strong></p>
+<pre><code>Similar to BLEU but focuses on recall
+"Did the summary include the important content?"</code></pre>
+<p><strong>BERTScore (Modern Approach):</strong></p>
+<pre><code>Uses embeddings to measure semantic similarity
+Can recognize that "cat" and "feline" are similar!
+Much better correlation with human judgment</code></pre>
+</section>
+<section id="human-evaluation" class="level4">
+<h4 class="anchored" data-anchor-id="human-evaluation">Human Evaluation</h4>
+<p><strong>What Humans Judge:</strong></p>
+<pre><code>1. Fluency: Does the text sound natural?
+2. Coherence: Does it make logical sense?
+3. Factual Accuracy: Are the facts correct?
+4. Relevance: Does it answer the question?</code></pre>
+<p><strong>Challenges:</strong></p>
+<pre><code>❌ Expensive and time-consuming
+❌ Subjective (humans disagree!)
+❌ Hard to scale
+❌ But most reliable for quality assessment</code></pre>
+</section>
+</section>
+<section id="the-evaluation-challenge" class="level3">
+<h3 class="anchored" data-anchor-id="the-evaluation-challenge">The Evaluation Challenge</h3>
+<section id="why-evaluation-is-hard" class="level4">
+<h4 class="anchored" data-anchor-id="why-evaluation-is-hard">Why Evaluation is Hard</h4>
+<pre><code>Language is:
+- Subjective (multiple good answers)
+- Contextual (meaning depends on situation)  
+- Creative (novel combinations are good!)
+- Nuanced (subtle differences matter)
+
+How do you measure creativity and understanding? 🤔</code></pre>
+</section>
+<section id="current-best-practices" class="level4">
+<h4 class="anchored" data-anchor-id="current-best-practices">Current Best Practices</h4>
+<pre><code>1. Use multiple metrics (no single metric is perfect)
+2. Include human evaluation for final assessment
+3. Task-specific metrics when possible
+4. Consider both automatic and human metrics
+5. Be aware of metric limitations</code></pre>
+<hr>
+</section>
+</section>
+</section>
+<section id="putting-it-all-together-the-nlp-pipeline" class="level2">
+<h2 class="anchored" data-anchor-id="putting-it-all-together-the-nlp-pipeline">Putting It All Together: The NLP Pipeline 🔄</h2>
+<section id="from-raw-text-to-model-predictions" class="level3">
+<h3 class="anchored" data-anchor-id="from-raw-text-to-model-predictions">From Raw Text to Model Predictions</h3>
+<section id="step-1-text-preprocessing" class="level4">
+<h4 class="anchored" data-anchor-id="step-1-text-preprocessing">Step 1: Text Preprocessing</h4>
+<pre><code>Raw text: "Hello world! How are you today???"
+Cleaned: "Hello world! How are you today?"
+Normalized: Remove excessive punctuation, fix encoding</code></pre>
+</section>
+<section id="step-2-tokenization" class="level4">
+<h4 class="anchored" data-anchor-id="step-2-tokenization">Step 2: Tokenization</h4>
+<pre><code>Text: "Hello world! How are you today?"
+Tokens: ["Hello", " world", "!", " How", " are", " you", " today", "?"]</code></pre>
+</section>
+<section id="step-3-vocabulary-creation" class="level4">
+<h4 class="anchored" data-anchor-id="step-3-vocabulary-creation">Step 3: Vocabulary Creation</h4>
+<pre><code>Collect all unique tokens from training data
+Add special tokens: [PAD], [UNK], [BOS], [EOS]
+Final vocabulary size: ~30K-50K tokens</code></pre>
+</section>
+<section id="step-4-embedding" class="level4">
+<h4 class="anchored" data-anchor-id="step-4-embedding">Step 4: Embedding</h4>
+<pre><code>Each token gets mapped to dense vector:
+"Hello" → [0.2, -0.1, 0.8, 0.3, ...]
+" world" → [0.1, 0.5, -0.2, 0.7, ...]</code></pre>
+</section>
+<section id="step-5-model-processing" class="level4">
+<h4 class="anchored" data-anchor-id="step-5-model-processing">Step 5: Model Processing</h4>
+<pre><code>Embeddings → Transformer layers → Output probabilities</code></pre>
+</section>
+<section id="step-6-decoding" class="level4">
+<h4 class="anchored" data-anchor-id="step-6-decoding">Step 6: Decoding</h4>
+<pre><code>Probabilities → Sample next token → Convert back to text</code></pre>
+<hr>
+</section>
+</section>
+</section>
+<section id="common-student-questions" class="level2">
+<h2 class="anchored" data-anchor-id="common-student-questions">Common Student Questions 🙋‍♀️</h2>
+<section id="q-why-do-we-need-so-many-different-tokenization-methods" class="level3">
+<h3 class="anchored" data-anchor-id="q-why-do-we-need-so-many-different-tokenization-methods">Q: “Why do we need so many different tokenization methods?”</h3>
+<p><strong>A:</strong> Different methods work better for different languages and tasks. It’s like having different tools for different jobs!</p>
+</section>
+<section id="q-how-do-embeddings-actually-capture-meaning" class="level3">
+<h3 class="anchored" data-anchor-id="q-how-do-embeddings-actually-capture-meaning">Q: “How do embeddings actually capture meaning?”</h3>
+<p><strong>A:</strong> Through training! Words that appear in similar contexts get similar embeddings. The model learns that “king” and “queen” are similar because they appear in similar situations.</p>
+</section>
+<section id="q-why-is-language-modeling-so-important" class="level3">
+<h3 class="anchored" data-anchor-id="q-why-is-language-modeling-so-important">Q: “Why is language modeling so important?”</h3>
+<p><strong>A:</strong> If you can predict what comes next in language really well, you understand grammar, semantics, context, and world knowledge. It’s a powerful general task!</p>
+</section>
+<section id="q-which-evaluation-metric-should-i-use" class="level3">
+<h3 class="anchored" data-anchor-id="q-which-evaluation-metric-should-i-use">Q: “Which evaluation metric should I use?”</h3>
+<p><strong>A:</strong> Depends on your task! For generation: BLEU/ROUGE + human eval. For understanding: task-specific accuracy. Always use multiple metrics!</p>
+<hr>
+</section>
+</section>
+<section id="key-takeaways" class="level2">
+<h2 class="anchored" data-anchor-id="key-takeaways">Key Takeaways 🎯</h2>
+<ol type="1">
+<li><p><strong>Tokenization</strong> is crucial - it determines how your model sees language. Subword methods like BPE are usually best.</p></li>
+<li><p><strong>Word embeddings</strong> capture semantic similarity by mapping words to dense vectors based on distributional similarity.</p></li>
+<li><p><strong>Language modeling</strong> (predicting next words) is a powerful task that teaches models about language structure and meaning.</p></li>
+<li><p><strong>Evaluation</strong> is challenging but essential - use multiple metrics and include human judgment when possible.</p></li>
+<li><p><strong>The NLP pipeline</strong> connects all these pieces to transform raw text into model understanding.</p></li>
+</ol>
+<hr>
+</section>
+<section id="fun-exercises" class="level2">
+<h2 class="anchored" data-anchor-id="fun-exercises">Fun Exercises 🎮</h2>
+<section id="exercise-1-tokenization-practice" class="level3">
+<h3 class="anchored" data-anchor-id="exercise-1-tokenization-practice">Exercise 1: Tokenization Practice</h3>
+<pre><code>Try tokenizing this sentence with different methods:
+"The AI model's performance was extraordinary!"
+
+Word-level: ?
+Character-level: ?  
+Subword (guess): ?</code></pre>
+</section>
+<section id="exercise-2-embedding-intuition" class="level3">
+<h3 class="anchored" data-anchor-id="exercise-2-embedding-intuition">Exercise 2: Embedding Intuition</h3>
+<pre><code>Which pairs should have similar embeddings?
+a) "king" and "queen"
+b) "king" and "car"  
+c) "happy" and "joyful"
+d) "run" and "running"</code></pre>
+</section>
+<section id="exercise-3-language-modeling" class="level3">
+<h3 class="anchored" data-anchor-id="exercise-3-language-modeling">Exercise 3: Language Modeling</h3>
+<pre><code>What should come next?
+"The weather today is very ___"
+
+What factors affect this prediction?</code></pre>
+<hr>
+</section>
+</section>
+<section id="whats-next" class="level2">
+<h2 class="anchored" data-anchor-id="whats-next">What’s Next? 📚</h2>
+<p>In Chapter 4, we’ll dive deep into the Transformer architecture - the breakthrough that made modern LLMs possible!</p>
+<p><strong>Preview:</strong> We’ll learn about: - The attention mechanism (how models “focus”) - Self-attention (how words relate to each other) - The complete transformer architecture - Why this was such a revolutionary breakthrough</p>
+<p>Get ready to understand the engine that powers ChatGPT! 🚀</p>
+<hr>
+</section>
+<section id="final-thought" class="level2">
+<h2 class="anchored" data-anchor-id="final-thought">Final Thought 💭</h2>
+<pre><code>"The best way to understand language models is to remember: 
+they're pattern matching machines that learned patterns from massive amounts of text.
+The patterns they learned happen to correspond to grammar, meaning, and knowledge!"
+
+That's both amazing and important to remember for their limitations! 😊</code></pre>
+
+
+</section>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

@@ -1,0 +1,1608 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.8.25">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>chapter_08_fine_tuning – Large Language Models 教程</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<script src="site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="site_libs/quarto-html/axe/axe-check.js" type="module"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-7b89279ff1a6dce999919e0e67d4d9ec.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap-a8976c3e89df70b272bdfba3d2fda974.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+
+</head>
+
+<body class="nav-fixed quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a href="./index.html" class="navbar-brand navbar-brand-logo">
+    </a>
+    <a class="navbar-brand" href="./index.html">
+    <span class="navbar-title">Large Language Models 教程</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="./index.html"> 
+<span class="menu-text">首页</span></a>
+  </li>  
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">章节</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-">    
+        <li>
+    <a class="dropdown-item" href="./Chapter_01_Introduction_LLMs.html">
+ <span class="dropdown-text">01 - LLM 介绍</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./Chapter_02_Math_Foundations.html">
+ <span class="dropdown-text">02 - 数学基础</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./Chapter_03_NLP_Fundamentals.html">
+ <span class="dropdown-text">03 - NLP 基础</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./Chapter_04_Transformer_Architecture.html">
+ <span class="dropdown-text">04 - Transformer 架构</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./Chapter_05_Modern_Transformer_Variants_Complete.html">
+ <span class="dropdown-text">05 - 现代 Transformer</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./Chapter_08_Fine_Tuning.html">
+ <span class="dropdown-text">08 - 微调</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./Chapter_09_Alignment_RLHF.html">
+ <span class="dropdown-text">09 - 对齐与 RLHF</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./Chapter_10_Prompting_InContext_Learning.html">
+ <span class="dropdown-text">10 - Prompt 工程</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./Chapter_11_RAG.html">
+ <span class="dropdown-text">11 - RAG</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./Chapter_12_LLM_Agents_Tool_Use.html">
+ <span class="dropdown-text">12 - LLM Agents</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./Chapter_13_Optimization_Inference.html">
+ <span class="dropdown-text">13 - 优化推理</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./Chapter_14_Production_Deployment.html">
+ <span class="dropdown-text">14 - 生产部署</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./Chapter_15_Multimodal_LLMs.html">
+ <span class="dropdown-text">15 - 多模态 LLM</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./Chapter_16_Evaluation_Benchmarking.html">
+ <span class="dropdown-text">16 - 评估基准</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./Chapter_17_Cutting_Edge_Research_Future.html">
+ <span class="dropdown-text">17 - 前沿研究</span></a>
+  </li>  
+    </ul>
+  </li>
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#chapter-8-fine-tuning-techniques" id="toc-chapter-8-fine-tuning-techniques" class="nav-link active" data-scroll-target="#chapter-8-fine-tuning-techniques">Chapter 8: Fine-tuning Techniques</a>
+  <ul class="collapse">
+  <li><a href="#what-well-learn-today" id="toc-what-well-learn-today" class="nav-link" data-scroll-target="#what-well-learn-today">What We’ll Learn Today 🎯</a></li>
+  <li><a href="#what-is-fine-tuning-the-specialization-stage" id="toc-what-is-fine-tuning-the-specialization-stage" class="nav-link" data-scroll-target="#what-is-fine-tuning-the-specialization-stage">8.1 What is Fine-tuning? The Specialization Stage 🎯</a>
+  <ul class="collapse">
+  <li><a href="#the-two-stage-learning-paradigm" id="toc-the-two-stage-learning-paradigm" class="nav-link" data-scroll-target="#the-two-stage-learning-paradigm">The Two-Stage Learning Paradigm</a></li>
+  <li><a href="#why-fine-tuning-is-powerful" id="toc-why-fine-tuning-is-powerful" class="nav-link" data-scroll-target="#why-fine-tuning-is-powerful">Why Fine-tuning is Powerful</a></li>
+  </ul></li>
+  <li><a href="#supervised-fine-tuning-sft-the-traditional-approach" id="toc-supervised-fine-tuning-sft-the-traditional-approach" class="nav-link" data-scroll-target="#supervised-fine-tuning-sft-the-traditional-approach">8.2 Supervised Fine-tuning (SFT): The Traditional Approach 📚</a>
+  <ul class="collapse">
+  <li><a href="#how-supervised-fine-tuning-works" id="toc-how-supervised-fine-tuning-works" class="nav-link" data-scroll-target="#how-supervised-fine-tuning-works">How Supervised Fine-tuning Works</a></li>
+  <li><a href="#creating-high-quality-training-data" id="toc-creating-high-quality-training-data" class="nav-link" data-scroll-target="#creating-high-quality-training-data">Creating High-Quality Training Data</a></li>
+  <li><a href="#training-process-and-hyperparameters" id="toc-training-process-and-hyperparameters" class="nav-link" data-scroll-target="#training-process-and-hyperparameters">Training Process and Hyperparameters</a></li>
+  </ul></li>
+  <li><a href="#parameter-efficient-fine-tuning-the-smart-way" id="toc-parameter-efficient-fine-tuning-the-smart-way" class="nav-link" data-scroll-target="#parameter-efficient-fine-tuning-the-smart-way">8.3 Parameter-Efficient Fine-tuning: The Smart Way 🧠</a>
+  <ul class="collapse">
+  <li><a href="#the-problem-with-full-fine-tuning" id="toc-the-problem-with-full-fine-tuning" class="nav-link" data-scroll-target="#the-problem-with-full-fine-tuning">The Problem with Full Fine-tuning</a></li>
+  <li><a href="#lora-low-rank-adaptation" id="toc-lora-low-rank-adaptation" class="nav-link" data-scroll-target="#lora-low-rank-adaptation">LoRA: Low-Rank Adaptation 🔧</a></li>
+  <li><a href="#qlora-quantized-lora" id="toc-qlora-quantized-lora" class="nav-link" data-scroll-target="#qlora-quantized-lora">QLoRA: Quantized LoRA 📱</a></li>
+  <li><a href="#other-parameter-efficient-methods" id="toc-other-parameter-efficient-methods" class="nav-link" data-scroll-target="#other-parameter-efficient-methods">Other Parameter-Efficient Methods</a></li>
+  <li><a href="#comparing-parameter-efficient-methods" id="toc-comparing-parameter-efficient-methods" class="nav-link" data-scroll-target="#comparing-parameter-efficient-methods">Comparing Parameter-Efficient Methods</a></li>
+  </ul></li>
+  <li><a href="#domain-adaptation-teaching-specialized-knowledge" id="toc-domain-adaptation-teaching-specialized-knowledge" class="nav-link" data-scroll-target="#domain-adaptation-teaching-specialized-knowledge">8.4 Domain Adaptation: Teaching Specialized Knowledge 🏥</a>
+  <ul class="collapse">
+  <li><a href="#understanding-domain-adaptation" id="toc-understanding-domain-adaptation" class="nav-link" data-scroll-target="#understanding-domain-adaptation">Understanding Domain Adaptation</a></li>
+  <li><a href="#case-study-adapting-to-medical-domain" id="toc-case-study-adapting-to-medical-domain" class="nav-link" data-scroll-target="#case-study-adapting-to-medical-domain">Case Study: Adapting to Medical Domain</a></li>
+  <li><a href="#domain-adaptation-best-practices" id="toc-domain-adaptation-best-practices" class="nav-link" data-scroll-target="#domain-adaptation-best-practices">Domain Adaptation Best Practices</a></li>
+  </ul></li>
+  <li><a href="#instruction-tuning-teaching-models-to-follow-directions" id="toc-instruction-tuning-teaching-models-to-follow-directions" class="nav-link" data-scroll-target="#instruction-tuning-teaching-models-to-follow-directions">8.5 Instruction Tuning: Teaching Models to Follow Directions 📝</a>
+  <ul class="collapse">
+  <li><a href="#what-is-instruction-tuning" id="toc-what-is-instruction-tuning" class="nav-link" data-scroll-target="#what-is-instruction-tuning">What is Instruction Tuning?</a></li>
+  <li><a href="#training-data-for-instruction-tuning" id="toc-training-data-for-instruction-tuning" class="nav-link" data-scroll-target="#training-data-for-instruction-tuning">Training Data for Instruction Tuning</a></li>
+  <li><a href="#training-process" id="toc-training-process" class="nav-link" data-scroll-target="#training-process">Training Process</a></li>
+  </ul></li>
+  <li><a href="#alignment-and-rlhf-making-models-helpful-and-safe" id="toc-alignment-and-rlhf-making-models-helpful-and-safe" class="nav-link" data-scroll-target="#alignment-and-rlhf-making-models-helpful-and-safe">8.6 Alignment and RLHF: Making Models Helpful and Safe 🛡️</a>
+  <ul class="collapse">
+  <li><a href="#the-alignment-problem" id="toc-the-alignment-problem" class="nav-link" data-scroll-target="#the-alignment-problem">The Alignment Problem</a></li>
+  <li><a href="#reinforcement-learning-from-human-feedback-rlhf" id="toc-reinforcement-learning-from-human-feedback-rlhf" class="nav-link" data-scroll-target="#reinforcement-learning-from-human-feedback-rlhf">Reinforcement Learning from Human Feedback (RLHF)</a></li>
+  <li><a href="#constitutional-ai-teaching-models-principles" id="toc-constitutional-ai-teaching-models-principles" class="nav-link" data-scroll-target="#constitutional-ai-teaching-models-principles">Constitutional AI: Teaching Models Principles</a></li>
+  </ul></li>
+  <li><a href="#when-to-fine-tune-vs.-when-to-prompt" id="toc-when-to-fine-tune-vs.-when-to-prompt" class="nav-link" data-scroll-target="#when-to-fine-tune-vs.-when-to-prompt">8.7 When to Fine-tune vs.&nbsp;When to Prompt 🤔</a>
+  <ul class="collapse">
+  <li><a href="#the-decision-framework" id="toc-the-decision-framework" class="nav-link" data-scroll-target="#the-decision-framework">The Decision Framework</a></li>
+  <li><a href="#cost-benefit-analysis" id="toc-cost-benefit-analysis" class="nav-link" data-scroll-target="#cost-benefit-analysis">Cost-Benefit Analysis</a></li>
+  <li><a href="#hybrid-approaches" id="toc-hybrid-approaches" class="nav-link" data-scroll-target="#hybrid-approaches">Hybrid Approaches</a></li>
+  </ul></li>
+  <li><a href="#real-world-case-studies" id="toc-real-world-case-studies" class="nav-link" data-scroll-target="#real-world-case-studies">Real-World Case Studies 🌍</a>
+  <ul class="collapse">
+  <li><a href="#case-study-1-customer-service-chatbot" id="toc-case-study-1-customer-service-chatbot" class="nav-link" data-scroll-target="#case-study-1-customer-service-chatbot">Case Study 1: Customer Service Chatbot</a></li>
+  <li><a href="#case-study-2-code-generation-assistant" id="toc-case-study-2-code-generation-assistant" class="nav-link" data-scroll-target="#case-study-2-code-generation-assistant">Case Study 2: Code Generation Assistant</a></li>
+  <li><a href="#case-study-3-scientific-research-assistant" id="toc-case-study-3-scientific-research-assistant" class="nav-link" data-scroll-target="#case-study-3-scientific-research-assistant">Case Study 3: Scientific Research Assistant</a></li>
+  </ul></li>
+  <li><a href="#key-takeaways" id="toc-key-takeaways" class="nav-link" data-scroll-target="#key-takeaways">Key Takeaways 🎯</a></li>
+  <li><a href="#fun-exercises" id="toc-fun-exercises" class="nav-link" data-scroll-target="#fun-exercises">Fun Exercises 🎮</a>
+  <ul class="collapse">
+  <li><a href="#exercise-1-method-selection" id="toc-exercise-1-method-selection" class="nav-link" data-scroll-target="#exercise-1-method-selection">Exercise 1: Method Selection</a></li>
+  <li><a href="#exercise-2-lora-design" id="toc-exercise-2-lora-design" class="nav-link" data-scroll-target="#exercise-2-lora-design">Exercise 2: LoRA Design</a></li>
+  <li><a href="#exercise-3-data-creation" id="toc-exercise-3-data-creation" class="nav-link" data-scroll-target="#exercise-3-data-creation">Exercise 3: Data Creation</a></li>
+  </ul></li>
+  <li><a href="#whats-next" id="toc-whats-next" class="nav-link" data-scroll-target="#whats-next">What’s Next? 📚</a></li>
+  <li><a href="#final-thought" id="toc-final-thought" class="nav-link" data-scroll-target="#final-thought">Final Thought 💭</a></li>
+  </ul></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content"><header id="title-block-header" class="quarto-title-block"></header>
+
+
+
+
+<section id="chapter-8-fine-tuning-techniques" class="level1">
+<h1>Chapter 8: Fine-tuning Techniques</h1>
+<p><em>From General Intelligence to Task-Specific Expertise</em></p>
+<section id="what-well-learn-today" class="level2">
+<h2 class="anchored" data-anchor-id="what-well-learn-today">What We’ll Learn Today 🎯</h2>
+<ul>
+<li>How to turn a general language model into a specialist</li>
+<li>Efficient fine-tuning without breaking the bank</li>
+<li>LoRA and other parameter-efficient methods (the smart way!)</li>
+<li>Domain adaptation strategies</li>
+<li>When to fine-tune vs.&nbsp;when to just prompt</li>
+</ul>
+<p><strong>Key Insight:</strong> You don’t always need to retrain everything - sometimes you just need to teach new tricks! 🎪</p>
+<hr>
+</section>
+<section id="what-is-fine-tuning-the-specialization-stage" class="level2">
+<h2 class="anchored" data-anchor-id="what-is-fine-tuning-the-specialization-stage">8.1 What is Fine-tuning? The Specialization Stage 🎯</h2>
+<section id="the-two-stage-learning-paradigm" class="level3">
+<h3 class="anchored" data-anchor-id="the-two-stage-learning-paradigm">The Two-Stage Learning Paradigm</h3>
+<section id="analogy-becoming-a-specialist-doctor" class="level4">
+<h4 class="anchored" data-anchor-id="analogy-becoming-a-specialist-doctor">Analogy: Becoming a Specialist Doctor 👩‍⚕️</h4>
+<pre><code>Stage 1 - Medical School (Pre-training):
+- Learn general medical knowledge
+- Understand human anatomy and physiology
+- Study diseases and treatments
+- Develop diagnostic reasoning
+
+Stage 2 - Residency/Specialization (Fine-tuning):
+- Focus on specific area (cardiology, neurology, etc.)
+- Practice specific procedures
+- Learn specialty-specific knowledge
+- Adapt general skills to specialized context</code></pre>
+</section>
+<section id="for-language-models" class="level4">
+<h4 class="anchored" data-anchor-id="for-language-models">For Language Models</h4>
+<pre><code>Stage 1 - Pre-training:
+- Learn general language understanding
+- Acquire world knowledge
+- Develop reasoning capabilities
+- Master grammar and syntax
+
+Stage 2 - Fine-tuning:
+- Adapt to specific tasks (Q&amp;A, summarization, etc.)
+- Learn domain-specific terminology
+- Follow particular formats and styles
+- Align with human preferences and values</code></pre>
+</section>
+</section>
+<section id="why-fine-tuning-is-powerful" class="level3">
+<h3 class="anchored" data-anchor-id="why-fine-tuning-is-powerful">Why Fine-tuning is Powerful</h3>
+<section id="the-transfer-learning-magic" class="level4">
+<h4 class="anchored" data-anchor-id="the-transfer-learning-magic">The Transfer Learning Magic ✨</h4>
+<pre><code>Amazing fact: A pre-trained model already knows most of what it needs!
+
+Fine-tuning just teaches:
+- Task-specific formats ("Answer: ..." for Q&amp;A)
+- Domain vocabulary (medical terms for healthcare)
+- Style preferences (formal vs. casual)
+- Safety guidelines and human alignment
+
+It's like teaching a smart person a new job - they learn fast! 🚀</code></pre>
+</section>
+<section id="efficiency-benefits" class="level4">
+<h4 class="anchored" data-anchor-id="efficiency-benefits">Efficiency Benefits</h4>
+<pre><code>Compared to training from scratch:
+✅ 100-1000x less compute needed
+✅ Much smaller datasets required (thousands vs. billions of examples)
+✅ Faster to experiment and iterate
+✅ Better performance with less data
+✅ Can leverage existing model capabilities</code></pre>
+<hr>
+</section>
+</section>
+</section>
+<section id="supervised-fine-tuning-sft-the-traditional-approach" class="level2">
+<h2 class="anchored" data-anchor-id="supervised-fine-tuning-sft-the-traditional-approach">8.2 Supervised Fine-tuning (SFT): The Traditional Approach 📚</h2>
+<section id="how-supervised-fine-tuning-works" class="level3">
+<h3 class="anchored" data-anchor-id="how-supervised-fine-tuning-works">How Supervised Fine-tuning Works</h3>
+<section id="the-basic-process" class="level4">
+<h4 class="anchored" data-anchor-id="the-basic-process">The Basic Process</h4>
+<pre><code>1. Start with pre-trained model (already smart!)
+2. Collect task-specific examples:
+   Input: "What is the capital of France?"
+   Output: "The capital of France is Paris."
+3. Train model to produce correct outputs for given inputs
+4. Use much smaller learning rate than pre-training
+5. Train for fewer epochs (don't overfit!)</code></pre>
+</section>
+<section id="example-training-a-qa-model" class="level4">
+<h4 class="anchored" data-anchor-id="example-training-a-qa-model">Example: Training a Q&amp;A Model</h4>
+<pre><code>Pre-trained model can already:
+✅ Understand questions
+✅ Reason about facts
+✅ Generate coherent text
+
+Fine-tuning teaches:
+- Specific answer format: "The answer is..."
+- Factual accuracy emphasis
+- Appropriate response length
+- Handling of "I don't know" cases</code></pre>
+</section>
+</section>
+<section id="creating-high-quality-training-data" class="level3">
+<h3 class="anchored" data-anchor-id="creating-high-quality-training-data">Creating High-Quality Training Data</h3>
+<section id="data-collection-strategies" class="level4">
+<h4 class="anchored" data-anchor-id="data-collection-strategies">Data Collection Strategies</h4>
+<p><strong>Human Annotation</strong></p>
+<pre><code>Process:
+1. Collect input examples (questions, prompts, etc.)
+2. Have humans write ideal outputs
+3. Quality control and validation
+4. Create train/validation/test splits
+
+Pros: High quality, aligned with human preferences
+Cons: Expensive, time-consuming, limited scale</code></pre>
+<p><strong>Synthetic Data Generation</strong></p>
+<pre><code>Use existing AI models to generate training data:
+
+Process:
+1. Use GPT-4 to generate Q&amp;A pairs
+2. Filter for quality and accuracy
+3. Add human review for critical cases
+4. Bootstrap from small human-annotated set
+
+Benefits: Scalable, consistent, can cover edge cases
+Risks: Model biases, factual errors, lack of diversity</code></pre>
+<p><strong>Data Augmentation</strong></p>
+<pre><code>Expand existing datasets:
+- Paraphrase questions/answers
+- Translate to other languages and back
+- Add context variations
+- Create harder/easier versions
+
+Example:
+Original: "What is 2+2?" → "4"
+Augmented: "Calculate the sum of two plus two" → "The answer is 4."</code></pre>
+</section>
+<section id="data-quality-best-practices" class="level4">
+<h4 class="anchored" data-anchor-id="data-quality-best-practices">Data Quality Best Practices</h4>
+<pre><code>High-quality fine-tuning data should be:
+✅ Accurate: Factually correct outputs
+✅ Consistent: Similar inputs get similar outputs
+✅ Diverse: Cover many scenarios and edge cases
+✅ Well-formatted: Clean, consistent structure
+✅ Balanced: Avoid bias toward specific groups/topics
+❌ Avoid: Contradictory examples, toxic content, copyright issues</code></pre>
+</section>
+</section>
+<section id="training-process-and-hyperparameters" class="level3">
+<h3 class="anchored" data-anchor-id="training-process-and-hyperparameters">Training Process and Hyperparameters</h3>
+<section id="learning-rate-strategy" class="level4">
+<h4 class="anchored" data-anchor-id="learning-rate-strategy">Learning Rate Strategy</h4>
+<pre><code>Key principle: Use MUCH smaller learning rate than pre-training!
+
+Typical ranges:
+- Pre-training: 1e-3 to 1e-4
+- Fine-tuning: 1e-5 to 1e-6 (10-100x smaller)
+
+Why smaller?
+- Pre-trained weights are already good
+- Don't want to "catastrophically forget" general knowledge
+- Small adjustments, not major rewiring</code></pre>
+</section>
+<section id="training-schedule" class="level4">
+<h4 class="anchored" data-anchor-id="training-schedule">Training Schedule</h4>
+<pre><code>Typical fine-tuning schedule:
+1. Linear warmup: 10% of training steps
+2. Constant learning rate: 80% of training steps  
+3. Linear decay: 10% of training steps
+
+Total training: Much shorter than pre-training
+- Pre-training: weeks/months
+- Fine-tuning: hours/days</code></pre>
+</section>
+<section id="preventing-catastrophic-forgetting" class="level4">
+<h4 class="anchored" data-anchor-id="preventing-catastrophic-forgetting">Preventing Catastrophic Forgetting</h4>
+<pre><code>Problem: Fine-tuning can make model forget pre-trained knowledge
+
+Solutions:
+✅ Small learning rates
+✅ Short training duration
+✅ Regularization techniques (L2, dropout)
+✅ Mixed training data (task-specific + general)
+✅ Early stopping based on validation performance</code></pre>
+<hr>
+</section>
+</section>
+</section>
+<section id="parameter-efficient-fine-tuning-the-smart-way" class="level2">
+<h2 class="anchored" data-anchor-id="parameter-efficient-fine-tuning-the-smart-way">8.3 Parameter-Efficient Fine-tuning: The Smart Way 🧠</h2>
+<section id="the-problem-with-full-fine-tuning" class="level3">
+<h3 class="anchored" data-anchor-id="the-problem-with-full-fine-tuning">The Problem with Full Fine-tuning</h3>
+<section id="resource-requirements" class="level4">
+<h4 class="anchored" data-anchor-id="resource-requirements">Resource Requirements</h4>
+<pre><code>Full fine-tuning challenges:
+❌ Need to store full model copy for each task
+❌ High memory requirements during training
+❌ Expensive compute for large models
+❌ Risk of catastrophic forgetting
+❌ Difficult to maintain multiple task-specific versions
+
+For GPT-3 (175B parameters):
+- Full fine-tuning: Need ~700GB GPU memory
+- Store multiple versions: TB of storage
+- Training cost: $10K+ per task</code></pre>
+</section>
+<section id="the-efficiency-insight" class="level4">
+<h4 class="anchored" data-anchor-id="the-efficiency-insight">The Efficiency Insight 💡</h4>
+<pre><code>Key observation: You don't need to change ALL parameters!
+
+Research shows:
+- Language models are "over-parameterized"
+- Task adaptation needs only small changes
+- Most knowledge is preserved, small adjustments suffice
+
+Solution: Only train a small subset of parameters! 🎯</code></pre>
+</section>
+</section>
+<section id="lora-low-rank-adaptation" class="level3">
+<h3 class="anchored" data-anchor-id="lora-low-rank-adaptation">LoRA: Low-Rank Adaptation 🔧</h3>
+<section id="the-core-idea" class="level4">
+<h4 class="anchored" data-anchor-id="the-core-idea">The Core Idea</h4>
+<pre><code>Instead of changing weight matrix W:
+Keep W frozen, add a small "adapter":
+
+W_new = W + A×B
+
+Where:
+- W: Original frozen weights (large)
+- A, B: Small matrices we train (tiny!)
+- A×B: Low-rank approximation of weight changes</code></pre>
+</section>
+<section id="mathematical-intuition" class="level4">
+<h4 class="anchored" data-anchor-id="mathematical-intuition">Mathematical Intuition</h4>
+<pre><code>Example with attention weights:
+Original: W ∈ ℝ^(4096×4096) = 16M parameters
+LoRA: A ∈ ℝ^(4096×16), B ∈ ℝ^(16×4096) = 131K parameters
+
+Reduction: 16M → 131K = 99% fewer parameters! 🤯
+
+The magic: Most weight changes can be approximated with low-rank matrices</code></pre>
+</section>
+<section id="lora-in-practice" class="level4">
+<h4 class="anchored" data-anchor-id="lora-in-practice">LoRA in Practice</h4>
+<pre><code>Implementation:
+1. Freeze all pre-trained weights
+2. Add LoRA adapters to attention layers (mainly)
+3. Train only the adapter weights
+4. At inference: W_effective = W_frozen + A×B
+
+Benefits:
+✅ 100-1000x fewer trainable parameters
+✅ Same inference speed (merge weights)
+✅ Easy to swap adapters for different tasks
+✅ Much less memory during training
+✅ Preserves pre-trained knowledge</code></pre>
+</section>
+<section id="lora-hyperparameters" class="level4">
+<h4 class="anchored" data-anchor-id="lora-hyperparameters">LoRA Hyperparameters</h4>
+<pre><code>Key settings:
+- Rank (r): Usually 4-64, higher = more capacity
+- Alpha: Scaling factor, typically 16-32
+- Target modules: Usually attention weights (W_q, W_k, W_v, W_o)
+- Dropout: 0.1 typical for regularization
+
+Rule of thumb: Start with r=16, alpha=32</code></pre>
+</section>
+</section>
+<section id="qlora-quantized-lora" class="level3">
+<h3 class="anchored" data-anchor-id="qlora-quantized-lora">QLoRA: Quantized LoRA 📱</h3>
+<section id="the-memory-optimization" class="level4">
+<h4 class="anchored" data-anchor-id="the-memory-optimization">The Memory Optimization</h4>
+<pre><code>Problem: Even frozen weights need GPU memory for gradients
+
+QLoRA solution:
+1. Quantize base model to 4-bit (NF4 format)
+2. Add LoRA adapters in full precision
+3. Use paged optimizers for memory efficiency
+
+Result: Fine-tune 65B model on single 48GB GPU! 🚀</code></pre>
+</section>
+<section id="when-to-use-qlora" class="level4">
+<h4 class="anchored" data-anchor-id="when-to-use-qlora">When to Use QLoRA</h4>
+<pre><code>Perfect for:
+✅ Limited GPU memory
+✅ Large base models (7B+)
+✅ Research and experimentation
+✅ Personal/small-scale projects
+
+Trade-offs:
+⚖️ Slightly slower training
+⚖️ Some precision loss from quantization
+⚖️ More complex setup</code></pre>
+</section>
+</section>
+<section id="other-parameter-efficient-methods" class="level3">
+<h3 class="anchored" data-anchor-id="other-parameter-efficient-methods">Other Parameter-Efficient Methods</h3>
+<section id="prefix-tuning" class="level4">
+<h4 class="anchored" data-anchor-id="prefix-tuning">Prefix Tuning</h4>
+<pre><code>Idea: Keep model frozen, only train "prefix" tokens
+
+How it works:
+1. Prepend learnable tokens to input sequence
+2. These tokens guide model behavior
+3. Model sees: [PREFIX_TOKENS] + [USER_INPUT]
+
+Benefits: Very few parameters (0.1% of model)
+Limitations: Takes up input context space</code></pre>
+</section>
+<section id="adapter-layers" class="level4">
+<h4 class="anchored" data-anchor-id="adapter-layers">Adapter Layers</h4>
+<pre><code>Concept: Insert small "adapter" networks between layers
+
+Architecture:
+Original layer → Adapter (down-project → nonlinearity → up-project) → Next layer
+
+Adapter structure:
+- Down-project: d_model → bottleneck (e.g., 64)
+- Activation: ReLU or GELU
+- Up-project: bottleneck → d_model
+- Residual connection around adapter</code></pre>
+</section>
+<section id="ia³-infused-adapter-by-inhibiting-and-amplifying" class="level4">
+<h4 class="anchored" data-anchor-id="ia³-infused-adapter-by-inhibiting-and-amplifying">(IA)³: Infused Adapter by Inhibiting and Amplifying</h4>
+<pre><code>Simplest approach: Element-wise scaling
+
+Implementation:
+- Add learnable scaling vectors to activations
+- learned_scale ⊙ activation
+- Almost no parameters (just scaling factors)
+
+When it works: Simple tasks, when base model is already close</code></pre>
+</section>
+</section>
+<section id="comparing-parameter-efficient-methods" class="level3">
+<h3 class="anchored" data-anchor-id="comparing-parameter-efficient-methods">Comparing Parameter-Efficient Methods</h3>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Method</th>
+<th>Parameters</th>
+<th>Memory</th>
+<th>Setup Complexity</th>
+<th>Performance</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Full Fine-tuning</td>
+<td>100%</td>
+<td>High</td>
+<td>Simple</td>
+<td>Best</td>
+</tr>
+<tr class="even">
+<td>LoRA</td>
+<td>0.1-1%</td>
+<td>Medium</td>
+<td>Medium</td>
+<td>Very Good</td>
+</tr>
+<tr class="odd">
+<td>QLoRA</td>
+<td>0.1-1%</td>
+<td>Low</td>
+<td>Complex</td>
+<td>Good</td>
+</tr>
+<tr class="even">
+<td>Prefix Tuning</td>
+<td>0.01%</td>
+<td>Low</td>
+<td>Simple</td>
+<td>Good</td>
+</tr>
+<tr class="odd">
+<td>Adapters</td>
+<td>1-5%</td>
+<td>Medium</td>
+<td>Medium</td>
+<td>Very Good</td>
+</tr>
+<tr class="even">
+<td>(IA)³</td>
+<td>&lt;0.01%</td>
+<td>Low</td>
+<td>Simple</td>
+<td>Variable</td>
+</tr>
+</tbody>
+</table>
+<hr>
+</section>
+</section>
+<section id="domain-adaptation-teaching-specialized-knowledge" class="level2">
+<h2 class="anchored" data-anchor-id="domain-adaptation-teaching-specialized-knowledge">8.4 Domain Adaptation: Teaching Specialized Knowledge 🏥</h2>
+<section id="understanding-domain-adaptation" class="level3">
+<h3 class="anchored" data-anchor-id="understanding-domain-adaptation">Understanding Domain Adaptation</h3>
+<section id="the-domain-gap-problem" class="level4">
+<h4 class="anchored" data-anchor-id="the-domain-gap-problem">The Domain Gap Problem</h4>
+<pre><code>General models know general knowledge, but domains have:
+- Specialized vocabulary (medical, legal, technical terms)
+- Domain-specific formats and conventions
+- Particular reasoning patterns
+- Unique evaluation criteria
+
+Example: Medical domain
+- General model: "Patient has elevated temperature"
+- Medical model: "Patient presents with hyperthermia, likely pyrexia secondary to infectious etiology"</code></pre>
+</section>
+<section id="adaptation-strategies" class="level4">
+<h4 class="anchored" data-anchor-id="adaptation-strategies">Adaptation Strategies</h4>
+<p><strong>Continued Pre-training</strong></p>
+<pre><code>Process:
+1. Take general pre-trained model
+2. Continue pre-training on domain-specific corpus
+3. Use same objective (next token prediction)
+4. Much smaller learning rate and shorter duration
+
+Example: Medical domain
+- Start with GPT-3
+- Continue training on PubMed articles, medical textbooks
+- Learn medical terminology and reasoning patterns</code></pre>
+<p><strong>Task-Specific Fine-tuning</strong></p>
+<pre><code>Process:
+1. Start with domain-adapted model
+2. Fine-tune on specific task examples
+3. Focus on task format and quality
+
+Example: Medical Q&amp;A
+- Start with medically-adapted model
+- Fine-tune on medical Q&amp;A datasets
+- Learn to answer medical questions accurately</code></pre>
+</section>
+</section>
+<section id="case-study-adapting-to-medical-domain" class="level3">
+<h3 class="anchored" data-anchor-id="case-study-adapting-to-medical-domain">Case Study: Adapting to Medical Domain</h3>
+<section id="phase-1-domain-pre-training" class="level4">
+<h4 class="anchored" data-anchor-id="phase-1-domain-pre-training">Phase 1: Domain Pre-training</h4>
+<pre><code>Dataset: Medical literature
+- PubMed abstracts: 30M articles
+- Medical textbooks and guidelines  
+- Clinical notes (de-identified)
+- Drug databases and medical references
+
+Training: Continue pre-training for 1-2 epochs
+Learning rate: 1e-5 (10x smaller than original pre-training)
+Result: Model learns medical vocabulary and concepts</code></pre>
+</section>
+<section id="phase-2-task-fine-tuning" class="level4">
+<h4 class="anchored" data-anchor-id="phase-2-task-fine-tuning">Phase 2: Task Fine-tuning</h4>
+<pre><code>Dataset: Medical Q&amp;A pairs
+- MedQA: Medical licensing exam questions
+- PubMedQA: Research paper Q&amp;A
+- Clinical case studies
+- Medical diagnosis scenarios
+
+Training: Supervised fine-tuning
+Format: Question → Detailed medical answer
+Result: Model can answer medical questions professionally</code></pre>
+</section>
+<section id="evaluation-results" class="level4">
+<h4 class="anchored" data-anchor-id="evaluation-results">Evaluation Results</h4>
+<pre><code>Before domain adaptation:
+- Medical term recognition: 60%
+- Clinical reasoning: 45%
+- Diagnosis accuracy: 40%
+
+After domain adaptation:
+- Medical term recognition: 95%
+- Clinical reasoning: 80%
+- Diagnosis accuracy: 75%
+
+Huge improvement with domain-specific training! 📈</code></pre>
+</section>
+</section>
+<section id="domain-adaptation-best-practices" class="level3">
+<h3 class="anchored" data-anchor-id="domain-adaptation-best-practices">Domain Adaptation Best Practices</h3>
+<section id="data-collection-strategies-1" class="level4">
+<h4 class="anchored" data-anchor-id="data-collection-strategies-1">Data Collection Strategies</h4>
+<pre><code>High-quality domain data sources:
+✅ Professional publications and journals
+✅ Educational materials and textbooks
+✅ Industry reports and documentation
+✅ Expert-written content and guidelines
+
+Avoid:
+❌ Low-quality web scraping
+❌ Outdated or incorrect information
+❌ Biased or non-representative samples
+❌ Copyrighted material without permission</code></pre>
+</section>
+<section id="balancing-general-vs.-domain-knowledge" class="level4">
+<h4 class="anchored" data-anchor-id="balancing-general-vs.-domain-knowledge">Balancing General vs.&nbsp;Domain Knowledge</h4>
+<pre><code>Challenge: Don't lose general capabilities while gaining domain expertise
+
+Solutions:
+- Mixed training data (80% domain, 20% general)
+- Regularization to preserve general knowledge
+- Careful monitoring of general capabilities
+- Early stopping to prevent overfitting
+
+Goal: Specialist that retains general intelligence 🎯</code></pre>
+<hr>
+</section>
+</section>
+</section>
+<section id="instruction-tuning-teaching-models-to-follow-directions" class="level2">
+<h2 class="anchored" data-anchor-id="instruction-tuning-teaching-models-to-follow-directions">8.5 Instruction Tuning: Teaching Models to Follow Directions 📝</h2>
+<section id="what-is-instruction-tuning" class="level3">
+<h3 class="anchored" data-anchor-id="what-is-instruction-tuning">What is Instruction Tuning?</h3>
+<section id="the-goal" class="level4">
+<h4 class="anchored" data-anchor-id="the-goal">The Goal</h4>
+<pre><code>Transform: "Complete this text..." 
+Into: "Follow this instruction explicitly"
+
+Example transformation:
+Before: Model continues text however it wants
+After: Model follows specific instructions like:
+- "Summarize this article in 3 bullet points"
+- "Translate this to Spanish"  
+- "Answer this question factually"</code></pre>
+</section>
+<section id="why-its-powerful" class="level4">
+<h4 class="anchored" data-anchor-id="why-its-powerful">Why It’s Powerful</h4>
+<pre><code>Instruction tuning enables:
+✅ Zero-shot task performance (no examples needed)
+✅ Better control over model behavior
+✅ More helpful and reliable responses
+✅ Easier for users to interact with model
+✅ Foundation for conversational AI</code></pre>
+</section>
+</section>
+<section id="training-data-for-instruction-tuning" class="level3">
+<h3 class="anchored" data-anchor-id="training-data-for-instruction-tuning">Training Data for Instruction Tuning</h3>
+<section id="dataset-creation" class="level4">
+<h4 class="anchored" data-anchor-id="dataset-creation">Dataset Creation</h4>
+<pre><code>Format: (Instruction, Input, Output) triplets
+
+Examples:
+Instruction: "Summarize the following article"
+Input: [Long news article text]
+Output: [Concise 2-sentence summary]
+
+Instruction: "Translate to French"
+Input: "Hello, how are you?"
+Output: "Bonjour, comment allez-vous?"
+
+Instruction: "Answer the question"
+Input: "What is the capital of Japan?"
+Output: "The capital of Japan is Tokyo."</code></pre>
+</section>
+<section id="instruction-diversity" class="level4">
+<h4 class="anchored" data-anchor-id="instruction-diversity">Instruction Diversity</h4>
+<pre><code>Good instruction datasets include:
+- Question answering (factual, reasoning, opinion)
+- Text generation (creative writing, explanations)
+- Text transformation (summarization, translation)
+- Analysis tasks (sentiment, classification)
+- Mathematical reasoning
+- Code generation and debugging</code></pre>
+</section>
+<section id="popular-instruction-datasets" class="level4">
+<h4 class="anchored" data-anchor-id="popular-instruction-datasets">Popular Instruction Datasets</h4>
+<pre><code>Stanford Alpaca:
+- 52K instruction-following examples
+- Generated using GPT-3.5 (self-instruct)
+- Open source, widely used
+
+Databricks Dolly:
+- 15K high-quality human examples
+- Focused on helpful, harmless responses
+- Commercial-friendly license
+
+FLAN Collection:
+- 1000+ tasks with instructions
+- Academic benchmark tasks reformatted
+- Very comprehensive</code></pre>
+</section>
+</section>
+<section id="training-process" class="level3">
+<h3 class="anchored" data-anchor-id="training-process">Training Process</h3>
+<section id="the-instruction-following-format" class="level4">
+<h4 class="anchored" data-anchor-id="the-instruction-following-format">The Instruction-Following Format</h4>
+<pre><code>Training format wraps everything consistently:
+
+System: You are a helpful assistant.
+User: [Instruction] + [Optional Input]
+Assistant: [Expected Output]
+
+This teaches model to:
+- Recognize instruction vs. input
+- Respond in assistant role
+- Follow directions precisely</code></pre>
+</section>
+<section id="multi-task-training" class="level4">
+<h4 class="anchored" data-anchor-id="multi-task-training">Multi-task Training</h4>
+<pre><code>Key insight: Train on MANY tasks simultaneously
+
+Benefits:
+✅ Better generalization to new tasks
+✅ More robust instruction following
+✅ Fewer task-specific biases
+✅ Better transfer learning
+
+Challenge: Balancing different task types and difficulties</code></pre>
+<hr>
+</section>
+</section>
+</section>
+<section id="alignment-and-rlhf-making-models-helpful-and-safe" class="level2">
+<h2 class="anchored" data-anchor-id="alignment-and-rlhf-making-models-helpful-and-safe">8.6 Alignment and RLHF: Making Models Helpful and Safe 🛡️</h2>
+<section id="the-alignment-problem" class="level3">
+<h3 class="anchored" data-anchor-id="the-alignment-problem">The Alignment Problem</h3>
+<section id="what-is-alignment" class="level4">
+<h4 class="anchored" data-anchor-id="what-is-alignment">What is Alignment?</h4>
+<pre><code>Alignment = Making AI systems do what humans actually want
+
+The challenge:
+- Models optimize for training objectives
+- Training objectives ≠ human values
+- "Be helpful" is hard to specify precisely
+- Need to capture nuanced human preferences</code></pre>
+</section>
+<section id="why-standard-training-isnt-enough" class="level4">
+<h4 class="anchored" data-anchor-id="why-standard-training-isnt-enough">Why Standard Training Isn’t Enough</h4>
+<pre><code>Problems with pure supervised learning:
+❌ Limited by quality of training data
+❌ Can't capture all human preferences
+❌ May generate harmful or biased content
+❌ Optimizes for pattern matching, not helpfulness
+❌ No mechanism for learning from mistakes</code></pre>
+</section>
+</section>
+<section id="reinforcement-learning-from-human-feedback-rlhf" class="level3">
+<h3 class="anchored" data-anchor-id="reinforcement-learning-from-human-feedback-rlhf">Reinforcement Learning from Human Feedback (RLHF)</h3>
+<section id="the-rlhf-process-3-stages" class="level4">
+<h4 class="anchored" data-anchor-id="the-rlhf-process-3-stages">The RLHF Process (3 Stages)</h4>
+<p><strong>Stage 1: Supervised Fine-tuning (SFT)</strong></p>
+<pre><code>Goal: Teach basic instruction following
+Data: High-quality human demonstrations
+Process: Standard supervised fine-tuning
+Result: Model that can follow instructions reasonably well</code></pre>
+<p><strong>Stage 2: Reward Model Training</strong></p>
+<pre><code>Goal: Learn human preferences
+Data: Human comparisons of model outputs
+Process:
+1. Generate multiple responses to same prompt
+2. Humans rank responses by quality/safety
+3. Train reward model to predict human preferences
+4. Reward model assigns scores to any model output</code></pre>
+<p><strong>Stage 3: PPO Training</strong></p>
+<pre><code>Goal: Optimize model using reward signal
+Process:
+1. Generate responses using SFT model
+2. Score responses using reward model
+3. Use PPO (Proximal Policy Optimization) to improve
+4. Iterate: generate → score → optimize
+Result: Model aligned with human preferences</code></pre>
+</section>
+<section id="the-reward-model" class="level4">
+<h4 class="anchored" data-anchor-id="the-reward-model">The Reward Model</h4>
+<pre><code>What it learns to recognize:
+✅ Helpful vs. unhelpful responses
+✅ Harmless vs. potentially harmful content
+✅ Honest vs. misleading information
+✅ Appropriate vs. inappropriate tone
+✅ Factual vs. fabricated information
+
+Training data example:
+Prompt: "How do I bake a cake?"
+Response A: "Mix flour, eggs, sugar..." (high score)
+Response B: "I can't help with that" (low score)
+Response C: [Recipe with dangerous ingredients] (very low score)</code></pre>
+</section>
+</section>
+<section id="constitutional-ai-teaching-models-principles" class="level3">
+<h3 class="anchored" data-anchor-id="constitutional-ai-teaching-models-principles">Constitutional AI: Teaching Models Principles</h3>
+<section id="the-concept" class="level4">
+<h4 class="anchored" data-anchor-id="the-concept">The Concept</h4>
+<pre><code>Instead of just human feedback:
+Give models a "constitution" (set of principles)
+
+Examples of constitutional principles:
+- Be helpful and informative
+- Do not provide harmful instructions
+- Respect human autonomy and dignity
+- Be honest about limitations and uncertainty
+- Avoid discrimination and bias</code></pre>
+</section>
+<section id="self-critique-and-revision" class="level4">
+<h4 class="anchored" data-anchor-id="self-critique-and-revision">Self-Critique and Revision</h4>
+<pre><code>Process:
+1. Model generates initial response
+2. Model critiques its own response against principles
+3. Model revises response to be more aligned
+4. Repeat until response meets standards
+
+Benefits:
+✅ Scalable (doesn't require human feedback for every response)
+✅ Consistent application of principles
+✅ Transparent reasoning process
+✅ Can handle edge cases not seen in training</code></pre>
+<hr>
+</section>
+</section>
+</section>
+<section id="when-to-fine-tune-vs.-when-to-prompt" class="level2">
+<h2 class="anchored" data-anchor-id="when-to-fine-tune-vs.-when-to-prompt">8.7 When to Fine-tune vs.&nbsp;When to Prompt 🤔</h2>
+<section id="the-decision-framework" class="level3">
+<h3 class="anchored" data-anchor-id="the-decision-framework">The Decision Framework</h3>
+<section id="fine-tuning-is-better-when" class="level4">
+<h4 class="anchored" data-anchor-id="fine-tuning-is-better-when">Fine-tuning is Better When:</h4>
+<pre><code>✅ You have lots of task-specific data (1000+ examples)
+✅ Task requires specialized knowledge/vocabulary
+✅ Need consistent output format
+✅ Performance is critical
+✅ You'll use the model repeatedly for same task
+✅ Privacy/data security requirements
+✅ Want to optimize for specific evaluation metrics</code></pre>
+</section>
+<section id="prompting-is-better-when" class="level4">
+<h4 class="anchored" data-anchor-id="prompting-is-better-when">Prompting is Better When:</h4>
+<pre><code>✅ Limited training data (&lt; 100 examples)
+✅ Need flexibility for varied tasks
+✅ Quick experimentation and iteration
+✅ Task is simple or general
+✅ Want to leverage latest model capabilities
+✅ Budget constraints (fine-tuning expensive)
+✅ One-off or rare use cases</code></pre>
+</section>
+</section>
+<section id="cost-benefit-analysis" class="level3">
+<h3 class="anchored" data-anchor-id="cost-benefit-analysis">Cost-Benefit Analysis</h3>
+<section id="fine-tuning-costs" class="level4">
+<h4 class="anchored" data-anchor-id="fine-tuning-costs">Fine-tuning Costs</h4>
+<pre><code>Upfront costs:
+- Data collection and annotation
+- Compute for training
+- Engineering time for setup
+- Model evaluation and testing
+
+Ongoing costs:
+- Model hosting and serving
+- Maintenance and updates
+- Monitoring and debugging
+
+Benefits:
+- Better task performance
+- Consistent outputs
+- Lower inference costs (smaller models possible)
+- Privacy and control</code></pre>
+</section>
+<section id="prompting-costs" class="level4">
+<h4 class="anchored" data-anchor-id="prompting-costs">Prompting Costs</h4>
+<pre><code>Upfront costs:
+- Prompt engineering and testing
+- Few-shot example curation
+- Output format design
+
+Ongoing costs:
+- API costs per request (can be high)
+- Prompt maintenance
+- Output post-processing
+
+Benefits:
+- Fast iteration and experimentation
+- Access to latest model capabilities
+- No training infrastructure needed
+- Easy to modify and update</code></pre>
+</section>
+</section>
+<section id="hybrid-approaches" class="level3">
+<h3 class="anchored" data-anchor-id="hybrid-approaches">Hybrid Approaches</h3>
+<section id="prompt-engineering-fine-tuning" class="level4">
+<h4 class="anchored" data-anchor-id="prompt-engineering-fine-tuning">Prompt Engineering + Fine-tuning</h4>
+<pre><code>Strategy: Use both techniques together
+1. Start with prompt engineering for rapid prototyping
+2. Collect successful examples and edge cases
+3. Use collected data for fine-tuning
+4. Combine fine-tuned model with refined prompts
+
+Best of both worlds! 🎯</code></pre>
+</section>
+<section id="in-context-learning-with-specialized-models" class="level4">
+<h4 class="anchored" data-anchor-id="in-context-learning-with-specialized-models">In-Context Learning with Specialized Models</h4>
+<pre><code>Approach:
+1. Fine-tune model on domain (medical, legal, etc.)
+2. Use domain-adapted model with task-specific prompts
+3. Leverage domain knowledge + task flexibility
+
+Example: Medical model + diagnostic prompting</code></pre>
+<hr>
+</section>
+</section>
+</section>
+<section id="real-world-case-studies" class="level2">
+<h2 class="anchored" data-anchor-id="real-world-case-studies">Real-World Case Studies 🌍</h2>
+<section id="case-study-1-customer-service-chatbot" class="level3">
+<h3 class="anchored" data-anchor-id="case-study-1-customer-service-chatbot">Case Study 1: Customer Service Chatbot</h3>
+<section id="the-challenge" class="level4">
+<h4 class="anchored" data-anchor-id="the-challenge">The Challenge</h4>
+<pre><code>Company needs AI assistant for customer support:
+- Handle common questions (refunds, shipping, etc.)
+- Maintain consistent brand voice
+- Escalate complex issues appropriately
+- Available 24/7 with high quality</code></pre>
+</section>
+<section id="the-solution" class="level4">
+<h4 class="anchored" data-anchor-id="the-solution">The Solution</h4>
+<pre><code>Approach: Instruction tuning + LoRA fine-tuning
+
+Step 1: Collect customer service conversations (10K examples)
+Step 2: Create instruction-tuned dataset
+Step 3: Fine-tune using LoRA (efficient, preserves general knowledge)
+Step 4: Implement safety filters and escalation rules
+
+Results:
+✅ 85% customer satisfaction
+✅ 60% reduction in human agent workload
+✅ Consistent brand voice
+✅ 24/7 availability</code></pre>
+</section>
+</section>
+<section id="case-study-2-code-generation-assistant" class="level3">
+<h3 class="anchored" data-anchor-id="case-study-2-code-generation-assistant">Case Study 2: Code Generation Assistant</h3>
+<section id="the-challenge-1" class="level4">
+<h4 class="anchored" data-anchor-id="the-challenge-1">The Challenge</h4>
+<pre><code>Software company wants AI coding assistant:
+- Generate code in company's specific frameworks
+- Follow internal coding standards
+- Handle company-specific APIs and libraries
+- Integrate with existing development workflow</code></pre>
+</section>
+<section id="the-solution-1" class="level4">
+<h4 class="anchored" data-anchor-id="the-solution-1">The Solution</h4>
+<pre><code>Approach: Domain adaptation + instruction tuning
+
+Step 1: Collect internal codebases and documentation
+Step 2: Continue pre-training on company code
+Step 3: Create instruction-following examples for coding tasks
+Step 4: Fine-tune for instruction following
+
+Results:
+✅ 40% faster development for routine tasks
+✅ Consistent code style across team
+✅ Better onboarding for new developers
+✅ Reduced documentation lookup time</code></pre>
+</section>
+</section>
+<section id="case-study-3-scientific-research-assistant" class="level3">
+<h3 class="anchored" data-anchor-id="case-study-3-scientific-research-assistant">Case Study 3: Scientific Research Assistant</h3>
+<section id="the-challenge-2" class="level4">
+<h4 class="anchored" data-anchor-id="the-challenge-2">The Challenge</h4>
+<pre><code>Research lab needs AI for literature review:
+- Understand specialized scientific terminology
+- Summarize research papers accurately
+- Identify relevant papers for specific topics
+- Generate research hypotheses</code></pre>
+</section>
+<section id="the-solution-2" class="level4">
+<h4 class="anchored" data-anchor-id="the-solution-2">The Solution</h4>
+<pre><code>Approach: Domain pre-training + task-specific fine-tuning
+
+Step 1: Continue pre-training on scientific literature (arXiv, PubMed)
+Step 2: Fine-tune on paper summarization tasks
+Step 3: Add instruction tuning for research queries
+Step 4: Implement citation and fact-checking features
+
+Results:
+✅ 70% time savings in literature review
+✅ Discovery of relevant papers researchers missed
+✅ Accurate technical summaries
+✅ Novel research direction suggestions</code></pre>
+<hr>
+</section>
+</section>
+</section>
+<section id="key-takeaways" class="level2">
+<h2 class="anchored" data-anchor-id="key-takeaways">Key Takeaways 🎯</h2>
+<ol type="1">
+<li><p><strong>Fine-tuning is specialization</strong> - it adapts general intelligence to specific tasks and domains</p></li>
+<li><p><strong>Parameter-efficient methods</strong> like LoRA make fine-tuning accessible and cost-effective</p></li>
+<li><p><strong>Data quality matters more than quantity</strong> - a few hundred high-quality examples often suffice</p></li>
+<li><p><strong>Domain adaptation</strong> can dramatically improve performance in specialized fields</p></li>
+<li><p><strong>Instruction tuning</strong> teaches models to follow directions and be helpful assistants</p></li>
+<li><p><strong>RLHF and alignment</strong> are crucial for safe and beneficial AI systems</p></li>
+<li><p><strong>Choose your approach wisely</strong> - consider prompting vs.&nbsp;fine-tuning based on your specific needs</p></li>
+</ol>
+<hr>
+</section>
+<section id="fun-exercises" class="level2">
+<h2 class="anchored" data-anchor-id="fun-exercises">Fun Exercises 🎮</h2>
+<section id="exercise-1-method-selection" class="level3">
+<h3 class="anchored" data-anchor-id="exercise-1-method-selection">Exercise 1: Method Selection</h3>
+<pre><code>For each scenario, choose the best fine-tuning approach:
+
+a) Personal email assistant (100 examples, privacy critical)
+b) Legal document analysis (10K examples, specialized vocabulary)
+c) Creative writing assistant (flexible tasks, various styles)
+d) Medical diagnosis support (critical accuracy, liability concerns)
+
+Explain your reasoning!</code></pre>
+</section>
+<section id="exercise-2-lora-design" class="level3">
+<h3 class="anchored" data-anchor-id="exercise-2-lora-design">Exercise 2: LoRA Design</h3>
+<pre><code>You're fine-tuning a 7B model for customer service:
+- Budget: $1000
+- Training data: 5K conversation examples
+- Hardware: Single A100 GPU
+
+Design your LoRA configuration:
+- Rank: ?
+- Alpha: ?
+- Target modules: ?
+- Training schedule: ?</code></pre>
+</section>
+<section id="exercise-3-data-creation" class="level3">
+<h3 class="anchored" data-anchor-id="exercise-3-data-creation">Exercise 3: Data Creation</h3>
+<pre><code>Create 3 instruction-following examples for a cooking assistant:
+- One for recipe generation
+- One for ingredient substitution
+- One for dietary restrictions
+
+Make sure they're diverse and high-quality!</code></pre>
+<hr>
+</section>
+</section>
+<section id="whats-next" class="level2">
+<h2 class="anchored" data-anchor-id="whats-next">What’s Next? 📚</h2>
+<p>In Chapter 9, we’ll explore alignment and RLHF in much more detail!</p>
+<p><strong>Preview:</strong> We’ll learn about: - The deeper technical details of reward modeling - PPO and other RL algorithms for language models - Constitutional AI and self-alignment techniques - Safety research and AI alignment challenges</p>
+<p>From helpful to harmless - making AI that humans can trust! 🤝</p>
+<hr>
+</section>
+<section id="final-thought" class="level2">
+<h2 class="anchored" data-anchor-id="final-thought">Final Thought 💭</h2>
+<pre><code>"Fine-tuning is like teaching a polymath to become a specialist:
+- They already have the general intelligence
+- You just need to show them the specific skills
+- With the right techniques, a little goes a long way
+- The result: expertise without losing wisdom
+
+The best fine-tuned models feel like talking to a knowledgeable expert
+who also happens to be a great communicator!" 🎓✨</code></pre>
+
+
+</section>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

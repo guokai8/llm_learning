@@ -1,0 +1,1577 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.8.25">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>chapter_11_rag – Large Language Models 教程</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<script src="site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="site_libs/quarto-html/axe/axe-check.js" type="module"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-7b89279ff1a6dce999919e0e67d4d9ec.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap-a8976c3e89df70b272bdfba3d2fda974.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+
+</head>
+
+<body class="nav-fixed quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a href="./index.html" class="navbar-brand navbar-brand-logo">
+    </a>
+    <a class="navbar-brand" href="./index.html">
+    <span class="navbar-title">Large Language Models 教程</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="./index.html"> 
+<span class="menu-text">首页</span></a>
+  </li>  
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">章节</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-">    
+        <li>
+    <a class="dropdown-item" href="./Chapter_01_Introduction_LLMs.html">
+ <span class="dropdown-text">01 - LLM 介绍</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./Chapter_02_Math_Foundations.html">
+ <span class="dropdown-text">02 - 数学基础</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./Chapter_03_NLP_Fundamentals.html">
+ <span class="dropdown-text">03 - NLP 基础</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./Chapter_04_Transformer_Architecture.html">
+ <span class="dropdown-text">04 - Transformer 架构</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./Chapter_05_Modern_Transformer_Variants_Complete.html">
+ <span class="dropdown-text">05 - 现代 Transformer</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./Chapter_08_Fine_Tuning.html">
+ <span class="dropdown-text">08 - 微调</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./Chapter_09_Alignment_RLHF.html">
+ <span class="dropdown-text">09 - 对齐与 RLHF</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./Chapter_10_Prompting_InContext_Learning.html">
+ <span class="dropdown-text">10 - Prompt 工程</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./Chapter_11_RAG.html">
+ <span class="dropdown-text">11 - RAG</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./Chapter_12_LLM_Agents_Tool_Use.html">
+ <span class="dropdown-text">12 - LLM Agents</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./Chapter_13_Optimization_Inference.html">
+ <span class="dropdown-text">13 - 优化推理</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./Chapter_14_Production_Deployment.html">
+ <span class="dropdown-text">14 - 生产部署</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./Chapter_15_Multimodal_LLMs.html">
+ <span class="dropdown-text">15 - 多模态 LLM</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./Chapter_16_Evaluation_Benchmarking.html">
+ <span class="dropdown-text">16 - 评估基准</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./Chapter_17_Cutting_Edge_Research_Future.html">
+ <span class="dropdown-text">17 - 前沿研究</span></a>
+  </li>  
+    </ul>
+  </li>
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#chapter-11-retrieval-augmented-generation-rag" id="toc-chapter-11-retrieval-augmented-generation-rag" class="nav-link active" data-scroll-target="#chapter-11-retrieval-augmented-generation-rag">Chapter 11: Retrieval-Augmented Generation (RAG)</a>
+  <ul class="collapse">
+  <li><a href="#what-well-learn-today" id="toc-what-well-learn-today" class="nav-link" data-scroll-target="#what-well-learn-today">What We’ll Learn Today 🎯</a></li>
+  <li><a href="#the-knowledge-problem-why-rag-exists" id="toc-the-knowledge-problem-why-rag-exists" class="nav-link" data-scroll-target="#the-knowledge-problem-why-rag-exists">11.1 The Knowledge Problem: Why RAG Exists 🤔</a>
+  <ul class="collapse">
+  <li><a href="#the-limitations-of-pure-llms" id="toc-the-limitations-of-pure-llms" class="nav-link" data-scroll-target="#the-limitations-of-pure-llms">The Limitations of Pure LLMs</a></li>
+  <li><a href="#enter-rag-the-best-of-both-worlds" id="toc-enter-rag-the-best-of-both-worlds" class="nav-link" data-scroll-target="#enter-rag-the-best-of-both-worlds">Enter RAG: The Best of Both Worlds</a></li>
+  </ul></li>
+  <li><a href="#how-rag-works-the-architecture" id="toc-how-rag-works-the-architecture" class="nav-link" data-scroll-target="#how-rag-works-the-architecture">11.2 How RAG Works: The Architecture 🏗️</a>
+  <ul class="collapse">
+  <li><a href="#the-rag-pipeline" id="toc-the-rag-pipeline" class="nav-link" data-scroll-target="#the-rag-pipeline">The RAG Pipeline</a></li>
+  <li><a href="#vector-embeddings-the-magic-behind-semantic-search" id="toc-vector-embeddings-the-magic-behind-semantic-search" class="nav-link" data-scroll-target="#vector-embeddings-the-magic-behind-semantic-search">Vector Embeddings: The Magic Behind Semantic Search</a></li>
+  <li><a href="#vector-databases-storage-for-semantic-search" id="toc-vector-databases-storage-for-semantic-search" class="nav-link" data-scroll-target="#vector-databases-storage-for-semantic-search">Vector Databases: Storage for Semantic Search</a></li>
+  </ul></li>
+  <li><a href="#building-a-rag-system-step-by-step" id="toc-building-a-rag-system-step-by-step" class="nav-link" data-scroll-target="#building-a-rag-system-step-by-step">11.3 Building a RAG System Step-by-Step 🔨</a>
+  <ul class="collapse">
+  <li><a href="#phase-1-document-preparation" id="toc-phase-1-document-preparation" class="nav-link" data-scroll-target="#phase-1-document-preparation">Phase 1: Document Preparation</a></li>
+  <li><a href="#phase-2-embedding-and-storage" id="toc-phase-2-embedding-and-storage" class="nav-link" data-scroll-target="#phase-2-embedding-and-storage">Phase 2: Embedding and Storage</a></li>
+  <li><a href="#phase-3-retrieval-implementation" id="toc-phase-3-retrieval-implementation" class="nav-link" data-scroll-target="#phase-3-retrieval-implementation">Phase 3: Retrieval Implementation</a></li>
+  <li><a href="#phase-4-generation-and-response" id="toc-phase-4-generation-and-response" class="nav-link" data-scroll-target="#phase-4-generation-and-response">Phase 4: Generation and Response</a></li>
+  </ul></li>
+  <li><a href="#advanced-rag-techniques" id="toc-advanced-rag-techniques" class="nav-link" data-scroll-target="#advanced-rag-techniques">11.4 Advanced RAG Techniques 🚀</a>
+  <ul class="collapse">
+  <li><a href="#hierarchical-retrieval" id="toc-hierarchical-retrieval" class="nav-link" data-scroll-target="#hierarchical-retrieval">Hierarchical Retrieval</a></li>
+  <li><a href="#query-expansion-and-refinement" id="toc-query-expansion-and-refinement" class="nav-link" data-scroll-target="#query-expansion-and-refinement">Query Expansion and Refinement</a></li>
+  <li><a href="#fusion-and-re-ranking" id="toc-fusion-and-re-ranking" class="nav-link" data-scroll-target="#fusion-and-re-ranking">Fusion and Re-ranking</a></li>
+  <li><a href="#adaptive-rag" id="toc-adaptive-rag" class="nav-link" data-scroll-target="#adaptive-rag">Adaptive RAG</a></li>
+  </ul></li>
+  <li><a href="#rag-evaluation-and-optimization" id="toc-rag-evaluation-and-optimization" class="nav-link" data-scroll-target="#rag-evaluation-and-optimization">11.5 RAG Evaluation and Optimization 📊</a>
+  <ul class="collapse">
+  <li><a href="#evaluation-metrics" id="toc-evaluation-metrics" class="nav-link" data-scroll-target="#evaluation-metrics">Evaluation Metrics</a></li>
+  <li><a href="#common-problems-and-solutions" id="toc-common-problems-and-solutions" class="nav-link" data-scroll-target="#common-problems-and-solutions">Common Problems and Solutions</a></li>
+  <li><a href="#optimization-strategies" id="toc-optimization-strategies" class="nav-link" data-scroll-target="#optimization-strategies">Optimization Strategies</a></li>
+  </ul></li>
+  <li><a href="#real-world-rag-applications" id="toc-real-world-rag-applications" class="nav-link" data-scroll-target="#real-world-rag-applications">11.6 Real-World RAG Applications 🌍</a>
+  <ul class="collapse">
+  <li><a href="#customer-support-rag-system" id="toc-customer-support-rag-system" class="nav-link" data-scroll-target="#customer-support-rag-system">Customer Support RAG System</a></li>
+  <li><a href="#legal-research-assistant" id="toc-legal-research-assistant" class="nav-link" data-scroll-target="#legal-research-assistant">Legal Research Assistant</a></li>
+  <li><a href="#medical-information-system" id="toc-medical-information-system" class="nav-link" data-scroll-target="#medical-information-system">Medical Information System</a></li>
+  <li><a href="#educational-content-platform" id="toc-educational-content-platform" class="nav-link" data-scroll-target="#educational-content-platform">Educational Content Platform</a></li>
+  </ul></li>
+  <li><a href="#building-your-first-rag-system" id="toc-building-your-first-rag-system" class="nav-link" data-scroll-target="#building-your-first-rag-system">11.7 Building Your First RAG System 🛠️</a>
+  <ul class="collapse">
+  <li><a href="#minimal-rag-implementation" id="toc-minimal-rag-implementation" class="nav-link" data-scroll-target="#minimal-rag-implementation">Minimal RAG Implementation</a></li>
+  <li><a href="#production-considerations" id="toc-production-considerations" class="nav-link" data-scroll-target="#production-considerations">Production Considerations</a></li>
+  </ul></li>
+  <li><a href="#key-takeaways" id="toc-key-takeaways" class="nav-link" data-scroll-target="#key-takeaways">Key Takeaways 🎯</a></li>
+  <li><a href="#fun-exercises" id="toc-fun-exercises" class="nav-link" data-scroll-target="#fun-exercises">Fun Exercises 🎮</a>
+  <ul class="collapse">
+  <li><a href="#exercise-1-chunking-strategy-design" id="toc-exercise-1-chunking-strategy-design" class="nav-link" data-scroll-target="#exercise-1-chunking-strategy-design">Exercise 1: Chunking Strategy Design</a></li>
+  <li><a href="#exercise-2-rag-evaluation-design" id="toc-exercise-2-rag-evaluation-design" class="nav-link" data-scroll-target="#exercise-2-rag-evaluation-design">Exercise 2: RAG Evaluation Design</a></li>
+  <li><a href="#exercise-3-query-expansion" id="toc-exercise-3-query-expansion" class="nav-link" data-scroll-target="#exercise-3-query-expansion">Exercise 3: Query Expansion</a></li>
+  </ul></li>
+  <li><a href="#whats-next" id="toc-whats-next" class="nav-link" data-scroll-target="#whats-next">What’s Next? 📚</a></li>
+  <li><a href="#final-thought" id="toc-final-thought" class="nav-link" data-scroll-target="#final-thought">Final Thought 💭</a></li>
+  </ul></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content"><header id="title-block-header" class="quarto-title-block"></header>
+
+
+
+
+<section id="chapter-11-retrieval-augmented-generation-rag" class="level1">
+<h1>Chapter 11: Retrieval-Augmented Generation (RAG)</h1>
+<p><em>Giving AI a Library Card</em></p>
+<section id="what-well-learn-today" class="level2">
+<h2 class="anchored" data-anchor-id="what-well-learn-today">What We’ll Learn Today 🎯</h2>
+<ul>
+<li>Why even smart AI needs access to external knowledge</li>
+<li>How RAG systems work (like giving AI a search engine!)</li>
+<li>Vector databases and semantic search</li>
+<li>Building your own RAG system step-by-step</li>
+<li>Optimization tricks and common pitfalls</li>
+</ul>
+<p><strong>Big Idea:</strong> Instead of storing all knowledge in model parameters, teach AI to look things up! 📚🔍</p>
+<hr>
+</section>
+<section id="the-knowledge-problem-why-rag-exists" class="level2">
+<h2 class="anchored" data-anchor-id="the-knowledge-problem-why-rag-exists">11.1 The Knowledge Problem: Why RAG Exists 🤔</h2>
+<section id="the-limitations-of-pure-llms" class="level3">
+<h3 class="anchored" data-anchor-id="the-limitations-of-pure-llms">The Limitations of Pure LLMs</h3>
+<section id="the-knowledge-cutoff-problem" class="level4">
+<h4 class="anchored" data-anchor-id="the-knowledge-cutoff-problem">The Knowledge Cutoff Problem</h4>
+<pre><code>LLM knowledge is frozen at training time:
+- GPT-4: Training data up to April 2023
+- Can't learn about events after training
+- No real-time information updates
+- Knowledge becomes stale over time
+
+Example problems:
+❌ "Who won the 2024 Olympics?" (if trained before 2024)
+❌ "What's the latest news about..." (anything recent)
+❌ "What's the current stock price of..." (real-time data)</code></pre>
+</section>
+<section id="the-hallucination-challenge" class="level4">
+<h4 class="anchored" data-anchor-id="the-hallucination-challenge">The Hallucination Challenge</h4>
+<pre><code>LLMs sometimes confidently generate false information:
+- Mix up similar facts
+- Extrapolate beyond their knowledge
+- Generate plausible-sounding but incorrect details
+- Can't distinguish between facts they know vs. don't know
+
+Example:
+User: "What are the specifications of the XYZ-2000 processor?"
+LLM: "The XYZ-2000 has 8 cores, 16 threads, and runs at 3.2GHz base clock..."
+Reality: XYZ-2000 doesn't exist, but answer sounds plausible! 😅</code></pre>
+</section>
+<section id="the-domain-knowledge-gap" class="level4">
+<h4 class="anchored" data-anchor-id="the-domain-knowledge-gap">The Domain Knowledge Gap</h4>
+<pre><code>General LLMs lack deep expertise in specialized domains:
+- Medical literature and latest research
+- Legal precedents and recent cases
+- Company-specific information
+- Technical documentation
+- Personal or proprietary data
+
+They know a little about everything, but not everything about anything!</code></pre>
+</section>
+</section>
+<section id="enter-rag-the-best-of-both-worlds" class="level3">
+<h3 class="anchored" data-anchor-id="enter-rag-the-best-of-both-worlds">Enter RAG: The Best of Both Worlds</h3>
+<section id="what-is-retrieval-augmented-generation" class="level4">
+<h4 class="anchored" data-anchor-id="what-is-retrieval-augmented-generation">What is Retrieval-Augmented Generation?</h4>
+<pre><code>RAG = Retrieval + Generation
+
+Step 1: RETRIEVAL
+- Search external knowledge base for relevant information
+- Find documents, passages, or facts related to user query
+
+Step 2: GENERATION  
+- Combine retrieved information with user query
+- Generate response based on both LLM knowledge AND retrieved facts
+- Cite sources and provide evidence
+
+Result: Up-to-date, accurate, verifiable responses! ✅</code></pre>
+</section>
+<section id="the-restaurant-analogy" class="level4">
+<h4 class="anchored" data-anchor-id="the-restaurant-analogy">The Restaurant Analogy 🍽️</h4>
+<pre><code>Pure LLM = Chef who memorized recipes
+- Knows many dishes by heart
+- Limited by what they memorized
+- Can't make new dishes without retraining
+
+RAG = Chef with access to cookbooks
+- Has basic cooking knowledge
+- Can look up any recipe when needed
+- Adapts and combines multiple sources
+- Always has access to latest recipes
+
+Much more flexible and capable! 👨‍🍳📚</code></pre>
+<hr>
+</section>
+</section>
+</section>
+<section id="how-rag-works-the-architecture" class="level2">
+<h2 class="anchored" data-anchor-id="how-rag-works-the-architecture">11.2 How RAG Works: The Architecture 🏗️</h2>
+<section id="the-rag-pipeline" class="level3">
+<h3 class="anchored" data-anchor-id="the-rag-pipeline">The RAG Pipeline</h3>
+<section id="overview-of-the-process" class="level4">
+<h4 class="anchored" data-anchor-id="overview-of-the-process">Overview of the Process</h4>
+<pre><code>1. Document Ingestion
+   - Collect and preprocess documents
+   - Split into manageable chunks
+   - Convert to embeddings
+   - Store in vector database
+
+2. Query Processing
+   - User asks a question
+   - Convert question to embedding
+   - Search for similar content
+
+3. Retrieval
+   - Find most relevant chunks
+   - Rank by relevance score
+   - Select top K results
+
+4. Generation
+   - Combine query + retrieved context
+   - Generate response using LLM
+   - Include citations and sources</code></pre>
+</section>
+<section id="step-by-step-example" class="level4">
+<h4 class="anchored" data-anchor-id="step-by-step-example">Step-by-Step Example</h4>
+<pre><code>User Question: "What are the side effects of ibuprofen?"
+
+Step 1: Convert question to embedding vector
+Question embedding: [0.2, -0.1, 0.8, 0.3, ...]
+
+Step 2: Search vector database
+Find chunks with high similarity:
+- Chunk 1: "Ibuprofen side effects include nausea, stomach pain..." (similarity: 0.92)
+- Chunk 2: "Common NSAIDs like ibuprofen may cause..." (similarity: 0.87)
+- Chunk 3: "Drug interactions with ibuprofen..." (similarity: 0.81)
+
+Step 3: Retrieve top chunks and create prompt
+"Based on the following information, answer the user's question:
+
+Context 1: [Chunk 1 content]
+Context 2: [Chunk 2 content]  
+Context 3: [Chunk 3 content]
+
+Question: What are the side effects of ibuprofen?
+
+Please provide an accurate answer based on the context provided."
+
+Step 4: LLM generates response with citations
+"Based on the medical literature, ibuprofen side effects include:
+- Gastrointestinal issues (nausea, stomach pain, ulcers)
+- Cardiovascular risks with long-term use
+- Kidney problems in some patients
+- Allergic reactions in sensitive individuals
+
+Sources: Medical Reference Database, entries 1-3"</code></pre>
+</section>
+</section>
+<section id="vector-embeddings-the-magic-behind-semantic-search" class="level3">
+<h3 class="anchored" data-anchor-id="vector-embeddings-the-magic-behind-semantic-search">Vector Embeddings: The Magic Behind Semantic Search</h3>
+<section id="what-are-vector-embeddings" class="level4">
+<h4 class="anchored" data-anchor-id="what-are-vector-embeddings">What are Vector Embeddings?</h4>
+<pre><code>Embeddings = Numbers that represent meaning
+
+Text: "The cat sat on the mat"
+Embedding: [0.2, -0.1, 0.8, 0.3, -0.5, 0.7, ...]
+
+Key properties:
+✅ Similar meanings → similar vectors
+✅ Can compute similarity with math (cosine similarity)
+✅ Works across languages and paraphrases
+✅ Captures semantic relationships
+
+Examples:
+"dog" and "puppy" → very similar vectors
+"dog" and "bicycle" → very different vectors</code></pre>
+</section>
+<section id="semantic-search-vs.-keyword-search" class="level4">
+<h4 class="anchored" data-anchor-id="semantic-search-vs.-keyword-search">Semantic Search vs.&nbsp;Keyword Search</h4>
+<pre><code>Keyword Search (traditional):
+Query: "car accident"
+Matches: Documents containing exactly "car" AND "accident"
+Misses: "vehicle collision", "auto crash", "traffic incident"
+
+Semantic Search (vector):
+Query: "car accident"  
+Matches: Documents about:
+- "vehicle collision"
+- "auto crash"  
+- "traffic incident"
+- "automobile accident"
+- "motor vehicle crash"
+
+Understands meaning, not just words! 🧠</code></pre>
+</section>
+</section>
+<section id="vector-databases-storage-for-semantic-search" class="level3">
+<h3 class="anchored" data-anchor-id="vector-databases-storage-for-semantic-search">Vector Databases: Storage for Semantic Search</h3>
+<section id="why-special-databases" class="level4">
+<h4 class="anchored" data-anchor-id="why-special-databases">Why Special Databases?</h4>
+<pre><code>Regular databases: Exact matching
+Vector databases: Similarity matching
+
+Traditional SQL:
+SELECT * FROM docs WHERE title = "exact match"
+
+Vector database:
+SELECT * FROM docs ORDER BY similarity(embedding, query_embedding) LIMIT 5
+
+Need specialized indexes for fast similarity search!</code></pre>
+</section>
+<section id="popular-vector-database-options" class="level4">
+<h4 class="anchored" data-anchor-id="popular-vector-database-options">Popular Vector Database Options</h4>
+<pre><code>🏢 Enterprise Solutions:
+- Pinecone: Managed, scalable, easy to use
+- Weaviate: Open source with GraphQL API
+- Chroma: Simple, embeddable vector database
+- Qdrant: High-performance with filtering
+
+🔧 Traditional DB Extensions:
+- pgvector: PostgreSQL extension
+- Redis with vector similarity
+- Elasticsearch with dense vectors
+
+🏠 Local/Embedded Options:
+- FAISS: Facebook's similarity search library
+- Annoy: Spotify's approximate nearest neighbor
+- ChromaDB: For local development</code></pre>
+<hr>
+</section>
+</section>
+</section>
+<section id="building-a-rag-system-step-by-step" class="level2">
+<h2 class="anchored" data-anchor-id="building-a-rag-system-step-by-step">11.3 Building a RAG System Step-by-Step 🔨</h2>
+<section id="phase-1-document-preparation" class="level3">
+<h3 class="anchored" data-anchor-id="phase-1-document-preparation">Phase 1: Document Preparation</h3>
+<section id="document-collection" class="level4">
+<h4 class="anchored" data-anchor-id="document-collection">Document Collection</h4>
+<pre><code>Gather your knowledge sources:
+✅ PDFs, Word docs, text files
+✅ Web pages and articles
+✅ Databases and spreadsheets
+✅ APIs and real-time data sources
+✅ Internal company documents
+
+Quality matters more than quantity!
+Focus on authoritative, up-to-date sources.</code></pre>
+</section>
+<section id="text-extraction-and-cleaning" class="level4">
+<h4 class="anchored" data-anchor-id="text-extraction-and-cleaning">Text Extraction and Cleaning</h4>
+<pre><code>Common preprocessing steps:
+1. Extract text from various formats (PDF, HTML, etc.)
+2. Remove headers, footers, navigation elements
+3. Clean up formatting issues
+4. Handle special characters and encoding
+5. Remove duplicates and near-duplicates
+
+Example cleaning:
+Raw PDF text: "Header Text\n\nMain content here...\n\nFooter Page 1"
+Cleaned text: "Main content here..."</code></pre>
+</section>
+<section id="chunking-breaking-documents-into-pieces" class="level4">
+<h4 class="anchored" data-anchor-id="chunking-breaking-documents-into-pieces">Chunking: Breaking Documents into Pieces</h4>
+<pre><code>Why chunk documents?
+❌ Whole documents are too long for context windows
+❌ Mixing unrelated topics reduces relevance
+❌ Large chunks dilute important information
+
+Good chunking strategies:
+✅ Semantic chunking (by topic/paragraph)
+✅ Fixed-size chunking (e.g., 500 tokens)
+✅ Overlapping chunks (prevent information loss)
+✅ Structure-aware chunking (respect headers, sections)</code></pre>
+</section>
+<section id="chunking-example" class="level4">
+<h4 class="anchored" data-anchor-id="chunking-example">Chunking Example</h4>
+<pre><code>Original document:
+"Introduction to Machine Learning
+
+Machine learning is a subset of artificial intelligence...
+
+Types of Machine Learning
+
+There are three main types: supervised, unsupervised, and reinforcement learning...
+
+Supervised Learning
+
+In supervised learning, we train models using labeled examples..."
+
+Chunked output:
+Chunk 1: "Machine learning is a subset of artificial intelligence..." (Introduction)
+Chunk 2: "There are three main types: supervised, unsupervised..." (Types overview)  
+Chunk 3: "In supervised learning, we train models using labeled examples..." (Supervised details)
+
+Each chunk is focused and searchable! 🎯</code></pre>
+</section>
+</section>
+<section id="phase-2-embedding-and-storage" class="level3">
+<h3 class="anchored" data-anchor-id="phase-2-embedding-and-storage">Phase 2: Embedding and Storage</h3>
+<section id="generating-embeddings" class="level4">
+<h4 class="anchored" data-anchor-id="generating-embeddings">Generating Embeddings</h4>
+<pre><code>Popular embedding models:
+- OpenAI text-embedding-ada-002: General purpose, high quality
+- Sentence-BERT: Open source, good for sentences
+- Cohere embeddings: Multilingual support
+- HuggingFace models: Many specialized options
+
+Code example (conceptual):
+embeddings = embedding_model.encode([
+    "Machine learning is a subset of AI...",
+    "There are three main types...",
+    "In supervised learning..."
+])
+# Result: Array of vectors representing each chunk</code></pre>
+</section>
+<section id="vector-database-setup" class="level4">
+<h4 class="anchored" data-anchor-id="vector-database-setup">Vector Database Setup</h4>
+<pre><code>Example with Chroma (simple local option):
+
+1. Install and initialize:
+import chromadb
+client = chromadb.Client()
+collection = client.create_collection("my_docs")
+
+2. Add documents with embeddings:
+collection.add(
+    documents=["chunk text 1", "chunk text 2"],
+    embeddings=[[0.1, 0.2, ...], [0.3, 0.4, ...]],
+    ids=["doc1_chunk1", "doc1_chunk2"],
+    metadatas=[{"source": "doc1.pdf"}, {"source": "doc1.pdf"}]
+)
+
+3. Ready for similarity search!</code></pre>
+</section>
+</section>
+<section id="phase-3-retrieval-implementation" class="level3">
+<h3 class="anchored" data-anchor-id="phase-3-retrieval-implementation">Phase 3: Retrieval Implementation</h3>
+<section id="query-processing" class="level4">
+<h4 class="anchored" data-anchor-id="query-processing">Query Processing</h4>
+<pre><code>User query → Vector embedding → Similarity search
+
+Example implementation:
+def retrieve_context(query, top_k=3):
+    # Convert query to embedding
+    query_embedding = embedding_model.encode([query])
+    
+    # Search vector database
+    results = collection.query(
+        query_embeddings=query_embedding,
+        n_results=top_k
+    )
+    
+    # Extract relevant chunks
+    relevant_chunks = results['documents'][0]
+    sources = results['metadatas'][0]
+    
+    return relevant_chunks, sources</code></pre>
+</section>
+<section id="relevance-scoring-and-filtering" class="level4">
+<h4 class="anchored" data-anchor-id="relevance-scoring-and-filtering">Relevance Scoring and Filtering</h4>
+<pre><code>Improve retrieval quality:
+
+1. Similarity threshold filtering:
+   - Only include chunks above minimum similarity (e.g., 0.7)
+   - Prevents including irrelevant content
+
+2. Diversity filtering:
+   - Avoid multiple very similar chunks
+   - Include diverse perspectives
+
+3. Metadata filtering:
+   - Filter by date, source, document type
+   - Enable domain-specific retrieval
+
+4. Re-ranking:
+   - Use additional models to re-score results
+   - Consider query-document interaction</code></pre>
+</section>
+</section>
+<section id="phase-4-generation-and-response" class="level3">
+<h3 class="anchored" data-anchor-id="phase-4-generation-and-response">Phase 4: Generation and Response</h3>
+<section id="prompt-construction" class="level4">
+<h4 class="anchored" data-anchor-id="prompt-construction">Prompt Construction</h4>
+<pre><code>Template for RAG responses:
+"You are a helpful assistant. Answer the user's question based on the provided context. If the context doesn't contain relevant information, say so clearly.
+
+Context:
+{retrieved_context_1}
+
+{retrieved_context_2}
+
+{retrieved_context_3}
+
+Question: {user_question}
+
+Instructions:
+- Base your answer primarily on the provided context
+- If you need to use outside knowledge, clearly indicate this
+- Include citations to the source material
+- If the context is insufficient, explain what information would be needed
+
+Answer:"</code></pre>
+</section>
+<section id="citation-and-source-attribution" class="level4">
+<h4 class="anchored" data-anchor-id="citation-and-source-attribution">Citation and Source Attribution</h4>
+<pre><code>Good RAG responses include:
+✅ Clear citations: "According to the product manual (page 15)..."
+✅ Source confidence: "Based on multiple sources..." vs "One source suggests..."
+✅ Uncertainty acknowledgment: "The available information doesn't fully address..."
+✅ Source accessibility: Links or references users can follow up on
+
+Example response:
+"Based on the retrieved documents, ibuprofen's common side effects include:
+- Stomach irritation and nausea [Source: FDA Drug Information, Section 4.2]
+- Increased bleeding risk [Source: Medical Safety Database, Entry #334]
+- Potential kidney effects with long-term use [Source: Clinical Studies Review, Page 87]
+
+Note: This information is from medical databases but should not replace consultation with healthcare providers."</code></pre>
+<hr>
+</section>
+</section>
+</section>
+<section id="advanced-rag-techniques" class="level2">
+<h2 class="anchored" data-anchor-id="advanced-rag-techniques">11.4 Advanced RAG Techniques 🚀</h2>
+<section id="hierarchical-retrieval" class="level3">
+<h3 class="anchored" data-anchor-id="hierarchical-retrieval">Hierarchical Retrieval</h3>
+<section id="multi-level-search-strategy" class="level4">
+<h4 class="anchored" data-anchor-id="multi-level-search-strategy">Multi-Level Search Strategy</h4>
+<pre><code>Instead of searching just chunks:
+1. First, find relevant documents
+2. Then, search within those documents for specific chunks
+3. Optionally, search for related concepts across the corpus
+
+Benefits:
+✅ Better context preservation
+✅ More relevant results
+✅ Reduced noise from unrelated domains</code></pre>
+</section>
+</section>
+<section id="query-expansion-and-refinement" class="level3">
+<h3 class="anchored" data-anchor-id="query-expansion-and-refinement">Query Expansion and Refinement</h3>
+<section id="improving-query-understanding" class="level4">
+<h4 class="anchored" data-anchor-id="improving-query-understanding">Improving Query Understanding</h4>
+<pre><code>Techniques to enhance retrieval:
+
+1. Query rewriting:
+   Original: "How to fix my car?"
+   Expanded: "automobile repair troubleshooting automotive maintenance"
+
+2. Multi-query generation:
+   Original: "Python machine learning"
+   Generated queries:
+   - "Python ML libraries and frameworks"
+   - "Machine learning with Python programming"
+   - "Python scikit-learn tensorflow tutorial"
+
+3. Hypothetical document generation:
+   Generate what the ideal answer might look like
+   Use that to search for similar real documents</code></pre>
+</section>
+</section>
+<section id="fusion-and-re-ranking" class="level3">
+<h3 class="anchored" data-anchor-id="fusion-and-re-ranking">Fusion and Re-ranking</h3>
+<section id="combining-multiple-retrieval-strategies" class="level4">
+<h4 class="anchored" data-anchor-id="combining-multiple-retrieval-strategies">Combining Multiple Retrieval Strategies</h4>
+<pre><code>Reciprocal Rank Fusion (RRF):
+1. Retrieve using multiple methods:
+   - Vector similarity search
+   - BM25 keyword search  
+   - Metadata filtering
+2. Combine rankings using RRF formula
+3. Get more robust, diverse results
+
+Benefits:
+✅ Captures both semantic and lexical matching
+✅ More robust to query variations
+✅ Better coverage of relevant information</code></pre>
+</section>
+</section>
+<section id="adaptive-rag" class="level3">
+<h3 class="anchored" data-anchor-id="adaptive-rag">Adaptive RAG</h3>
+<section id="context-aware-retrieval" class="level4">
+<h4 class="anchored" data-anchor-id="context-aware-retrieval">Context-Aware Retrieval</h4>
+<pre><code>Adjust retrieval strategy based on:
+- Query type (factual vs. reasoning vs. creative)
+- Domain (medical vs. legal vs. technical)
+- User expertise level
+- Previous conversation context
+
+Example:
+Medical query → Prioritize recent, peer-reviewed sources
+Legal query → Focus on jurisdiction-specific documents
+Creative query → Allow more diverse, inspirational sources</code></pre>
+<hr>
+</section>
+</section>
+</section>
+<section id="rag-evaluation-and-optimization" class="level2">
+<h2 class="anchored" data-anchor-id="rag-evaluation-and-optimization">11.5 RAG Evaluation and Optimization 📊</h2>
+<section id="evaluation-metrics" class="level3">
+<h3 class="anchored" data-anchor-id="evaluation-metrics">Evaluation Metrics</h3>
+<section id="retrieval-quality-metrics" class="level4">
+<h4 class="anchored" data-anchor-id="retrieval-quality-metrics">Retrieval Quality Metrics</h4>
+<pre><code>1. Recall@K: "Did we retrieve all relevant documents?"
+   - Of all relevant docs, what % are in top-K results?
+
+2. Precision@K: "Are retrieved documents actually relevant?"
+   - Of top-K results, what % are actually relevant?
+
+3. Mean Reciprocal Rank (MRR): "How high are relevant results ranked?"
+   - Average of 1/rank for first relevant result
+
+4. NDCG@K: "How well-ordered are the results?"
+   - Considers both relevance and ranking quality</code></pre>
+</section>
+<section id="end-to-end-evaluation" class="level4">
+<h4 class="anchored" data-anchor-id="end-to-end-evaluation">End-to-End Evaluation</h4>
+<pre><code>Generation Quality Metrics:
+1. Faithfulness: Does response align with retrieved context?
+2. Answer Relevance: Does response address the question?
+3. Context Relevance: Is retrieved context useful for the question?
+
+Human Evaluation:
+- Accuracy of factual claims
+- Completeness of answers
+- Usefulness for user's needs
+- Citation quality and traceability</code></pre>
+</section>
+</section>
+<section id="common-problems-and-solutions" class="level3">
+<h3 class="anchored" data-anchor-id="common-problems-and-solutions">Common Problems and Solutions</h3>
+<section id="problem-1-poor-retrieval-quality" class="level4">
+<h4 class="anchored" data-anchor-id="problem-1-poor-retrieval-quality">Problem 1: Poor Retrieval Quality</h4>
+<pre><code>Symptoms:
+❌ Irrelevant chunks retrieved
+❌ Missing important information
+❌ Low similarity scores overall
+
+Solutions:
+✅ Improve chunking strategy (better boundaries)
+✅ Use better embedding models
+✅ Add metadata filtering
+✅ Implement query expansion
+✅ Fine-tune embedding model for your domain</code></pre>
+</section>
+<section id="problem-2-context-window-overflow" class="level4">
+<h4 class="anchored" data-anchor-id="problem-2-context-window-overflow">Problem 2: Context Window Overflow</h4>
+<pre><code>Symptoms:
+❌ Too many retrieved chunks to fit in prompt
+❌ Important information gets truncated
+❌ Generation quality decreases
+
+Solutions:
+✅ Implement intelligent chunk selection
+✅ Summarize retrieved content before generation
+✅ Use hierarchical retrieval (fewer, better chunks)
+✅ Implement dynamic context sizing</code></pre>
+</section>
+<section id="problem-3-hallucination-despite-rag" class="level4">
+<h4 class="anchored" data-anchor-id="problem-3-hallucination-despite-rag">Problem 3: Hallucination Despite RAG</h4>
+<pre><code>Symptoms:
+❌ Model still generates unverified information
+❌ Mixes retrieved facts with invented details
+❌ Confident but incorrect responses
+
+Solutions:
+✅ Stronger prompts emphasizing context-only responses
+✅ Citation requirements in prompts
+✅ Post-processing to verify claims against context
+✅ Use models trained specifically for faithful generation</code></pre>
+</section>
+</section>
+<section id="optimization-strategies" class="level3">
+<h3 class="anchored" data-anchor-id="optimization-strategies">Optimization Strategies</h3>
+<section id="embedding-model-selection" class="level4">
+<h4 class="anchored" data-anchor-id="embedding-model-selection">Embedding Model Selection</h4>
+<pre><code>Factors to consider:
+- Domain specificity (general vs. specialized)
+- Language support (multilingual needs)
+- Performance vs. cost trade-offs
+- Fine-tuning capabilities
+
+Domain-specific options:
+- Scientific papers: SciBERT, BioBERT
+- Legal documents: LegalBERT
+- Code: CodeBERT
+- Medical: ClinicalBERT</code></pre>
+</section>
+<section id="chunking-optimization" class="level4">
+<h4 class="anchored" data-anchor-id="chunking-optimization">Chunking Optimization</h4>
+<pre><code>Advanced chunking strategies:
+
+1. Semantic chunking:
+   - Use sentence similarity to group related content
+   - Break at natural topic boundaries
+
+2. Hierarchical chunking:
+   - Multiple chunk sizes (paragraphs + sections)
+   - Enable multi-level retrieval
+
+3. Overlapping windows:
+   - Overlap chunks by 10-20% to prevent information loss
+   - Helps with context continuity
+
+4. Structure-aware chunking:
+   - Respect document structure (headers, lists, tables)
+   - Preserve formatting and relationships</code></pre>
+<hr>
+</section>
+</section>
+</section>
+<section id="real-world-rag-applications" class="level2">
+<h2 class="anchored" data-anchor-id="real-world-rag-applications">11.6 Real-World RAG Applications 🌍</h2>
+<section id="customer-support-rag-system" class="level3">
+<h3 class="anchored" data-anchor-id="customer-support-rag-system">Customer Support RAG System</h3>
+<section id="use-case-technical-documentation-search" class="level4">
+<h4 class="anchored" data-anchor-id="use-case-technical-documentation-search">Use Case: Technical Documentation Search</h4>
+<pre><code>Challenge: Customer support needs instant access to:
+- Product manuals and documentation
+- Troubleshooting guides
+- FAQ databases
+- Known issue databases
+
+RAG Solution:
+1. Ingest all support documentation
+2. Real-time retrieval for support agents
+3. Automated initial customer responses
+4. Continuous updates with new documentation
+
+Benefits:
+✅ Faster issue resolution
+✅ Consistent information across agents
+✅ 24/7 availability
+✅ Reduced training time for new agents</code></pre>
+</section>
+</section>
+<section id="legal-research-assistant" class="level3">
+<h3 class="anchored" data-anchor-id="legal-research-assistant">Legal Research Assistant</h3>
+<section id="use-case-case-law-and-precedent-search" class="level4">
+<h4 class="anchored" data-anchor-id="use-case-case-law-and-precedent-search">Use Case: Case Law and Precedent Search</h4>
+<pre><code>Challenge: Lawyers need to:
+- Search vast legal databases
+- Find relevant precedents
+- Stay updated on recent rulings
+- Cross-reference jurisdictions
+
+RAG Implementation:
+- Embedding legal documents with metadata (jurisdiction, date, topic)
+- Sophisticated filtering by legal domain
+- Citation network analysis
+- Temporal relevance weighting
+
+Example Query: "Breach of contract cases in California involving software licenses from 2020-2023"
+
+Retrieved Context: Relevant cases with proper legal citations and precedent chains</code></pre>
+</section>
+</section>
+<section id="medical-information-system" class="level3">
+<h3 class="anchored" data-anchor-id="medical-information-system">Medical Information System</h3>
+<section id="use-case-clinical-decision-support" class="level4">
+<h4 class="anchored" data-anchor-id="use-case-clinical-decision-support">Use Case: Clinical Decision Support</h4>
+<pre><code>Challenge: Healthcare providers need:
+- Latest medical research
+- Drug interaction information
+- Treatment guidelines
+- Diagnostic criteria
+
+RAG Architecture:
+- Embeddings of medical literature (PubMed, clinical guidelines)
+- Multi-modal search (symptoms + lab values + patient history)
+- Evidence-grading and source credibility
+- Real-time updates with new research
+
+Safety Features:
+✅ Strong disclaimers about medical advice
+✅ Emphasis on professional judgment
+✅ Citation of evidence levels
+✅ Integration with electronic health records</code></pre>
+</section>
+</section>
+<section id="educational-content-platform" class="level3">
+<h3 class="anchored" data-anchor-id="educational-content-platform">Educational Content Platform</h3>
+<section id="use-case-personalized-learning-assistant" class="level4">
+<h4 class="anchored" data-anchor-id="use-case-personalized-learning-assistant">Use Case: Personalized Learning Assistant</h4>
+<pre><code>Scenario: Online learning platform with RAG-powered tutor
+
+Features:
+1. Student asks question about any topic
+2. RAG retrieves relevant course materials, textbooks, examples
+3. Generates explanation appropriate to student's level
+4. Provides additional resources and practice problems
+
+Personalization:
+- Student's learning history and performance
+- Preferred explanation styles
+- Current course context
+- Difficulty level adaptation
+
+Example:
+Student: "I don't understand integrals"
+Retrieved: Relevant calculus textbook sections, visual examples, step-by-step solutions
+Generated: Personalized explanation with appropriate complexity and examples</code></pre>
+<hr>
+</section>
+</section>
+</section>
+<section id="building-your-first-rag-system" class="level2">
+<h2 class="anchored" data-anchor-id="building-your-first-rag-system">11.7 Building Your First RAG System 🛠️</h2>
+<section id="minimal-rag-implementation" class="level3">
+<h3 class="anchored" data-anchor-id="minimal-rag-implementation">Minimal RAG Implementation</h3>
+<section id="simple-python-rag-with-openai-chroma" class="level4">
+<h4 class="anchored" data-anchor-id="simple-python-rag-with-openai-chroma">Simple Python RAG with OpenAI + Chroma</h4>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb37"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Conceptual implementation - simplified for teaching</span></span>
+<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-3"><a href="#cb37-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> openai</span>
+<span id="cb37-4"><a href="#cb37-4" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> chromadb</span>
+<span id="cb37-5"><a href="#cb37-5" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sentence_transformers <span class="im">import</span> SentenceTransformer</span>
+<span id="cb37-6"><a href="#cb37-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-7"><a href="#cb37-7" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> SimpleRAG:</span>
+<span id="cb37-8"><a href="#cb37-8" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> <span class="fu">__init__</span>(<span class="va">self</span>):</span>
+<span id="cb37-9"><a href="#cb37-9" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Initialize components</span></span>
+<span id="cb37-10"><a href="#cb37-10" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.embedding_model <span class="op">=</span> SentenceTransformer(<span class="st">'all-MiniLM-L6-v2'</span>)</span>
+<span id="cb37-11"><a href="#cb37-11" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.client <span class="op">=</span> chromadb.Client()</span>
+<span id="cb37-12"><a href="#cb37-12" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.collection <span class="op">=</span> <span class="va">self</span>.client.create_collection(<span class="st">"docs"</span>)</span>
+<span id="cb37-13"><a href="#cb37-13" aria-hidden="true" tabindex="-1"></a>        </span>
+<span id="cb37-14"><a href="#cb37-14" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> add_documents(<span class="va">self</span>, documents, sources):</span>
+<span id="cb37-15"><a href="#cb37-15" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Generate embeddings</span></span>
+<span id="cb37-16"><a href="#cb37-16" aria-hidden="true" tabindex="-1"></a>        embeddings <span class="op">=</span> <span class="va">self</span>.embedding_model.encode(documents)</span>
+<span id="cb37-17"><a href="#cb37-17" aria-hidden="true" tabindex="-1"></a>        </span>
+<span id="cb37-18"><a href="#cb37-18" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Store in vector database</span></span>
+<span id="cb37-19"><a href="#cb37-19" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.collection.add(</span>
+<span id="cb37-20"><a href="#cb37-20" aria-hidden="true" tabindex="-1"></a>            documents<span class="op">=</span>documents,</span>
+<span id="cb37-21"><a href="#cb37-21" aria-hidden="true" tabindex="-1"></a>            embeddings<span class="op">=</span>embeddings.tolist(),</span>
+<span id="cb37-22"><a href="#cb37-22" aria-hidden="true" tabindex="-1"></a>            ids<span class="op">=</span>[<span class="ss">f"doc_</span><span class="sc">{</span>i<span class="sc">}</span><span class="ss">"</span> <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="bu">len</span>(documents))],</span>
+<span id="cb37-23"><a href="#cb37-23" aria-hidden="true" tabindex="-1"></a>            metadatas<span class="op">=</span>[{<span class="st">"source"</span>: src} <span class="cf">for</span> src <span class="kw">in</span> sources]</span>
+<span id="cb37-24"><a href="#cb37-24" aria-hidden="true" tabindex="-1"></a>        )</span>
+<span id="cb37-25"><a href="#cb37-25" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb37-26"><a href="#cb37-26" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> retrieve(<span class="va">self</span>, query, k<span class="op">=</span><span class="dv">3</span>):</span>
+<span id="cb37-27"><a href="#cb37-27" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Get query embedding</span></span>
+<span id="cb37-28"><a href="#cb37-28" aria-hidden="true" tabindex="-1"></a>        query_embedding <span class="op">=</span> <span class="va">self</span>.embedding_model.encode([query])</span>
+<span id="cb37-29"><a href="#cb37-29" aria-hidden="true" tabindex="-1"></a>        </span>
+<span id="cb37-30"><a href="#cb37-30" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Search similar documents</span></span>
+<span id="cb37-31"><a href="#cb37-31" aria-hidden="true" tabindex="-1"></a>        results <span class="op">=</span> <span class="va">self</span>.collection.query(</span>
+<span id="cb37-32"><a href="#cb37-32" aria-hidden="true" tabindex="-1"></a>            query_embeddings<span class="op">=</span>query_embedding.tolist(),</span>
+<span id="cb37-33"><a href="#cb37-33" aria-hidden="true" tabindex="-1"></a>            n_results<span class="op">=</span>k</span>
+<span id="cb37-34"><a href="#cb37-34" aria-hidden="true" tabindex="-1"></a>        )</span>
+<span id="cb37-35"><a href="#cb37-35" aria-hidden="true" tabindex="-1"></a>        </span>
+<span id="cb37-36"><a href="#cb37-36" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> results[<span class="st">'documents'</span>][<span class="dv">0</span>], results[<span class="st">'metadatas'</span>][<span class="dv">0</span>]</span>
+<span id="cb37-37"><a href="#cb37-37" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb37-38"><a href="#cb37-38" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> generate_response(<span class="va">self</span>, query, context_docs):</span>
+<span id="cb37-39"><a href="#cb37-39" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Construct prompt</span></span>
+<span id="cb37-40"><a href="#cb37-40" aria-hidden="true" tabindex="-1"></a>        context <span class="op">=</span> <span class="st">"</span><span class="ch">\n\n</span><span class="st">"</span>.join(context_docs)</span>
+<span id="cb37-41"><a href="#cb37-41" aria-hidden="true" tabindex="-1"></a>        prompt <span class="op">=</span> <span class="ss">f"""Based on the following context, answer the question.</span></span>
+<span id="cb37-42"><a href="#cb37-42" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-43"><a href="#cb37-43" aria-hidden="true" tabindex="-1"></a><span class="ss">Context:</span></span>
+<span id="cb37-44"><a href="#cb37-44" aria-hidden="true" tabindex="-1"></a><span class="sc">{</span>context<span class="sc">}</span></span>
+<span id="cb37-45"><a href="#cb37-45" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-46"><a href="#cb37-46" aria-hidden="true" tabindex="-1"></a><span class="ss">Question: </span><span class="sc">{</span>query<span class="sc">}</span></span>
+<span id="cb37-47"><a href="#cb37-47" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-48"><a href="#cb37-48" aria-hidden="true" tabindex="-1"></a><span class="ss">Answer:"""</span></span>
+<span id="cb37-49"><a href="#cb37-49" aria-hidden="true" tabindex="-1"></a>        </span>
+<span id="cb37-50"><a href="#cb37-50" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Generate response (using OpenAI API)</span></span>
+<span id="cb37-51"><a href="#cb37-51" aria-hidden="true" tabindex="-1"></a>        response <span class="op">=</span> openai.ChatCompletion.create(</span>
+<span id="cb37-52"><a href="#cb37-52" aria-hidden="true" tabindex="-1"></a>            model<span class="op">=</span><span class="st">"gpt-3.5-turbo"</span>,</span>
+<span id="cb37-53"><a href="#cb37-53" aria-hidden="true" tabindex="-1"></a>            messages<span class="op">=</span>[{<span class="st">"role"</span>: <span class="st">"user"</span>, <span class="st">"content"</span>: prompt}]</span>
+<span id="cb37-54"><a href="#cb37-54" aria-hidden="true" tabindex="-1"></a>        )</span>
+<span id="cb37-55"><a href="#cb37-55" aria-hidden="true" tabindex="-1"></a>        </span>
+<span id="cb37-56"><a href="#cb37-56" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> response.choices[<span class="dv">0</span>].message.content</span>
+<span id="cb37-57"><a href="#cb37-57" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb37-58"><a href="#cb37-58" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> query(<span class="va">self</span>, question):</span>
+<span id="cb37-59"><a href="#cb37-59" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Full RAG pipeline</span></span>
+<span id="cb37-60"><a href="#cb37-60" aria-hidden="true" tabindex="-1"></a>        context_docs, sources <span class="op">=</span> <span class="va">self</span>.retrieve(question)</span>
+<span id="cb37-61"><a href="#cb37-61" aria-hidden="true" tabindex="-1"></a>        response <span class="op">=</span> <span class="va">self</span>.generate_response(question, context_docs)</span>
+<span id="cb37-62"><a href="#cb37-62" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> response, sources</span>
+<span id="cb37-63"><a href="#cb37-63" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-64"><a href="#cb37-64" aria-hidden="true" tabindex="-1"></a><span class="co"># Usage</span></span>
+<span id="cb37-65"><a href="#cb37-65" aria-hidden="true" tabindex="-1"></a>rag <span class="op">=</span> SimpleRAG()</span>
+<span id="cb37-66"><a href="#cb37-66" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-67"><a href="#cb37-67" aria-hidden="true" tabindex="-1"></a><span class="co"># Add your documents</span></span>
+<span id="cb37-68"><a href="#cb37-68" aria-hidden="true" tabindex="-1"></a>documents <span class="op">=</span> [</span>
+<span id="cb37-69"><a href="#cb37-69" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Python is a programming language known for its simplicity..."</span>,</span>
+<span id="cb37-70"><a href="#cb37-70" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Machine learning involves training algorithms on data..."</span>,</span>
+<span id="cb37-71"><a href="#cb37-71" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Neural networks are inspired by biological brain structure..."</span></span>
+<span id="cb37-72"><a href="#cb37-72" aria-hidden="true" tabindex="-1"></a>]</span>
+<span id="cb37-73"><a href="#cb37-73" aria-hidden="true" tabindex="-1"></a>sources <span class="op">=</span> [<span class="st">"python_guide.pdf"</span>, <span class="st">"ml_basics.pdf"</span>, <span class="st">"neural_nets.pdf"</span>]</span>
+<span id="cb37-74"><a href="#cb37-74" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-75"><a href="#cb37-75" aria-hidden="true" tabindex="-1"></a>rag.add_documents(documents, sources)</span>
+<span id="cb37-76"><a href="#cb37-76" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-77"><a href="#cb37-77" aria-hidden="true" tabindex="-1"></a><span class="co"># Query the system</span></span>
+<span id="cb37-78"><a href="#cb37-78" aria-hidden="true" tabindex="-1"></a>answer, sources <span class="op">=</span> rag.query(<span class="st">"What is Python?"</span>)</span>
+<span id="cb37-79"><a href="#cb37-79" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Answer: </span><span class="sc">{</span>answer<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb37-80"><a href="#cb37-80" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Sources: </span><span class="sc">{</span>sources<span class="sc">}</span><span class="ss">"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</section>
+</section>
+<section id="production-considerations" class="level3">
+<h3 class="anchored" data-anchor-id="production-considerations">Production Considerations</h3>
+<section id="scalability-planning" class="level4">
+<h4 class="anchored" data-anchor-id="scalability-planning">Scalability Planning</h4>
+<pre><code>For production RAG systems:
+
+1. Vector Database Selection:
+   - Local development: ChromaDB, FAISS
+   - Production: Pinecone, Weaviate, Qdrant
+   - Enterprise: Custom solutions with existing infrastructure
+
+2. Embedding Strategy:
+   - API-based: OpenAI, Cohere (simple but costs per query)
+   - Self-hosted: Sentence-BERT, BGE (more control, fixed costs)
+   - Fine-tuned: Domain-specific models (best performance)
+
+3. Caching and Performance:
+   - Cache frequently retrieved documents
+   - Pre-compute embeddings for static content
+   - Implement query result caching
+   - Use CDNs for document storage
+
+4. Monitoring and Observability:
+   - Track retrieval quality metrics
+   - Monitor generation latency
+   - Log failed queries for improvement
+   - A/B test different configurations</code></pre>
+<hr>
+</section>
+</section>
+</section>
+<section id="key-takeaways" class="level2">
+<h2 class="anchored" data-anchor-id="key-takeaways">Key Takeaways 🎯</h2>
+<ol type="1">
+<li><p><strong>RAG solves the knowledge limitation</strong> - gives LLMs access to external, up-to-date information</p></li>
+<li><p><strong>Vector embeddings enable semantic search</strong> - understanding meaning, not just keywords</p></li>
+<li><p><strong>The pipeline has multiple optimization points</strong> - chunking, embedding, retrieval, and generation can all be tuned</p></li>
+<li><p><strong>Quality over quantity in retrieval</strong> - better to have fewer, highly relevant chunks than many marginally relevant ones</p></li>
+<li><p><strong>Evaluation is crucial</strong> - both retrieval quality and end-to-end response quality need monitoring</p></li>
+<li><p><strong>Domain adaptation improves results</strong> - specialized embeddings and chunking strategies help significantly</p></li>
+<li><p><strong>Citations and transparency build trust</strong> - users need to verify and trace information sources</p></li>
+</ol>
+<hr>
+</section>
+<section id="fun-exercises" class="level2">
+<h2 class="anchored" data-anchor-id="fun-exercises">Fun Exercises 🎮</h2>
+<section id="exercise-1-chunking-strategy-design" class="level3">
+<h3 class="anchored" data-anchor-id="exercise-1-chunking-strategy-design">Exercise 1: Chunking Strategy Design</h3>
+<pre><code>You have a 50-page technical manual for a software product. Design a chunking strategy that considers:
+- Different types of content (overview, tutorials, API reference, troubleshooting)
+- User query patterns (quick facts vs. detailed procedures)
+- Context window limitations
+
+What chunk sizes and overlap would you use? Why?</code></pre>
+</section>
+<section id="exercise-2-rag-evaluation-design" class="level3">
+<h3 class="anchored" data-anchor-id="exercise-2-rag-evaluation-design">Exercise 2: RAG Evaluation Design</h3>
+<pre><code>Design an evaluation framework for a medical RAG system that answers patient questions:
+
+What metrics would you use for:
+a) Retrieval quality
+b) Response accuracy
+c) Safety (avoiding harmful medical advice)
+d) User satisfaction
+
+How would you collect ground truth data?</code></pre>
+</section>
+<section id="exercise-3-query-expansion" class="level3">
+<h3 class="anchored" data-anchor-id="exercise-3-query-expansion">Exercise 3: Query Expansion</h3>
+<pre><code>For each query, design 2-3 alternative phrasings that might retrieve better results:
+
+Original queries:
+a) "How to fix my code?"
+b) "Side effects of medication X"  
+c) "Company vacation policy"
+
+Consider: synonyms, specificity levels, different user intents</code></pre>
+<hr>
+</section>
+</section>
+<section id="whats-next" class="level2">
+<h2 class="anchored" data-anchor-id="whats-next">What’s Next? 📚</h2>
+<p>In Chapter 12, we’ll explore LLM Agents and Tool Use - giving AI the ability to take actions in the world!</p>
+<p><strong>Preview:</strong> We’ll learn about: - Agent architectures and reasoning loops - Tool integration and function calling - Multi-agent systems and collaboration - Memory systems for persistent agents</p>
+<p>From retrieving information to taking action! 🤖🔧</p>
+<hr>
+</section>
+<section id="final-thought" class="level2">
+<h2 class="anchored" data-anchor-id="final-thought">Final Thought 💭</h2>
+<pre><code>"RAG is like giving an AI a library card and teaching it to use the library:
+- It knows how to find the right books (retrieval)
+- It can read and understand the content (comprehension)
+- It synthesizes information from multiple sources (generation)
+- It cites its sources (transparency)
+
+The result: An AI that's both knowledgeable and honest about what it knows!" 📚🤖✨</code></pre>
+
+
+</section>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

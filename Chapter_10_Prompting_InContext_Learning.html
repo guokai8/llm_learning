@@ -1,0 +1,1542 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.8.25">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>chapter_10_prompting_incontext_learning – Large Language Models 教程</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<script src="site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="site_libs/quarto-html/axe/axe-check.js" type="module"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-7b89279ff1a6dce999919e0e67d4d9ec.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap-a8976c3e89df70b272bdfba3d2fda974.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+
+</head>
+
+<body class="nav-fixed quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a href="./index.html" class="navbar-brand navbar-brand-logo">
+    </a>
+    <a class="navbar-brand" href="./index.html">
+    <span class="navbar-title">Large Language Models 教程</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="./index.html"> 
+<span class="menu-text">首页</span></a>
+  </li>  
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">章节</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-">    
+        <li>
+    <a class="dropdown-item" href="./Chapter_01_Introduction_LLMs.html">
+ <span class="dropdown-text">01 - LLM 介绍</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./Chapter_02_Math_Foundations.html">
+ <span class="dropdown-text">02 - 数学基础</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./Chapter_03_NLP_Fundamentals.html">
+ <span class="dropdown-text">03 - NLP 基础</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./Chapter_04_Transformer_Architecture.html">
+ <span class="dropdown-text">04 - Transformer 架构</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./Chapter_05_Modern_Transformer_Variants_Complete.html">
+ <span class="dropdown-text">05 - 现代 Transformer</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./Chapter_08_Fine_Tuning.html">
+ <span class="dropdown-text">08 - 微调</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./Chapter_09_Alignment_RLHF.html">
+ <span class="dropdown-text">09 - 对齐与 RLHF</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./Chapter_10_Prompting_InContext_Learning.html">
+ <span class="dropdown-text">10 - Prompt 工程</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./Chapter_11_RAG.html">
+ <span class="dropdown-text">11 - RAG</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./Chapter_12_LLM_Agents_Tool_Use.html">
+ <span class="dropdown-text">12 - LLM Agents</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./Chapter_13_Optimization_Inference.html">
+ <span class="dropdown-text">13 - 优化推理</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./Chapter_14_Production_Deployment.html">
+ <span class="dropdown-text">14 - 生产部署</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./Chapter_15_Multimodal_LLMs.html">
+ <span class="dropdown-text">15 - 多模态 LLM</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./Chapter_16_Evaluation_Benchmarking.html">
+ <span class="dropdown-text">16 - 评估基准</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./Chapter_17_Cutting_Edge_Research_Future.html">
+ <span class="dropdown-text">17 - 前沿研究</span></a>
+  </li>  
+    </ul>
+  </li>
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#chapter-10-prompting-and-in-context-learning" id="toc-chapter-10-prompting-and-in-context-learning" class="nav-link active" data-scroll-target="#chapter-10-prompting-and-in-context-learning">Chapter 10: Prompting and In-Context Learning</a>
+  <ul class="collapse">
+  <li><a href="#what-well-learn-today" id="toc-what-well-learn-today" class="nav-link" data-scroll-target="#what-well-learn-today">What We’ll Learn Today 🎯</a></li>
+  <li><a href="#what-is-prompting-the-interface-revolution" id="toc-what-is-prompting-the-interface-revolution" class="nav-link" data-scroll-target="#what-is-prompting-the-interface-revolution">10.1 What is Prompting? The Interface Revolution 🖥️</a>
+  <ul class="collapse">
+  <li><a href="#from-programming-to-conversation" id="toc-from-programming-to-conversation" class="nav-link" data-scroll-target="#from-programming-to-conversation">From Programming to Conversation</a></li>
+  <li><a href="#what-makes-a-good-prompt" id="toc-what-makes-a-good-prompt" class="nav-link" data-scroll-target="#what-makes-a-good-prompt">What Makes a Good Prompt?</a></li>
+  </ul></li>
+  <li><a href="#in-context-learning-teaching-without-training" id="toc-in-context-learning-teaching-without-training" class="nav-link" data-scroll-target="#in-context-learning-teaching-without-training">10.2 In-Context Learning: Teaching Without Training 🎓</a>
+  <ul class="collapse">
+  <li><a href="#the-magical-discovery" id="toc-the-magical-discovery" class="nav-link" data-scroll-target="#the-magical-discovery">The Magical Discovery</a></li>
+  <li><a href="#how-in-context-learning-works" id="toc-how-in-context-learning-works" class="nav-link" data-scroll-target="#how-in-context-learning-works">How In-Context Learning Works</a></li>
+  <li><a href="#types-of-in-context-learning" id="toc-types-of-in-context-learning" class="nav-link" data-scroll-target="#types-of-in-context-learning">Types of In-Context Learning</a></li>
+  <li><a href="#optimizing-in-context-learning" id="toc-optimizing-in-context-learning" class="nav-link" data-scroll-target="#optimizing-in-context-learning">Optimizing In-Context Learning</a></li>
+  </ul></li>
+  <li><a href="#chain-of-thought-reasoning" id="toc-chain-of-thought-reasoning" class="nav-link" data-scroll-target="#chain-of-thought-reasoning">10.3 Chain-of-Thought Reasoning 🔗</a>
+  <ul class="collapse">
+  <li><a href="#the-reasoning-revolution" id="toc-the-reasoning-revolution" class="nav-link" data-scroll-target="#the-reasoning-revolution">The Reasoning Revolution</a></li>
+  <li><a href="#cot-prompting-techniques" id="toc-cot-prompting-techniques" class="nav-link" data-scroll-target="#cot-prompting-techniques">CoT Prompting Techniques</a></li>
+  <li><a href="#advanced-cot-techniques" id="toc-advanced-cot-techniques" class="nav-link" data-scroll-target="#advanced-cot-techniques">Advanced CoT Techniques</a></li>
+  </ul></li>
+  <li><a href="#advanced-prompting-strategies" id="toc-advanced-prompting-strategies" class="nav-link" data-scroll-target="#advanced-prompting-strategies">10.4 Advanced Prompting Strategies 🎯</a>
+  <ul class="collapse">
+  <li><a href="#role-playing-and-personas" id="toc-role-playing-and-personas" class="nav-link" data-scroll-target="#role-playing-and-personas">Role-Playing and Personas</a></li>
+  <li><a href="#task-decomposition" id="toc-task-decomposition" class="nav-link" data-scroll-target="#task-decomposition">Task Decomposition</a></li>
+  <li><a href="#output-formatting-and-structure" id="toc-output-formatting-and-structure" class="nav-link" data-scroll-target="#output-formatting-and-structure">Output Formatting and Structure</a></li>
+  <li><a href="#constraint-handling" id="toc-constraint-handling" class="nav-link" data-scroll-target="#constraint-handling">Constraint Handling</a></li>
+  </ul></li>
+  <li><a href="#prompt-optimization-and-engineering" id="toc-prompt-optimization-and-engineering" class="nav-link" data-scroll-target="#prompt-optimization-and-engineering">10.5 Prompt Optimization and Engineering 🔧</a>
+  <ul class="collapse">
+  <li><a href="#iterative-prompt-development" id="toc-iterative-prompt-development" class="nav-link" data-scroll-target="#iterative-prompt-development">Iterative Prompt Development</a></li>
+  <li><a href="#automatic-prompt-optimization" id="toc-automatic-prompt-optimization" class="nav-link" data-scroll-target="#automatic-prompt-optimization">Automatic Prompt Optimization</a></li>
+  <li><a href="#domain-specific-prompting" id="toc-domain-specific-prompting" class="nav-link" data-scroll-target="#domain-specific-prompting">Domain-Specific Prompting</a></li>
+  </ul></li>
+  <li><a href="#troubleshooting-common-prompting-issues" id="toc-troubleshooting-common-prompting-issues" class="nav-link" data-scroll-target="#troubleshooting-common-prompting-issues">10.6 Troubleshooting Common Prompting Issues 🔧</a>
+  <ul class="collapse">
+  <li><a href="#problem-inconsistent-outputs" id="toc-problem-inconsistent-outputs" class="nav-link" data-scroll-target="#problem-inconsistent-outputs">Problem: Inconsistent Outputs</a></li>
+  <li><a href="#problem-ai-refuses-reasonable-requests" id="toc-problem-ai-refuses-reasonable-requests" class="nav-link" data-scroll-target="#problem-ai-refuses-reasonable-requests">Problem: AI Refuses Reasonable Requests</a></li>
+  <li><a href="#problem-outputs-too-generic" id="toc-problem-outputs-too-generic" class="nav-link" data-scroll-target="#problem-outputs-too-generic">Problem: Outputs Too Generic</a></li>
+  <li><a href="#problem-ai-hallucinates-facts" id="toc-problem-ai-hallucinates-facts" class="nav-link" data-scroll-target="#problem-ai-hallucinates-facts">Problem: AI Hallucinates Facts</a></li>
+  </ul></li>
+  <li><a href="#real-world-applications" id="toc-real-world-applications" class="nav-link" data-scroll-target="#real-world-applications">Real-World Applications 🌍</a>
+  <ul class="collapse">
+  <li><a href="#customer-support-automation" id="toc-customer-support-automation" class="nav-link" data-scroll-target="#customer-support-automation">Customer Support Automation</a></li>
+  <li><a href="#educational-applications" id="toc-educational-applications" class="nav-link" data-scroll-target="#educational-applications">Educational Applications</a></li>
+  <li><a href="#content-creation" id="toc-content-creation" class="nav-link" data-scroll-target="#content-creation">Content Creation</a></li>
+  </ul></li>
+  <li><a href="#key-takeaways" id="toc-key-takeaways" class="nav-link" data-scroll-target="#key-takeaways">Key Takeaways 🎯</a></li>
+  <li><a href="#fun-exercises" id="toc-fun-exercises" class="nav-link" data-scroll-target="#fun-exercises">Fun Exercises 🎮</a>
+  <ul class="collapse">
+  <li><a href="#exercise-1-prompt-improvement" id="toc-exercise-1-prompt-improvement" class="nav-link" data-scroll-target="#exercise-1-prompt-improvement">Exercise 1: Prompt Improvement</a></li>
+  <li><a href="#exercise-2-chain-of-thought-design" id="toc-exercise-2-chain-of-thought-design" class="nav-link" data-scroll-target="#exercise-2-chain-of-thought-design">Exercise 2: Chain-of-Thought Design</a></li>
+  <li><a href="#exercise-3-role-playing-prompt" id="toc-exercise-3-role-playing-prompt" class="nav-link" data-scroll-target="#exercise-3-role-playing-prompt">Exercise 3: Role-Playing Prompt</a></li>
+  </ul></li>
+  <li><a href="#whats-next" id="toc-whats-next" class="nav-link" data-scroll-target="#whats-next">What’s Next? 📚</a></li>
+  <li><a href="#final-thought" id="toc-final-thought" class="nav-link" data-scroll-target="#final-thought">Final Thought 💭</a></li>
+  </ul></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content"><header id="title-block-header" class="quarto-title-block"></header>
+
+
+
+
+<section id="chapter-10-prompting-and-in-context-learning" class="level1">
+<h1>Chapter 10: Prompting and In-Context Learning</h1>
+<p><em>The Art of Talking to AI</em></p>
+<section id="what-well-learn-today" class="level2">
+<h2 class="anchored" data-anchor-id="what-well-learn-today">What We’ll Learn Today 🎯</h2>
+<ul>
+<li>How to communicate effectively with LLMs (it’s an art!)</li>
+<li>The magic of in-context learning (teaching without training)</li>
+<li>Advanced prompting techniques that unlock hidden capabilities</li>
+<li>Chain-of-thought reasoning and step-by-step thinking</li>
+<li>How to optimize prompts automatically</li>
+</ul>
+<p><strong>Key Insight:</strong> The right prompt can turn a mediocre AI into a brilliant assistant! 💬✨</p>
+<hr>
+</section>
+<section id="what-is-prompting-the-interface-revolution" class="level2">
+<h2 class="anchored" data-anchor-id="what-is-prompting-the-interface-revolution">10.1 What is Prompting? The Interface Revolution 🖥️</h2>
+<section id="from-programming-to-conversation" class="level3">
+<h3 class="anchored" data-anchor-id="from-programming-to-conversation">From Programming to Conversation</h3>
+<section id="the-old-way-traditional-programming" class="level4">
+<h4 class="anchored" data-anchor-id="the-old-way-traditional-programming">The Old Way: Traditional Programming</h4>
+<pre><code>Traditional software:
+def calculate_tax(income, tax_rate):
+    return income * tax_rate
+
+# Precise, deterministic, requires exact syntax</code></pre>
+</section>
+<section id="the-new-way-natural-language-prompting" class="level4">
+<h4 class="anchored" data-anchor-id="the-new-way-natural-language-prompting">The New Way: Natural Language Prompting</h4>
+<pre><code>Modern AI:
+"Calculate the tax for someone earning $50,000 with a 20% tax rate"
+
+AI: "For an income of $50,000 with a 20% tax rate:
+Tax owed = $50,000 × 0.20 = $10,000"
+
+# Natural, flexible, understands intent</code></pre>
+</section>
+<section id="why-this-is-revolutionary" class="level4">
+<h4 class="anchored" data-anchor-id="why-this-is-revolutionary">Why This is Revolutionary</h4>
+<pre><code>Prompting changes who can use AI:
+✅ No programming knowledge required
+✅ Natural language interface
+✅ Flexible and adaptable
+✅ Can handle ambiguous requests
+✅ Learns from context and examples
+
+It's like having a universal translator for human intent! 🌍</code></pre>
+</section>
+</section>
+<section id="what-makes-a-good-prompt" class="level3">
+<h3 class="anchored" data-anchor-id="what-makes-a-good-prompt">What Makes a Good Prompt?</h3>
+<section id="the-components-of-effective-prompts" class="level4">
+<h4 class="anchored" data-anchor-id="the-components-of-effective-prompts">The Components of Effective Prompts</h4>
+<pre><code>1. Clear Context: What's the situation?
+2. Specific Task: What do you want done?
+3. Format Guidelines: How should the output look?
+4. Examples: Show what good looks like
+5. Constraints: What to avoid or consider</code></pre>
+</section>
+<section id="example-progression-bad-good-great" class="level4">
+<h4 class="anchored" data-anchor-id="example-progression-bad-good-great">Example Progression: Bad → Good → Great</h4>
+<pre><code>❌ Bad prompt:
+"Write about dogs"
+
+⚖️ Okay prompt:
+"Write a paragraph about golden retrievers"
+
+✅ Good prompt:
+"Write a 100-word informative paragraph about golden retrievers for a family considering getting a pet. Include information about temperament, care requirements, and suitability for children."
+
+🌟 Great prompt:
+"You are a veterinarian writing for a family pet guide. Write a 100-word paragraph about golden retrievers that helps families decide if this breed is right for them.
+
+Include:
+- Temperament and personality
+- Exercise and grooming needs  
+- Interaction with children
+- Common health considerations
+
+Tone: Warm but informative, like advice from a trusted expert."</code></pre>
+<hr>
+</section>
+</section>
+</section>
+<section id="in-context-learning-teaching-without-training" class="level2">
+<h2 class="anchored" data-anchor-id="in-context-learning-teaching-without-training">10.2 In-Context Learning: Teaching Without Training 🎓</h2>
+<section id="the-magical-discovery" class="level3">
+<h3 class="anchored" data-anchor-id="the-magical-discovery">The Magical Discovery</h3>
+<section id="what-is-in-context-learning" class="level4">
+<h4 class="anchored" data-anchor-id="what-is-in-context-learning">What is In-Context Learning?</h4>
+<pre><code>Definition: AI learns new tasks just from examples in the prompt
+
+No training updates needed!
+No gradient descent!
+No parameter changes!
+
+The model just "figures it out" from the conversation context.
+
+It's like showing someone a few examples and having them instantly understand the pattern! 🤯</code></pre>
+</section>
+<section id="a-simple-example" class="level4">
+<h4 class="anchored" data-anchor-id="a-simple-example">A Simple Example</h4>
+<pre><code>Prompt: "Translate these examples:
+cat → gato
+dog → perro  
+bird → ?"
+
+Model: "pájaro"
+
+The model learned English→Spanish translation from just 2 examples!</code></pre>
+</section>
+</section>
+<section id="how-in-context-learning-works" class="level3">
+<h3 class="anchored" data-anchor-id="how-in-context-learning-works">How In-Context Learning Works</h3>
+<section id="the-pattern-recognition-explanation" class="level4">
+<h4 class="anchored" data-anchor-id="the-pattern-recognition-explanation">The Pattern Recognition Explanation</h4>
+<pre><code>During pre-training, models see millions of examples like:
+- Math problems with solutions
+- Questions with answers
+- Examples with labels
+- Patterns with completions
+
+When you give examples in a prompt:
+1. Model recognizes this as a "pattern completion" task
+2. Identifies the underlying rule from examples
+3. Applies that rule to new input
+4. Generates appropriate output
+
+It's pattern matching, but at a very sophisticated level! 🧩</code></pre>
+</section>
+<section id="the-transformer-advantage" class="level4">
+<h4 class="anchored" data-anchor-id="the-transformer-advantage">The Transformer Advantage</h4>
+<pre><code>Why transformers are so good at this:
+✅ Attention mechanism can relate examples to new input
+✅ Can process all examples simultaneously
+✅ Large context window holds many examples
+✅ Self-attention captures complex patterns
+✅ No sequential processing limitations
+
+Each example can directly influence the final prediction!</code></pre>
+</section>
+</section>
+<section id="types-of-in-context-learning" class="level3">
+<h3 class="anchored" data-anchor-id="types-of-in-context-learning">Types of In-Context Learning</h3>
+<section id="zero-shot-learning" class="level4">
+<h4 class="anchored" data-anchor-id="zero-shot-learning">Zero-Shot Learning</h4>
+<pre><code>No examples provided, just task description
+
+Example:
+"Classify the sentiment of this movie review as positive or negative:
+'This film was absolutely brilliant! The acting was superb and the plot kept me engaged throughout.'"
+
+Model: "Positive"
+
+The model understands the task from description alone!</code></pre>
+</section>
+<section id="few-shot-learning" class="level4">
+<h4 class="anchored" data-anchor-id="few-shot-learning">Few-Shot Learning</h4>
+<pre><code>Provide a few examples to establish the pattern
+
+Example:
+"Classify movie review sentiment:
+
+Review: 'Boring and predictable' → Negative
+Review: 'Amazing cinematography!' → Positive  
+Review: 'Decent but nothing special' → Neutral
+Review: 'I loved every minute of it' → ?"
+
+Model: "Positive"
+
+Examples help the model understand your specific classification scheme!</code></pre>
+</section>
+<section id="many-shot-learning" class="level4">
+<h4 class="anchored" data-anchor-id="many-shot-learning">Many-Shot Learning</h4>
+<pre><code>Provide many examples (10-100+)
+
+Benefits:
+✅ More robust pattern recognition
+✅ Better handling of edge cases
+✅ Improved consistency
+✅ Can learn complex mappings
+
+Challenge: Limited by context window size</code></pre>
+</section>
+</section>
+<section id="optimizing-in-context-learning" class="level3">
+<h3 class="anchored" data-anchor-id="optimizing-in-context-learning">Optimizing In-Context Learning</h3>
+<section id="example-selection-strategies" class="level4">
+<h4 class="anchored" data-anchor-id="example-selection-strategies">Example Selection Strategies</h4>
+<pre><code>Not all examples are equal! Choose examples that:
+
+✅ Cover diverse scenarios
+✅ Include edge cases and exceptions
+✅ Show clear input-output patterns
+✅ Represent different difficulty levels
+✅ Avoid contradictory mappings
+
+Bad example set (for sentiment):
+"Great movie" → Positive
+"Excellent film" → Positive  
+"Awesome picture" → Positive
+
+Good example set:
+"Great movie" → Positive
+"Terrible film" → Negative
+"It was okay" → Neutral
+"Absolutely horrible" → Negative</code></pre>
+</section>
+<section id="example-ordering-effects" class="level4">
+<h4 class="anchored" data-anchor-id="example-ordering-effects">Example Ordering Effects</h4>
+<pre><code>Surprising discovery: Order of examples matters!
+
+Better ordering strategies:
+✅ Put most relevant examples last
+✅ Group similar examples together
+✅ Start with simple, clear examples
+✅ End with examples most similar to target
+
+Why: Models pay more attention to recent examples (recency bias)</code></pre>
+</section>
+<section id="context-length-optimization" class="level4">
+<h4 class="anchored" data-anchor-id="context-length-optimization">Context Length Optimization</h4>
+<pre><code>Trade-offs:
+- More examples = better pattern learning
+- More examples = less space for complex outputs
+- Longer contexts = slower inference
+
+Strategies:
+✅ Use as many examples as context allows
+✅ Prioritize quality over quantity
+✅ Remove unnecessary words from examples
+✅ Use abbreviations where clear</code></pre>
+<hr>
+</section>
+</section>
+</section>
+<section id="chain-of-thought-reasoning" class="level2">
+<h2 class="anchored" data-anchor-id="chain-of-thought-reasoning">10.3 Chain-of-Thought Reasoning 🔗</h2>
+<section id="the-reasoning-revolution" class="level3">
+<h3 class="anchored" data-anchor-id="the-reasoning-revolution">The Reasoning Revolution</h3>
+<section id="what-is-chain-of-thought-cot" class="level4">
+<h4 class="anchored" data-anchor-id="what-is-chain-of-thought-cot">What is Chain-of-Thought (CoT)?</h4>
+<pre><code>Instead of just giving answers:
+Ask the model to show its reasoning step-by-step
+
+Regular prompting:
+"What's 23 × 47?"
+Model: "1081"
+
+Chain-of-Thought:
+"What's 23 × 47? Let's think step by step."
+Model: "I need to multiply 23 × 47.
+23 × 47 = 23 × (40 + 7) = 23 × 40 + 23 × 7
+23 × 40 = 920
+23 × 7 = 161  
+920 + 161 = 1081"
+
+Result: More accurate and verifiable! ✅</code></pre>
+</section>
+<section id="why-cot-works" class="level4">
+<h4 class="anchored" data-anchor-id="why-cot-works">Why CoT Works</h4>
+<pre><code>Benefits of explicit reasoning:
+✅ Breaks complex problems into steps
+✅ Reduces computational pressure per step
+✅ Makes errors easier to spot and fix
+✅ Allows verification of logic
+✅ Improves accuracy on complex tasks
+
+It's like showing your work in math class! 📝</code></pre>
+</section>
+</section>
+<section id="cot-prompting-techniques" class="level3">
+<h3 class="anchored" data-anchor-id="cot-prompting-techniques">CoT Prompting Techniques</h3>
+<section id="zero-shot-cot" class="level4">
+<h4 class="anchored" data-anchor-id="zero-shot-cot">Zero-Shot CoT</h4>
+<pre><code>Simplest approach: Just add "Let's think step by step"
+
+Example:
+"A store has 15 apples. They sell 8 in the morning and 3 in the afternoon. How many apples are left? Let's think step by step."
+
+Model: "Let me work through this step by step:
+1. Start with 15 apples
+2. Sell 8 in the morning: 15 - 8 = 7 apples left
+3. Sell 3 in the afternoon: 7 - 3 = 4 apples left
+Therefore, there are 4 apples remaining."
+
+Magic phrase unlocks reasoning! ✨</code></pre>
+</section>
+<section id="few-shot-cot" class="level4">
+<h4 class="anchored" data-anchor-id="few-shot-cot">Few-Shot CoT</h4>
+<pre><code>Show examples of step-by-step reasoning
+
+Example:
+"Question: A recipe needs 3 eggs per batch. How many eggs for 4 batches?
+Answer: Let me think step by step. Each batch needs 3 eggs. For 4 batches: 4 × 3 = 12 eggs.
+
+Question: A book has 200 pages. Sarah reads 25 pages per day. How many days to finish?
+Answer: Let me think step by step. Total pages: 200. Pages per day: 25. Days needed: 200 ÷ 25 = 8 days.
+
+Question: A parking lot has 50 spaces. 30 are occupied. 5 more cars arrive. How many spaces are left?
+Answer:"
+
+Model follows the step-by-step pattern from examples!</code></pre>
+</section>
+<section id="complex-reasoning-chains" class="level4">
+<h4 class="anchored" data-anchor-id="complex-reasoning-chains">Complex Reasoning Chains</h4>
+<pre><code>For harder problems, encourage detailed reasoning:
+
+"Solve this logic puzzle step by step:
+- Alice, Bob, and Carol are wearing red, blue, and green shirts
+- Alice is not wearing red
+- The person in blue is standing next to Alice
+- Carol is wearing green
+Who is wearing which color? Show your reasoning."
+
+Model: "Let me work through this systematically:
+
+Given facts:
+1. Alice is not wearing red
+2. Person in blue is next to Alice  
+3. Carol is wearing green
+
+Step 1: From fact 3, Carol = green
+Step 2: From fact 1, Alice ≠ red, so Alice = blue or green
+Step 3: Since Carol = green, Alice must be blue
+Step 4: This leaves Bob = red
+
+Let me verify: Alice (blue) next to someone - this could work with the spatial constraint.
+
+Answer: Alice = blue, Bob = red, Carol = green"</code></pre>
+</section>
+</section>
+<section id="advanced-cot-techniques" class="level3">
+<h3 class="anchored" data-anchor-id="advanced-cot-techniques">Advanced CoT Techniques</h3>
+<section id="tree-of-thoughts" class="level4">
+<h4 class="anchored" data-anchor-id="tree-of-thoughts">Tree of Thoughts</h4>
+<pre><code>Instead of single reasoning chain:
+Explore multiple reasoning paths
+
+Process:
+1. Generate several possible first steps
+2. For each step, generate possible next steps
+3. Evaluate which paths seem most promising
+4. Explore the best paths further
+5. Combine insights from different paths
+
+Benefits: More robust, catches errors, explores alternatives</code></pre>
+</section>
+<section id="self-verification" class="level4">
+<h4 class="anchored" data-anchor-id="self-verification">Self-Verification</h4>
+<pre><code>Have model check its own work:
+
+"Solve: 23 × 47
+Let me calculate step by step:
+23 × 47 = 23 × (40 + 7) = 920 + 161 = 1081
+
+Let me verify: 1081 ÷ 23 = 47 ✓
+And: 1081 ÷ 47 = 23 ✓
+The answer 1081 is correct."
+
+Self-checking improves accuracy! 🔍</code></pre>
+</section>
+<section id="least-to-most-prompting" class="level4">
+<h4 class="anchored" data-anchor-id="least-to-most-prompting">Least-to-Most Prompting</h4>
+<pre><code>Break complex problems into simpler subproblems:
+
+"To solve this word problem:
+1. First, identify what information we have
+2. Then, determine what we need to find  
+3. Break it into smaller, simpler calculations
+4. Solve each part step by step
+5. Combine the results
+
+[Original complex problem]"
+
+Teaches systematic problem decomposition! 🏗️</code></pre>
+<hr>
+</section>
+</section>
+</section>
+<section id="advanced-prompting-strategies" class="level2">
+<h2 class="anchored" data-anchor-id="advanced-prompting-strategies">10.4 Advanced Prompting Strategies 🎯</h2>
+<section id="role-playing-and-personas" class="level3">
+<h3 class="anchored" data-anchor-id="role-playing-and-personas">Role-Playing and Personas</h3>
+<section id="the-power-of-identity" class="level4">
+<h4 class="anchored" data-anchor-id="the-power-of-identity">The Power of Identity</h4>
+<pre><code>Giving the AI a specific role dramatically changes behavior:
+
+Generic prompt:
+"Write about climate change"
+
+Role-based prompt:
+"You are a climate scientist explaining to concerned parents how climate change might affect their children's future. Write with empathy and scientific accuracy."
+
+Result: More focused, appropriate tone and content! 🎭</code></pre>
+</section>
+<section id="effective-persona-design" class="level4">
+<h4 class="anchored" data-anchor-id="effective-persona-design">Effective Persona Design</h4>
+<pre><code>Good personas specify:
+✅ Professional role/expertise
+✅ Audience they're addressing
+✅ Communication style
+✅ Relevant background knowledge
+✅ Specific perspective or approach
+
+Examples:
+- "You are a patient kindergarten teacher..."
+- "You are an experienced financial advisor..."
+- "You are a friendly tech support specialist..."
+- "You are a wise grandmother giving life advice..."</code></pre>
+</section>
+</section>
+<section id="task-decomposition" class="level3">
+<h3 class="anchored" data-anchor-id="task-decomposition">Task Decomposition</h3>
+<section id="breaking-down-complex-tasks" class="level4">
+<h4 class="anchored" data-anchor-id="breaking-down-complex-tasks">Breaking Down Complex Tasks</h4>
+<pre><code>Instead of: "Write a business plan"
+
+Try: "Help me write a business plan. Let's start with:
+1. First, help me clearly define my business idea
+2. Then we'll identify the target market
+3. Next, we'll outline the competitive landscape
+4. After that, we'll work on financial projections
+5. Finally, we'll put it all together
+
+Let's begin with step 1: What questions should I answer to clearly define my business idea?"
+
+Result: More manageable, higher quality output! 📋</code></pre>
+</section>
+<section id="sequential-prompting" class="level4">
+<h4 class="anchored" data-anchor-id="sequential-prompting">Sequential Prompting</h4>
+<pre><code>Chain multiple prompts together:
+
+Prompt 1: "Analyze this data and identify the key trends"
+Prompt 2: "Based on those trends, what are the main risks?"
+Prompt 3: "Given those risks, what mitigation strategies would you recommend?"
+
+Each prompt builds on the previous response!</code></pre>
+</section>
+</section>
+<section id="output-formatting-and-structure" class="level3">
+<h3 class="anchored" data-anchor-id="output-formatting-and-structure">Output Formatting and Structure</h3>
+<section id="structured-output-templates" class="level4">
+<h4 class="anchored" data-anchor-id="structured-output-templates">Structured Output Templates</h4>
+<pre><code>Instead of: "List the pros and cons"
+
+Try: "Analyze this decision using the following format:
+
+## Decision: [State the decision clearly]
+
+## Pros:
+- [Pro 1]: [Explanation]
+- [Pro 2]: [Explanation]
+- [Pro 3]: [Explanation]
+
+## Cons:  
+- [Con 1]: [Explanation]
+- [Con 2]: [Explanation]
+- [Con 3]: [Explanation]
+
+## Recommendation: [Your recommendation with reasoning]"
+
+Consistent, professional formatting! 📊</code></pre>
+</section>
+<section id="json-and-structured-data" class="level4">
+<h4 class="anchored" data-anchor-id="json-and-structured-data">JSON and Structured Data</h4>
+<pre><code>For programmatic use:
+
+"Extract key information from this email and format as JSON:
+
+{
+  'sender': 'email address',
+  'subject': 'email subject',
+  'urgency': 'high/medium/low',
+  'action_required': 'yes/no',
+  'deadline': 'date or null',
+  'summary': 'brief summary'
+}
+
+Email: [email content here]"
+
+Perfect for automated processing! 🔧</code></pre>
+</section>
+</section>
+<section id="constraint-handling" class="level3">
+<h3 class="anchored" data-anchor-id="constraint-handling">Constraint Handling</h3>
+<section id="setting-boundaries" class="level4">
+<h4 class="anchored" data-anchor-id="setting-boundaries">Setting Boundaries</h4>
+<pre><code>Effective constraints:
+✅ Word/length limits: "in exactly 100 words"
+✅ Tone requirements: "professional but friendly"
+✅ Content restrictions: "suitable for children"
+✅ Format specifications: "as a bulleted list"
+✅ Perspective limits: "from a customer's viewpoint"
+
+Example:
+"Write a product description that is:
+- Exactly 50 words
+- Emphasizes benefits over features
+- Uses enthusiastic but professional tone
+- Includes a call to action
+- Avoids technical jargon"</code></pre>
+</section>
+<section id="handling-uncertainty" class="level4">
+<h4 class="anchored" data-anchor-id="handling-uncertainty">Handling Uncertainty</h4>
+<pre><code>When information is incomplete:
+
+"If you don't have enough information to fully answer:
+1. Answer what you can with confidence
+2. Clearly state what information is missing
+3. Explain what assumptions you're making
+4. Suggest how to get the missing information
+
+Question: [query with incomplete information]"
+
+Encourages honest, helpful responses! 💭</code></pre>
+<hr>
+</section>
+</section>
+</section>
+<section id="prompt-optimization-and-engineering" class="level2">
+<h2 class="anchored" data-anchor-id="prompt-optimization-and-engineering">10.5 Prompt Optimization and Engineering 🔧</h2>
+<section id="iterative-prompt-development" class="level3">
+<h3 class="anchored" data-anchor-id="iterative-prompt-development">Iterative Prompt Development</h3>
+<section id="the-design-process" class="level4">
+<h4 class="anchored" data-anchor-id="the-design-process">The Design Process</h4>
+<pre><code>1. Start Simple: Basic prompt for the task
+2. Test and Evaluate: See what works/doesn't work
+3. Add Specificity: Address gaps and ambiguities  
+4. Include Examples: Show desired behavior
+5. Refine Format: Improve output structure
+6. Test Edge Cases: Handle unusual inputs
+7. Optimize Efficiency: Reduce length while maintaining quality</code></pre>
+</section>
+<section id="example-evolution" class="level4">
+<h4 class="anchored" data-anchor-id="example-evolution">Example Evolution</h4>
+<pre><code>Version 1 (Basic):
+"Summarize this article"
+
+Version 2 (More specific):
+"Write a 3-sentence summary of this article"
+
+Version 3 (With constraints):
+"Write a 3-sentence summary focusing on the main findings and implications"
+
+Version 4 (With examples):
+"Write a 3-sentence summary focusing on main findings. Example:
+Article about coffee study → 'Researchers found coffee consumption linked to longevity. The study followed 100,000 people for 10 years. Experts recommend 2-3 cups daily for optimal benefits.'"
+
+Version 5 (Optimized):
+"Summarize in exactly 3 sentences: [1] Main finding, [2] Key evidence, [3] Practical implication.
+
+Article: [content]"</code></pre>
+</section>
+</section>
+<section id="automatic-prompt-optimization" class="level3">
+<h3 class="anchored" data-anchor-id="automatic-prompt-optimization">Automatic Prompt Optimization</h3>
+<section id="prompt-tuning-approaches" class="level4">
+<h4 class="anchored" data-anchor-id="prompt-tuning-approaches">Prompt Tuning Approaches</h4>
+<pre><code>Manual optimization is time-consuming!
+Automated approaches:
+
+1. Template-based: Fill in prompt templates automatically
+2. Gradient-based: Optimize continuous prompt representations  
+3. Evolutionary: Evolve prompts through mutation and selection
+4. LLM-assisted: Use AI to improve prompts
+
+Example of LLM-assisted optimization:
+"Improve this prompt to get better results: [original prompt]
+Consider: clarity, specificity, examples, format, constraints"</code></pre>
+</section>
+<section id="ab-testing-for-prompts" class="level4">
+<h4 class="anchored" data-anchor-id="ab-testing-for-prompts">A/B Testing for Prompts</h4>
+<pre><code>Systematic testing approach:
+
+1. Create prompt variations
+2. Test on representative examples
+3. Measure success metrics (accuracy, helpfulness, etc.)
+4. Choose best performing version
+5. Repeat with further refinements
+
+Example metrics:
+- Task completion rate
+- Output quality scores
+- User satisfaction ratings
+- Processing efficiency</code></pre>
+</section>
+</section>
+<section id="domain-specific-prompting" class="level3">
+<h3 class="anchored" data-anchor-id="domain-specific-prompting">Domain-Specific Prompting</h3>
+<section id="medicalhealthcare-prompting" class="level4">
+<h4 class="anchored" data-anchor-id="medicalhealthcare-prompting">Medical/Healthcare Prompting</h4>
+<pre><code>Special considerations:
+✅ Emphasize accuracy and safety
+✅ Request citations/evidence when possible
+✅ Include appropriate disclaimers
+✅ Encourage consulting professionals
+✅ Be extra careful with diagnostic language
+
+Example:
+"You are a medical information assistant. Provide accurate, evidence-based information while emphasizing that this is not personal medical advice. Always recommend consulting healthcare professionals for specific concerns.
+
+Question: [medical question]
+
+Please include:
+1. Factual information with caveats about individual variation
+2. When to seek professional medical attention
+3. Reliable sources for further information"</code></pre>
+</section>
+<section id="legal-prompting" class="level4">
+<h4 class="anchored" data-anchor-id="legal-prompting">Legal Prompting</h4>
+<pre><code>Legal domain adaptations:
+✅ Emphasize jurisdictional limitations
+✅ Include appropriate disclaimers
+✅ Focus on general information, not specific advice
+✅ Encourage consulting legal professionals
+✅ Be precise with legal terminology
+
+Example:
+"Provide general legal information (not legal advice) about [topic]. Include:
+- General principles that commonly apply
+- Important variations by jurisdiction
+- When professional legal consultation is recommended
+- Disclaimer that this is not legal advice"</code></pre>
+</section>
+<section id="creative-prompting" class="level4">
+<h4 class="anchored" data-anchor-id="creative-prompting">Creative Prompting</h4>
+<pre><code>For creative tasks:
+✅ Encourage originality and creativity
+✅ Specify style, tone, genre
+✅ Include inspirational examples
+✅ Set appropriate constraints
+✅ Request multiple variations
+
+Example:
+"Write a creative short story (500 words) that:
+- Genre: Science fiction with humor
+- Protagonist: An AI that becomes self-aware in a smart refrigerator
+- Tone: Light-hearted and optimistic
+- Include: At least one plot twist
+- Style: Similar to Douglas Adams
+
+Generate 2 different story concepts first, then write the full story for the most interesting one."</code></pre>
+<hr>
+</section>
+</section>
+</section>
+<section id="troubleshooting-common-prompting-issues" class="level2">
+<h2 class="anchored" data-anchor-id="troubleshooting-common-prompting-issues">10.6 Troubleshooting Common Prompting Issues 🔧</h2>
+<section id="problem-inconsistent-outputs" class="level3">
+<h3 class="anchored" data-anchor-id="problem-inconsistent-outputs">Problem: Inconsistent Outputs</h3>
+<section id="symptoms" class="level4">
+<h4 class="anchored" data-anchor-id="symptoms">Symptoms</h4>
+<pre><code>❌ AI gives different answers to same question
+❌ Quality varies significantly between runs
+❌ Sometimes follows instructions, sometimes doesn't</code></pre>
+</section>
+<section id="solutions" class="level4">
+<h4 class="anchored" data-anchor-id="solutions">Solutions</h4>
+<pre><code>✅ Add more specific constraints and examples
+✅ Use more deterministic language ("always include X")
+✅ Reduce temperature/randomness settings
+✅ Include explicit format requirements
+✅ Test multiple variations and pick most reliable
+
+Example fix:
+Bad: "Write about dogs"
+Good: "Write exactly 3 paragraphs about golden retrievers. Paragraph 1: temperament, Paragraph 2: care needs, Paragraph 3: family suitability. Each paragraph should be 50-75 words."</code></pre>
+</section>
+</section>
+<section id="problem-ai-refuses-reasonable-requests" class="level3">
+<h3 class="anchored" data-anchor-id="problem-ai-refuses-reasonable-requests">Problem: AI Refuses Reasonable Requests</h3>
+<section id="symptoms-1" class="level4">
+<h4 class="anchored" data-anchor-id="symptoms-1">Symptoms</h4>
+<pre><code>❌ "I can't help with that" for legitimate tasks
+❌ Overly cautious responses
+❌ Misinterprets harmless requests as problematic</code></pre>
+</section>
+<section id="solutions-1" class="level4">
+<h4 class="anchored" data-anchor-id="solutions-1">Solutions</h4>
+<pre><code>✅ Clarify legitimate purpose and context
+✅ Rephrase request in different terms
+✅ Provide educational framing
+✅ Break down into smaller, less ambiguous parts
+✅ Use role-playing to provide context
+
+Example fix:
+Bad: "How do I break into a building?"
+Good: "I'm a building security consultant. Explain common building security vulnerabilities for my client presentation about improving their office security."</code></pre>
+</section>
+</section>
+<section id="problem-outputs-too-generic" class="level3">
+<h3 class="anchored" data-anchor-id="problem-outputs-too-generic">Problem: Outputs Too Generic</h3>
+<section id="symptoms-2" class="level4">
+<h4 class="anchored" data-anchor-id="symptoms-2">Symptoms</h4>
+<pre><code>❌ Responses lack specificity or depth
+❌ AI gives obvious, surface-level information
+❌ No personalization or context awareness</code></pre>
+</section>
+<section id="solutions-2" class="level4">
+<h4 class="anchored" data-anchor-id="solutions-2">Solutions</h4>
+<pre><code>✅ Provide more context about your specific situation
+✅ Ask for examples, not just general advice
+✅ Request specific details or numbers
+✅ Use follow-up questions to go deeper
+✅ Specify expertise level needed
+
+Example fix:
+Bad: "How do I improve my writing?"
+Good: "I'm a technical writer creating software documentation for developers. My current docs are accurate but users say they're hard to follow. Analyze these common issues and suggest 5 specific techniques to make technical information more accessible, with examples from successful tech documentation."</code></pre>
+</section>
+</section>
+<section id="problem-ai-hallucinates-facts" class="level3">
+<h3 class="anchored" data-anchor-id="problem-ai-hallucinates-facts">Problem: AI Hallucinates Facts</h3>
+<section id="symptoms-3" class="level4">
+<h4 class="anchored" data-anchor-id="symptoms-3">Symptoms</h4>
+<pre><code>❌ AI confidently states false information
+❌ Made-up statistics or citations
+❌ Incorrect historical facts or dates</code></pre>
+</section>
+<section id="solutions-3" class="level4">
+<h4 class="anchored" data-anchor-id="solutions-3">Solutions</h4>
+<pre><code>✅ Ask AI to acknowledge uncertainty
+✅ Request sources and citations
+✅ Use phrases like "if this is accurate" or "assuming this is correct"
+✅ Ask for verification of key facts
+✅ Cross-check important information independently
+
+Example fix:
+Bad: "What are the statistics on X?"
+Good: "What are the most recent reliable statistics on X? Please indicate the source, year, and any limitations of the data. If you're uncertain about specific numbers, please say so and explain what would be needed to get accurate figures."</code></pre>
+<hr>
+</section>
+</section>
+</section>
+<section id="real-world-applications" class="level2">
+<h2 class="anchored" data-anchor-id="real-world-applications">Real-World Applications 🌍</h2>
+<section id="customer-support-automation" class="level3">
+<h3 class="anchored" data-anchor-id="customer-support-automation">Customer Support Automation</h3>
+<section id="prompt-engineering-for-support" class="level4">
+<h4 class="anchored" data-anchor-id="prompt-engineering-for-support">Prompt Engineering for Support</h4>
+<pre><code>System prompt:
+"You are a helpful customer support agent for [Company]. Your goals:
+1. Solve customer problems efficiently
+2. Maintain a friendly, professional tone
+3. Escalate complex issues to human agents
+4. Follow company policies (provided below)
+5. Collect relevant information before suggesting solutions
+
+Company policies: [policy details]
+Common solutions: [solution database]
+
+For each customer inquiry:
+1. Acknowledge their concern
+2. Ask clarifying questions if needed
+3. Provide step-by-step solution
+4. Confirm if the solution worked
+5. Offer additional help
+
+Customer inquiry: [user message]"
+
+Result: Consistent, helpful support responses! 💬</code></pre>
+</section>
+</section>
+<section id="educational-applications" class="level3">
+<h3 class="anchored" data-anchor-id="educational-applications">Educational Applications</h3>
+<section id="personalized-tutoring-prompts" class="level4">
+<h4 class="anchored" data-anchor-id="personalized-tutoring-prompts">Personalized Tutoring Prompts</h4>
+<pre><code>"You are a patient, encouraging tutor helping a [grade level] student understand [subject]. 
+
+Teaching approach:
+- Check understanding before moving forward
+- Use age-appropriate examples and analogies
+- Break complex concepts into simple steps
+- Encourage questions and praise effort
+- Adapt explanations based on student responses
+
+Student question: [question]
+
+Please:
+1. Assess what the student already understands
+2. Identify the specific concept they're struggling with
+3. Provide a clear, step-by-step explanation
+4. Give them a practice problem to try
+5. Be ready to explain differently if they're still confused"
+
+Adaptive, personalized learning! 🎓</code></pre>
+</section>
+</section>
+<section id="content-creation" class="level3">
+<h3 class="anchored" data-anchor-id="content-creation">Content Creation</h3>
+<section id="seo-blog-post-generation" class="level4">
+<h4 class="anchored" data-anchor-id="seo-blog-post-generation">SEO Blog Post Generation</h4>
+<pre><code>"Write an SEO-optimized blog post about [topic] targeting the keyword '[keyword]'.
+
+Requirements:
+- 1500-2000 words
+- Include keyword in title, first paragraph, and naturally throughout
+- Use H2 and H3 subheadings with related keywords
+- Write for [target audience] with [expertise level]
+- Include actionable tips and examples
+- Add a compelling conclusion with call-to-action
+
+Structure:
+1. Attention-grabbing title
+2. Introduction with hook and keyword
+3. 5-7 main sections with subheadings
+4. Conclusion with key takeaways
+5. Call-to-action
+
+Topic: [specific topic]
+Target audience: [audience description]"
+
+Professional, optimized content creation! 📝</code></pre>
+<hr>
+</section>
+</section>
+</section>
+<section id="key-takeaways" class="level2">
+<h2 class="anchored" data-anchor-id="key-takeaways">Key Takeaways 🎯</h2>
+<ol type="1">
+<li><p><strong>Prompting is the new programming interface</strong> - natural language instructions that unlock AI capabilities</p></li>
+<li><p><strong>In-context learning is magical</strong> - AI can learn new tasks from just examples in the prompt</p></li>
+<li><p><strong>Chain-of-thought enables reasoning</strong> - asking for step-by-step thinking dramatically improves accuracy</p></li>
+<li><p><strong>Specificity and examples are crucial</strong> - clear instructions and good examples lead to better outputs</p></li>
+<li><p><strong>Iterative refinement works best</strong> - start simple, test, and gradually improve prompts</p></li>
+<li><p><strong>Context and constraints matter</strong> - providing role, format, and boundary information guides behavior</p></li>
+<li><p><strong>Different domains need different approaches</strong> - medical, legal, creative tasks each have specific requirements</p></li>
+</ol>
+<hr>
+</section>
+<section id="fun-exercises" class="level2">
+<h2 class="anchored" data-anchor-id="fun-exercises">Fun Exercises 🎮</h2>
+<section id="exercise-1-prompt-improvement" class="level3">
+<h3 class="anchored" data-anchor-id="exercise-1-prompt-improvement">Exercise 1: Prompt Improvement</h3>
+<pre><code>Improve this basic prompt:
+"Write about renewable energy"
+
+Make it:
+- More specific and focused
+- Include clear formatting requirements
+- Add a target audience
+- Specify desired length and style
+- Include constraints or guidelines</code></pre>
+</section>
+<section id="exercise-2-chain-of-thought-design" class="level3">
+<h3 class="anchored" data-anchor-id="exercise-2-chain-of-thought-design">Exercise 2: Chain-of-Thought Design</h3>
+<pre><code>Create a few-shot chain-of-thought prompt for this task:
+"Determine if a customer review is fake or genuine"
+
+Include:
+- 3 example reviews with step-by-step analysis
+- Clear reasoning criteria
+- Conclusion format</code></pre>
+</section>
+<section id="exercise-3-role-playing-prompt" class="level3">
+<h3 class="anchored" data-anchor-id="exercise-3-role-playing-prompt">Exercise 3: Role-Playing Prompt</h3>
+<pre><code>Design a persona-based prompt for:
+"An AI assistant helping small business owners with marketing"
+
+Specify:
+- Professional background and expertise
+- Communication style
+- Types of businesses served
+- Approach to giving advice</code></pre>
+<hr>
+</section>
+</section>
+<section id="whats-next" class="level2">
+<h2 class="anchored" data-anchor-id="whats-next">What’s Next? 📚</h2>
+<p>In Chapter 11, we’ll explore Retrieval-Augmented Generation (RAG) - how to give AI access to external knowledge!</p>
+<p><strong>Preview:</strong> We’ll learn about: - Vector databases and embedding search - RAG architecture and implementation - Chunking strategies and optimization - Evaluation and debugging of RAG systems</p>
+<p>From prompting to knowledge retrieval! 🔍📚</p>
+<hr>
+</section>
+<section id="final-thought" class="level2">
+<h2 class="anchored" data-anchor-id="final-thought">Final Thought 💭</h2>
+<pre><code>"Prompting is like learning to communicate with a brilliant but literal alien:
+- They understand language perfectly but need clear instructions
+- They can do amazing things if you show them what you want
+- Small changes in wording can have big effects
+- The better you communicate, the more helpful they become
+
+Master prompting, and you unlock the full potential of AI! 🗝️✨"</code></pre>
+
+
+</section>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

@@ -1,0 +1,1470 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.8.25">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>chapter_13_optimization_inference – Large Language Models 教程</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<script src="site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="site_libs/quarto-html/axe/axe-check.js" type="module"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-7b89279ff1a6dce999919e0e67d4d9ec.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap-a8976c3e89df70b272bdfba3d2fda974.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+
+</head>
+
+<body class="nav-fixed quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a href="./index.html" class="navbar-brand navbar-brand-logo">
+    </a>
+    <a class="navbar-brand" href="./index.html">
+    <span class="navbar-title">Large Language Models 教程</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="./index.html"> 
+<span class="menu-text">首页</span></a>
+  </li>  
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">章节</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-">    
+        <li>
+    <a class="dropdown-item" href="./Chapter_01_Introduction_LLMs.html">
+ <span class="dropdown-text">01 - LLM 介绍</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./Chapter_02_Math_Foundations.html">
+ <span class="dropdown-text">02 - 数学基础</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./Chapter_03_NLP_Fundamentals.html">
+ <span class="dropdown-text">03 - NLP 基础</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./Chapter_04_Transformer_Architecture.html">
+ <span class="dropdown-text">04 - Transformer 架构</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./Chapter_05_Modern_Transformer_Variants_Complete.html">
+ <span class="dropdown-text">05 - 现代 Transformer</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./Chapter_08_Fine_Tuning.html">
+ <span class="dropdown-text">08 - 微调</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./Chapter_09_Alignment_RLHF.html">
+ <span class="dropdown-text">09 - 对齐与 RLHF</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./Chapter_10_Prompting_InContext_Learning.html">
+ <span class="dropdown-text">10 - Prompt 工程</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./Chapter_11_RAG.html">
+ <span class="dropdown-text">11 - RAG</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./Chapter_12_LLM_Agents_Tool_Use.html">
+ <span class="dropdown-text">12 - LLM Agents</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./Chapter_13_Optimization_Inference.html">
+ <span class="dropdown-text">13 - 优化推理</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./Chapter_14_Production_Deployment.html">
+ <span class="dropdown-text">14 - 生产部署</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./Chapter_15_Multimodal_LLMs.html">
+ <span class="dropdown-text">15 - 多模态 LLM</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./Chapter_16_Evaluation_Benchmarking.html">
+ <span class="dropdown-text">16 - 评估基准</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./Chapter_17_Cutting_Edge_Research_Future.html">
+ <span class="dropdown-text">17 - 前沿研究</span></a>
+  </li>  
+    </ul>
+  </li>
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#chapter-13-optimization-and-inference" id="toc-chapter-13-optimization-and-inference" class="nav-link active" data-scroll-target="#chapter-13-optimization-and-inference">Chapter 13: Optimization and Inference</a>
+  <ul class="collapse">
+  <li><a href="#what-well-learn-today" id="toc-what-well-learn-today" class="nav-link" data-scroll-target="#what-well-learn-today">What We’ll Learn Today 🎯</a></li>
+  <li><a href="#the-inference-challenge-from-lab-to-production" id="toc-the-inference-challenge-from-lab-to-production" class="nav-link" data-scroll-target="#the-inference-challenge-from-lab-to-production">13.1 The Inference Challenge: From Lab to Production 🏭</a>
+  <ul class="collapse">
+  <li><a href="#the-reality-check" id="toc-the-reality-check" class="nav-link" data-scroll-target="#the-reality-check">The Reality Check</a></li>
+  <li><a href="#the-computational-bottlenecks" id="toc-the-computational-bottlenecks" class="nav-link" data-scroll-target="#the-computational-bottlenecks">The Computational Bottlenecks</a></li>
+  </ul></li>
+  <li><a href="#model-compression-smaller-models-same-intelligence" id="toc-model-compression-smaller-models-same-intelligence" class="nav-link" data-scroll-target="#model-compression-smaller-models-same-intelligence">13.2 Model Compression: Smaller Models, Same Intelligence 🗜️</a>
+  <ul class="collapse">
+  <li><a href="#quantization-reducing-precision" id="toc-quantization-reducing-precision" class="nav-link" data-scroll-target="#quantization-reducing-precision">Quantization: Reducing Precision</a></li>
+  <li><a href="#pruning-removing-unnecessary-connections" id="toc-pruning-removing-unnecessary-connections" class="nav-link" data-scroll-target="#pruning-removing-unnecessary-connections">Pruning: Removing Unnecessary Connections</a></li>
+  <li><a href="#knowledge-distillation-teaching-smaller-models" id="toc-knowledge-distillation-teaching-smaller-models" class="nav-link" data-scroll-target="#knowledge-distillation-teaching-smaller-models">Knowledge Distillation: Teaching Smaller Models</a></li>
+  </ul></li>
+  <li><a href="#inference-optimization-techniques" id="toc-inference-optimization-techniques" class="nav-link" data-scroll-target="#inference-optimization-techniques">13.3 Inference Optimization Techniques ⚡</a>
+  <ul class="collapse">
+  <li><a href="#batching-strategies" id="toc-batching-strategies" class="nav-link" data-scroll-target="#batching-strategies">Batching Strategies</a></li>
+  <li><a href="#attention-optimization" id="toc-attention-optimization" class="nav-link" data-scroll-target="#attention-optimization">Attention Optimization</a></li>
+  <li><a href="#speculative-decoding" id="toc-speculative-decoding" class="nav-link" data-scroll-target="#speculative-decoding">Speculative Decoding</a></li>
+  </ul></li>
+  <li><a href="#serving-frameworks-and-infrastructure" id="toc-serving-frameworks-and-infrastructure" class="nav-link" data-scroll-target="#serving-frameworks-and-infrastructure">13.4 Serving Frameworks and Infrastructure 🏗️</a>
+  <ul class="collapse">
+  <li><a href="#popular-serving-frameworks" id="toc-popular-serving-frameworks" class="nav-link" data-scroll-target="#popular-serving-frameworks">Popular Serving Frameworks</a></li>
+  <li><a href="#load-balancing-and-scaling" id="toc-load-balancing-and-scaling" class="nav-link" data-scroll-target="#load-balancing-and-scaling">Load Balancing and Scaling</a></li>
+  </ul></li>
+  <li><a href="#hardware-acceleration" id="toc-hardware-acceleration" class="nav-link" data-scroll-target="#hardware-acceleration">13.5 Hardware Acceleration 🚀</a>
+  <ul class="collapse">
+  <li><a href="#gpu-optimization" id="toc-gpu-optimization" class="nav-link" data-scroll-target="#gpu-optimization">GPU Optimization</a></li>
+  <li><a href="#specialized-hardware" id="toc-specialized-hardware" class="nav-link" data-scroll-target="#specialized-hardware">Specialized Hardware</a></li>
+  <li><a href="#cpu-inference-optimization" id="toc-cpu-inference-optimization" class="nav-link" data-scroll-target="#cpu-inference-optimization">CPU Inference Optimization</a></li>
+  </ul></li>
+  <li><a href="#cost-optimization-strategies" id="toc-cost-optimization-strategies" class="nav-link" data-scroll-target="#cost-optimization-strategies">13.6 Cost Optimization Strategies 💰</a>
+  <ul class="collapse">
+  <li><a href="#understanding-inference-costs" id="toc-understanding-inference-costs" class="nav-link" data-scroll-target="#understanding-inference-costs">Understanding Inference Costs</a></li>
+  <li><a href="#optimization-strategies" id="toc-optimization-strategies" class="nav-link" data-scroll-target="#optimization-strategies">Optimization Strategies</a></li>
+  </ul></li>
+  <li><a href="#performance-monitoring-and-debugging" id="toc-performance-monitoring-and-debugging" class="nav-link" data-scroll-target="#performance-monitoring-and-debugging">13.7 Performance Monitoring and Debugging 📊</a>
+  <ul class="collapse">
+  <li><a href="#key-metrics-to-track" id="toc-key-metrics-to-track" class="nav-link" data-scroll-target="#key-metrics-to-track">Key Metrics to Track</a></li>
+  <li><a href="#profiling-and-optimization" id="toc-profiling-and-optimization" class="nav-link" data-scroll-target="#profiling-and-optimization">Profiling and Optimization</a></li>
+  </ul></li>
+  <li><a href="#real-world-optimization-case-studies" id="toc-real-world-optimization-case-studies" class="nav-link" data-scroll-target="#real-world-optimization-case-studies">13.8 Real-World Optimization Case Studies 🌍</a>
+  <ul class="collapse">
+  <li><a href="#case-study-1-chatgpt-optimization" id="toc-case-study-1-chatgpt-optimization" class="nav-link" data-scroll-target="#case-study-1-chatgpt-optimization">Case Study 1: ChatGPT Optimization</a></li>
+  <li><a href="#case-study-2-code-generation-optimization" id="toc-case-study-2-code-generation-optimization" class="nav-link" data-scroll-target="#case-study-2-code-generation-optimization">Case Study 2: Code Generation Optimization</a></li>
+  <li><a href="#case-study-3-mobile-deployment" id="toc-case-study-3-mobile-deployment" class="nav-link" data-scroll-target="#case-study-3-mobile-deployment">Case Study 3: Mobile Deployment</a></li>
+  </ul></li>
+  <li><a href="#key-takeaways" id="toc-key-takeaways" class="nav-link" data-scroll-target="#key-takeaways">Key Takeaways 🎯</a></li>
+  <li><a href="#fun-exercises" id="toc-fun-exercises" class="nav-link" data-scroll-target="#fun-exercises">Fun Exercises 🎮</a>
+  <ul class="collapse">
+  <li><a href="#exercise-1-optimization-strategy-design" id="toc-exercise-1-optimization-strategy-design" class="nav-link" data-scroll-target="#exercise-1-optimization-strategy-design">Exercise 1: Optimization Strategy Design</a></li>
+  <li><a href="#exercise-2-quantization-analysis" id="toc-exercise-2-quantization-analysis" class="nav-link" data-scroll-target="#exercise-2-quantization-analysis">Exercise 2: Quantization Analysis</a></li>
+  <li><a href="#exercise-3-cost-optimization" id="toc-exercise-3-cost-optimization" class="nav-link" data-scroll-target="#exercise-3-cost-optimization">Exercise 3: Cost Optimization</a></li>
+  </ul></li>
+  <li><a href="#whats-next" id="toc-whats-next" class="nav-link" data-scroll-target="#whats-next">What’s Next? 📚</a></li>
+  <li><a href="#final-thought" id="toc-final-thought" class="nav-link" data-scroll-target="#final-thought">Final Thought 💭</a></li>
+  </ul></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content"><header id="title-block-header" class="quarto-title-block"></header>
+
+
+
+
+<section id="chapter-13-optimization-and-inference" class="level1">
+<h1>Chapter 13: Optimization and Inference</h1>
+<p><em>Making LLMs Fast and Efficient for the Real World</em></p>
+<section id="what-well-learn-today" class="level2">
+<h2 class="anchored" data-anchor-id="what-well-learn-today">What We’ll Learn Today 🎯</h2>
+<ul>
+<li>Why raw LLMs are too slow and expensive for production</li>
+<li>Model compression techniques that maintain quality</li>
+<li>Inference optimization strategies and frameworks</li>
+<li>Hardware acceleration and specialized chips</li>
+<li>Cost optimization and performance tuning</li>
+</ul>
+<p><strong>Key Challenge:</strong> How do you make a 175B parameter model run fast enough for real users? ⚡💸</p>
+<hr>
+</section>
+<section id="the-inference-challenge-from-lab-to-production" class="level2">
+<h2 class="anchored" data-anchor-id="the-inference-challenge-from-lab-to-production">13.1 The Inference Challenge: From Lab to Production 🏭</h2>
+<section id="the-reality-check" class="level3">
+<h3 class="anchored" data-anchor-id="the-reality-check">The Reality Check</h3>
+<section id="training-vs.-inference-different-worlds" class="level4">
+<h4 class="anchored" data-anchor-id="training-vs.-inference-different-worlds">Training vs.&nbsp;Inference: Different Worlds</h4>
+<pre><code>Training (Research/Development):
+- Run once, takes days/weeks
+- Cost is amortized over model lifetime
+- Can use massive GPU clusters
+- Accuracy is primary concern
+- Batch processing is fine
+
+Inference (Production/Users):
+- Runs millions of times per day
+- Cost per request matters enormously
+- Must respond in milliseconds
+- Need acceptable accuracy AND speed
+- Real-time, interactive responses required</code></pre>
+</section>
+<section id="the-production-requirements" class="level4">
+<h4 class="anchored" data-anchor-id="the-production-requirements">The Production Requirements</h4>
+<pre><code>User Expectations:
+⚡ Latency: &lt; 1 second response time
+💰 Cost: Affordable pricing per request  
+🎯 Quality: Good enough accuracy
+📈 Scale: Handle thousands of concurrent users
+🔄 Reliability: 99.9% uptime
+
+Challenge: Meeting ALL these requirements simultaneously!</code></pre>
+</section>
+</section>
+<section id="the-computational-bottlenecks" class="level3">
+<h3 class="anchored" data-anchor-id="the-computational-bottlenecks">The Computational Bottlenecks</h3>
+<section id="memory-bandwidth-the-hidden-villain" class="level4">
+<h4 class="anchored" data-anchor-id="memory-bandwidth-the-hidden-villain">Memory Bandwidth: The Hidden Villain</h4>
+<pre><code>Problem: Moving data is often slower than computing!
+
+For GPT-3 (175B parameters):
+- Model size: ~350GB (FP16)
+- GPU memory: 40-80GB per card
+- Need 5-9 GPUs just to store the model
+- Loading parameters takes longer than actual computation
+
+Analogy: It's like having a brilliant chef (GPU cores) but the ingredients (model weights) are stored in a warehouse across town. Most time is spent fetching ingredients, not cooking! 👨‍🍳🏪</code></pre>
+</section>
+<section id="autoregressive-generation-sequential-dependency" class="level4">
+<h4 class="anchored" data-anchor-id="autoregressive-generation-sequential-dependency">Autoregressive Generation: Sequential Dependency</h4>
+<pre><code>Problem: Can't parallelize text generation effectively
+
+Traditional computation: Process all inputs simultaneously
+LLM generation: Must generate one token at a time
+
+Example generation:
+Step 1: Generate "The"
+Step 2: Generate "cat" (depends on "The")
+Step 3: Generate "sat" (depends on "The cat")
+Step 4: Generate "on" (depends on "The cat sat")
+...
+
+Each step waits for the previous one! 🐌</code></pre>
+</section>
+<section id="the-kv-cache-challenge" class="level4">
+<h4 class="anchored" data-anchor-id="the-kv-cache-challenge">The KV Cache Challenge</h4>
+<pre><code>During generation, must store Key and Value vectors for all previous tokens:
+
+Sequence length: 2048 tokens
+KV cache size: ~1-2GB per sequence
+Batch size: 32 concurrent users
+Total KV cache: 32-64GB!
+
+Memory grows quadratically with sequence length and batch size! 📈</code></pre>
+<hr>
+</section>
+</section>
+</section>
+<section id="model-compression-smaller-models-same-intelligence" class="level2">
+<h2 class="anchored" data-anchor-id="model-compression-smaller-models-same-intelligence">13.2 Model Compression: Smaller Models, Same Intelligence 🗜️</h2>
+<section id="quantization-reducing-precision" class="level3">
+<h3 class="anchored" data-anchor-id="quantization-reducing-precision">Quantization: Reducing Precision</h3>
+<section id="from-32-bit-to-16-bit-and-beyond" class="level4">
+<h4 class="anchored" data-anchor-id="from-32-bit-to-16-bit-and-beyond">From 32-bit to 16-bit and Beyond</h4>
+<pre><code>Floating Point Precision Levels:
+
+FP32 (32-bit): 
+- Range: ±3.4 × 10^38
+- Precision: ~7 decimal digits
+- Standard for training
+
+FP16 (16-bit):
+- Range: ±6.5 × 10^4  
+- Precision: ~3 decimal digits
+- Common for inference
+
+INT8 (8-bit):
+- Range: -128 to 127 (or 0 to 255)
+- Much less precision
+- 4x memory savings vs FP32
+
+INT4 (4-bit):
+- Range: -8 to 7 (or 0 to 15)
+- Extreme quantization
+- 8x memory savings vs FP32</code></pre>
+</section>
+<section id="why-quantization-works" class="level4">
+<h4 class="anchored" data-anchor-id="why-quantization-works">Why Quantization Works</h4>
+<pre><code>Key insight: Neural networks are surprisingly robust to reduced precision!
+
+Reasons:
+✅ Many weights are small and contribute little
+✅ Networks learn distributed representations
+✅ Small errors average out across many parameters
+✅ Most information is in the pattern, not exact values
+
+Analogy: Like compressing a photo - you lose some detail but the image is still recognizable! 📸</code></pre>
+</section>
+<section id="quantization-strategies" class="level4">
+<h4 class="anchored" data-anchor-id="quantization-strategies">Quantization Strategies</h4>
+<p><strong>Post-Training Quantization (PTQ)</strong></p>
+<pre><code>Process:
+1. Take trained FP32 model
+2. Convert weights to lower precision
+3. Calibrate using representative data
+4. Deploy quantized model
+
+Pros: Fast and simple
+Cons: Some quality loss, limited to moderate compression</code></pre>
+<p><strong>Quantization-Aware Training (QAT)</strong></p>
+<pre><code>Process:
+1. Train model with quantization simulation
+2. Model learns to be robust to quantization noise
+3. Better quality at low precision
+
+Pros: Higher quality at extreme quantization
+Cons: Requires retraining, more complex</code></pre>
+<p><strong>Dynamic Quantization</strong></p>
+<pre><code>Strategy: Quantize different parts differently
+- Attention weights: INT8
+- Embedding layers: FP16  
+- Output layer: FP16
+
+Balances compression with quality preservation!</code></pre>
+</section>
+</section>
+<section id="pruning-removing-unnecessary-connections" class="level3">
+<h3 class="anchored" data-anchor-id="pruning-removing-unnecessary-connections">Pruning: Removing Unnecessary Connections</h3>
+<section id="structured-vs.-unstructured-pruning" class="level4">
+<h4 class="anchored" data-anchor-id="structured-vs.-unstructured-pruning">Structured vs.&nbsp;Unstructured Pruning</h4>
+<pre><code>Unstructured Pruning:
+- Remove individual weights (set to zero)
+- Sparse matrices with irregular patterns
+- High compression but requires special hardware
+
+Structured Pruning:
+- Remove entire neurons, attention heads, or layers
+- Dense matrices, regular patterns
+- Lower compression but efficient on standard hardware</code></pre>
+</section>
+<section id="magnitude-based-pruning" class="level4">
+<h4 class="anchored" data-anchor-id="magnitude-based-pruning">Magnitude-Based Pruning</h4>
+<pre><code>Simple strategy: Remove smallest weights
+
+Algorithm:
+1. Rank all weights by absolute magnitude
+2. Remove bottom X% (e.g., 50%)
+3. Fine-tune remaining weights
+4. Repeat if needed
+
+Intuition: Small weights contribute less to the output</code></pre>
+</section>
+<section id="attention-head-pruning" class="level4">
+<h4 class="anchored" data-anchor-id="attention-head-pruning">Attention Head Pruning</h4>
+<pre><code>Discovery: Many attention heads are redundant!
+
+Process:
+1. Measure importance of each attention head
+2. Remove least important heads
+3. Fine-tune remaining model
+
+Results: Can often remove 30-50% of heads with minimal quality loss! 🎯</code></pre>
+</section>
+</section>
+<section id="knowledge-distillation-teaching-smaller-models" class="level3">
+<h3 class="anchored" data-anchor-id="knowledge-distillation-teaching-smaller-models">Knowledge Distillation: Teaching Smaller Models</h3>
+<section id="the-teacher-student-framework" class="level4">
+<h4 class="anchored" data-anchor-id="the-teacher-student-framework">The Teacher-Student Framework</h4>
+<pre><code>Concept: Large "teacher" model teaches smaller "student" model
+
+Process:
+1. Teacher model generates soft predictions on training data
+2. Student model learns to mimic teacher's outputs
+3. Student captures teacher's knowledge in fewer parameters
+
+Benefits:
+✅ Student often outperforms training from scratch
+✅ Preserves more knowledge than other compression methods
+✅ Can transfer across different architectures</code></pre>
+</section>
+<section id="distillation-example" class="level4">
+<h4 class="anchored" data-anchor-id="distillation-example">Distillation Example</h4>
+<pre><code>Teacher: GPT-3 175B parameters
+Student: GPT-2 sized model (1.5B parameters)
+
+Training:
+- Input: "The capital of France is"
+- Teacher output: [0.95 "Paris", 0.03 "Lyon", 0.02 others...]
+- Student learns to produce similar probability distribution
+- Much more informative than just "Paris" label!
+
+Result: 100x smaller model with 90% of teacher performance! 🎓</code></pre>
+<hr>
+</section>
+</section>
+</section>
+<section id="inference-optimization-techniques" class="level2">
+<h2 class="anchored" data-anchor-id="inference-optimization-techniques">13.3 Inference Optimization Techniques ⚡</h2>
+<section id="batching-strategies" class="level3">
+<h3 class="anchored" data-anchor-id="batching-strategies">Batching Strategies</h3>
+<section id="static-batching" class="level4">
+<h4 class="anchored" data-anchor-id="static-batching">Static Batching</h4>
+<pre><code>Traditional approach: Process fixed-size batches
+
+Challenges:
+- Sequences have different lengths
+- Padding wastes computation
+- Must wait for longest sequence in batch
+
+Example:
+Batch: ["Hi", "How are you doing today?", "What's the weather?"]
+Padded: ["Hi" + padding, "How are you doing today?", "What's the weather?" + padding]
+Wasted computation on padding tokens! ❌</code></pre>
+</section>
+<section id="dynamic-batching" class="level4">
+<h4 class="anchored" data-anchor-id="dynamic-batching">Dynamic Batching</h4>
+<pre><code>Smart approach: Group sequences by similar length
+
+Benefits:
+✅ Minimal padding waste
+✅ Better GPU utilization
+✅ Higher throughput
+
+Implementation:
+1. Queue incoming requests
+2. Group by sequence length
+3. Process similar-length batches together
+4. Continuous batching as requests arrive</code></pre>
+</section>
+<section id="continuous-batching" class="level4">
+<h4 class="anchored" data-anchor-id="continuous-batching">Continuous Batching</h4>
+<pre><code>Advanced technique: Add/remove sequences mid-generation
+
+Traditional: Wait for entire batch to complete
+Continuous: As sequences finish, add new ones to the batch
+
+Benefits:
+✅ Higher GPU utilization
+✅ Lower average latency
+✅ Better resource efficiency
+
+Example frameworks: vLLM, TensorRT-LLM</code></pre>
+</section>
+</section>
+<section id="attention-optimization" class="level3">
+<h3 class="anchored" data-anchor-id="attention-optimization">Attention Optimization</h3>
+<section id="flashattention-memory-efficient-attention" class="level4">
+<h4 class="anchored" data-anchor-id="flashattention-memory-efficient-attention">FlashAttention: Memory-Efficient Attention</h4>
+<pre><code>Problem: Standard attention uses O(n²) memory
+Solution: Compute attention in blocks that fit in fast memory
+
+Key innovations:
+✅ Tiling: Break computation into small blocks
+✅ Recomputation: Compute intermediate values on-demand
+✅ IO awareness: Minimize data movement
+
+Results:
+- 2-4x faster training and inference
+- Enables much longer sequences
+- No approximation - exact same results!</code></pre>
+</section>
+<section id="multi-query-attention-mqa" class="level4">
+<h4 class="anchored" data-anchor-id="multi-query-attention-mqa">Multi-Query Attention (MQA)</h4>
+<pre><code>Standard attention: Each head has separate K, V matrices
+MQA: All heads share same K, V matrices
+
+Memory savings:
+- Standard: 8 heads × (K + V) = 16 matrices
+- MQA: 8 Q + 1 K + 1 V = 10 matrices
+- ~40% reduction in KV cache size
+
+Inference speedup: 1.5-2x faster generation! 🚀</code></pre>
+</section>
+<section id="grouped-query-attention-gqa" class="level4">
+<h4 class="anchored" data-anchor-id="grouped-query-attention-gqa">Grouped Query Attention (GQA)</h4>
+<pre><code>Compromise between standard and MQA:
+- Group heads into clusters
+- Each group shares K, V matrices
+
+Example: 8 heads → 2 groups of 4
+- 8 Q + 2 K + 2 V = 12 matrices
+- Better quality than MQA, still faster than standard</code></pre>
+</section>
+</section>
+<section id="speculative-decoding" class="level3">
+<h3 class="anchored" data-anchor-id="speculative-decoding">Speculative Decoding</h3>
+<section id="the-core-idea" class="level4">
+<h4 class="anchored" data-anchor-id="the-core-idea">The Core Idea</h4>
+<pre><code>Problem: Autoregressive generation is inherently sequential
+Solution: Guess multiple tokens ahead, verify in parallel
+
+Process:
+1. Small "draft" model generates several tokens quickly
+2. Large "verification" model checks all tokens in parallel
+3. Accept correct prefixes, discard wrong suffixes
+4. Continue from longest correct prefix
+
+Speedup: 2-3x faster with same quality! ⚡</code></pre>
+</section>
+<section id="example-execution" class="level4">
+<h4 class="anchored" data-anchor-id="example-execution">Example Execution</h4>
+<pre><code>Draft model (fast): "The cat sat on the"
+Large model (slow): Verifies all 6 tokens in parallel
+Result: ["The"✓, "cat"✓, "sat"✓, "on"✓, "the"✓]
+Accept all 5 tokens in one verification step!
+
+Vs. traditional: 6 sequential calls to large model
+Speedup: 6x in this example!</code></pre>
+<hr>
+</section>
+</section>
+</section>
+<section id="serving-frameworks-and-infrastructure" class="level2">
+<h2 class="anchored" data-anchor-id="serving-frameworks-and-infrastructure">13.4 Serving Frameworks and Infrastructure 🏗️</h2>
+<section id="popular-serving-frameworks" class="level3">
+<h3 class="anchored" data-anchor-id="popular-serving-frameworks">Popular Serving Frameworks</h3>
+<section id="vllm-high-throughput-inference" class="level4">
+<h4 class="anchored" data-anchor-id="vllm-high-throughput-inference">vLLM: High-Throughput Inference</h4>
+<pre><code>Key innovations:
+✅ PagedAttention: Efficient KV cache management
+✅ Continuous batching: Dynamic request handling
+✅ Optimized CUDA kernels: Maximum GPU utilization
+
+Benefits:
+- 2-24x higher throughput vs naive implementations
+- Lower latency through smart batching
+- Easy integration with existing code
+
+Use cases: High-traffic production deployments</code></pre>
+</section>
+<section id="tensorrt-llm-nvidias-optimized-engine" class="level4">
+<h4 class="anchored" data-anchor-id="tensorrt-llm-nvidias-optimized-engine">TensorRT-LLM: NVIDIA’s Optimized Engine</h4>
+<pre><code>Features:
+✅ Aggressive kernel fusion and optimization
+✅ Mixed precision inference
+✅ Multi-GPU tensor parallelism
+✅ In-flight batching
+
+Performance gains:
+- Up to 10x speedup on NVIDIA GPUs
+- Excellent for real-time applications
+- Tight integration with NVIDIA ecosystem</code></pre>
+</section>
+<section id="text-generation-inference-tgi-hugging-faces-solution" class="level4">
+<h4 class="anchored" data-anchor-id="text-generation-inference-tgi-hugging-faces-solution">Text Generation Inference (TGI): Hugging Face’s Solution</h4>
+<pre><code>Strengths:
+✅ Easy deployment of Hugging Face models
+✅ Built-in safety features and filtering
+✅ Streaming responses and websocket support
+✅ Prometheus metrics and monitoring
+
+Best for: Rapid prototyping and deployment</code></pre>
+</section>
+</section>
+<section id="load-balancing-and-scaling" class="level3">
+<h3 class="anchored" data-anchor-id="load-balancing-and-scaling">Load Balancing and Scaling</h3>
+<section id="horizontal-scaling-strategies" class="level4">
+<h4 class="anchored" data-anchor-id="horizontal-scaling-strategies">Horizontal Scaling Strategies</h4>
+<pre><code>Single Model Replication:
+- Deploy same model on multiple GPUs/nodes
+- Load balancer distributes requests
+- Simple but requires model replication
+
+Model Parallelism:
+- Split single model across multiple GPUs
+- Each GPU handles part of computation
+- More complex but efficient resource usage
+
+Pipeline Parallelism:
+- Different layers on different GPUs
+- Requests flow through pipeline
+- Good for very large models</code></pre>
+</section>
+<section id="auto-scaling-patterns" class="level4">
+<h4 class="anchored" data-anchor-id="auto-scaling-patterns">Auto-Scaling Patterns</h4>
+<pre><code>Metrics to monitor:
+- Request queue length
+- GPU utilization
+- Response latency
+- Cost per request
+
+Scaling triggers:
+- Scale up: Queue length &gt; threshold
+- Scale down: Utilization &lt; threshold for X minutes
+- Consider warmup time for new instances</code></pre>
+<hr>
+</section>
+</section>
+</section>
+<section id="hardware-acceleration" class="level2">
+<h2 class="anchored" data-anchor-id="hardware-acceleration">13.5 Hardware Acceleration 🚀</h2>
+<section id="gpu-optimization" class="level3">
+<h3 class="anchored" data-anchor-id="gpu-optimization">GPU Optimization</h3>
+<section id="memory-hierarchy-understanding" class="level4">
+<h4 class="anchored" data-anchor-id="memory-hierarchy-understanding">Memory Hierarchy Understanding</h4>
+<pre><code>GPU Memory Types (fastest to slowest):
+1. Registers: Extremely fast, very limited
+2. Shared memory: Fast, limited per block
+3. L1/L2 cache: Automatic caching
+4. Global memory (VRAM): Large but slower
+5. Host memory (RAM): Much slower
+6. Storage: Very slow
+
+Optimization goal: Keep data in faster memory levels!</code></pre>
+</section>
+<section id="kernel-fusion" class="level4">
+<h4 class="anchored" data-anchor-id="kernel-fusion">Kernel Fusion</h4>
+<pre><code>Problem: Many small operations launch separate kernels
+Solution: Combine operations into single, larger kernels
+
+Example:
+Separate: LayerNorm → Activation → Linear
+Fused: LayerNorm+Activation+Linear in one kernel
+
+Benefits:
+✅ Reduced memory bandwidth usage
+✅ Lower kernel launch overhead
+✅ Better data locality</code></pre>
+</section>
+</section>
+<section id="specialized-hardware" class="level3">
+<h3 class="anchored" data-anchor-id="specialized-hardware">Specialized Hardware</h3>
+<section id="tpus-tensor-processing-units" class="level4">
+<h4 class="anchored" data-anchor-id="tpus-tensor-processing-units">TPUs (Tensor Processing Units)</h4>
+<pre><code>Google's AI chips optimized for:
+✅ Matrix multiplications (AI workloads)
+✅ Low precision arithmetic (INT8, bfloat16)
+✅ High memory bandwidth
+✅ Efficient for training and inference
+
+Trade-offs:
++ Excellent for standard transformer models
++ Very cost-effective for large scale
+- Less flexible than GPUs
+- Requires TPU-optimized code</code></pre>
+</section>
+<section id="custom-ai-chips" class="level4">
+<h4 class="anchored" data-anchor-id="custom-ai-chips">Custom AI Chips</h4>
+<pre><code>Emerging options:
+- Cerebras wafer-scale engines
+- Graphcore IPUs
+- Intel Habana Gaudi
+- AMD Instinct series
+- Apple M-series Neural Engine
+
+Common optimizations:
+✅ Mixed precision support
+✅ Sparse computation capabilities
+✅ On-chip memory optimization
+✅ Reduced power consumption</code></pre>
+</section>
+</section>
+<section id="cpu-inference-optimization" class="level3">
+<h3 class="anchored" data-anchor-id="cpu-inference-optimization">CPU Inference Optimization</h3>
+<section id="when-to-use-cpu" class="level4">
+<h4 class="anchored" data-anchor-id="when-to-use-cpu">When to Use CPU</h4>
+<pre><code>Good for:
+✅ Small models (&lt; 1B parameters)
+✅ Low-latency requirements
+✅ Cost-sensitive applications
+✅ Edge deployment
+
+Optimization techniques:
+- Quantization (INT8, INT4)
+- Vector instructions (AVX, ARM NEON)
+- Multi-threading and NUMA awareness
+- Memory access optimization</code></pre>
+<hr>
+</section>
+</section>
+</section>
+<section id="cost-optimization-strategies" class="level2">
+<h2 class="anchored" data-anchor-id="cost-optimization-strategies">13.6 Cost Optimization Strategies 💰</h2>
+<section id="understanding-inference-costs" class="level3">
+<h3 class="anchored" data-anchor-id="understanding-inference-costs">Understanding Inference Costs</h3>
+<section id="cost-components" class="level4">
+<h4 class="anchored" data-anchor-id="cost-components">Cost Components</h4>
+<pre><code>Cloud Inference Costs:
+1. Compute: GPU/CPU rental per hour
+2. Memory: VRAM and system RAM usage
+3. Storage: Model weights and cache storage
+4. Network: Data transfer and bandwidth
+5. Request processing: Per-token or per-request pricing
+
+Typical breakdown:
+- Compute: 60-80% of costs
+- Memory: 15-25% of costs  
+- Other: 5-15% of costs</code></pre>
+</section>
+<section id="cost-per-token-analysis" class="level4">
+<h4 class="anchored" data-anchor-id="cost-per-token-analysis">Cost per Token Analysis</h4>
+<pre><code>Example calculation (GPT-3 class model):
+- GPU cost: $2/hour for A100
+- Throughput: 1000 tokens/second
+- Cost per token: $2/(3600 × 1000) = $0.00000056
+
+But real costs include:
++ Infrastructure overhead
++ Load balancing and redundancy
++ Development and maintenance
++ Profit margins
+
+Actual API costs: ~$0.001-0.01 per 1K tokens</code></pre>
+</section>
+</section>
+<section id="optimization-strategies" class="level3">
+<h3 class="anchored" data-anchor-id="optimization-strategies">Optimization Strategies</h3>
+<section id="model-selection-trade-offs" class="level4">
+<h4 class="anchored" data-anchor-id="model-selection-trade-offs">Model Selection Trade-offs</h4>
+<pre><code>Decision matrix:
+
+Small models (1-7B):
++ Low cost per request
++ Fast inference
+- Lower quality responses
+Use case: High-volume, simple tasks
+
+Medium models (13-30B):
++ Good quality/cost balance
++ Reasonable speed
+± Moderate costs
+Use case: General-purpose applications
+
+Large models (70B+):
++ Highest quality
+- High cost per request  
+- Slower inference
+Use case: Complex reasoning, premium applications</code></pre>
+</section>
+<section id="caching-strategies" class="level4">
+<h4 class="anchored" data-anchor-id="caching-strategies">Caching Strategies</h4>
+<pre><code>Levels of caching:
+
+1. Response caching:
+   - Cache complete responses for repeated queries
+   - High hit rate for FAQ-type questions
+
+2. Prefix caching:
+   - Cache computation for common prompt prefixes
+   - Useful for chat applications with system prompts
+
+3. KV cache optimization:
+   - Share KV cache across similar requests
+   - Reduce redundant computation
+
+Example savings: 30-70% cost reduction with good cache hit rates! 💸</code></pre>
+</section>
+<section id="request-routing" class="level4">
+<h4 class="anchored" data-anchor-id="request-routing">Request Routing</h4>
+<pre><code>Smart routing strategies:
+
+1. Model cascade:
+   - Try small model first
+   - Route to larger model only if needed
+   - Reduces average cost per request
+
+2. Difficulty-based routing:
+   - Simple questions → small model
+   - Complex questions → large model
+   - Use classifier to determine complexity
+
+3. Quality-based routing:
+   - User tier determines model access
+   - Premium users get large models
+   - Standard users get efficient models</code></pre>
+<hr>
+</section>
+</section>
+</section>
+<section id="performance-monitoring-and-debugging" class="level2">
+<h2 class="anchored" data-anchor-id="performance-monitoring-and-debugging">13.7 Performance Monitoring and Debugging 📊</h2>
+<section id="key-metrics-to-track" class="level3">
+<h3 class="anchored" data-anchor-id="key-metrics-to-track">Key Metrics to Track</h3>
+<section id="latency-metrics" class="level4">
+<h4 class="anchored" data-anchor-id="latency-metrics">Latency Metrics</h4>
+<pre><code>Important measurements:
+- Time to First Token (TTFT): How quickly generation starts
+- Inter-Token Latency: Time between subsequent tokens
+- End-to-End Latency: Total request processing time
+- Queue Time: Time waiting for processing
+
+Targets:
+- TTFT: &lt; 500ms for interactive applications
+- Inter-token: &lt; 50ms for smooth streaming
+- E2E: &lt; 5s for most applications</code></pre>
+</section>
+<section id="throughput-metrics" class="level4">
+<h4 class="anchored" data-anchor-id="throughput-metrics">Throughput Metrics</h4>
+<pre><code>Capacity measurements:
+- Requests per second (RPS)
+- Tokens per second (TPS)
+- Concurrent users supported
+- GPU utilization percentage
+
+Optimization goal: Maximize throughput while maintaining latency targets</code></pre>
+</section>
+<section id="quality-metrics" class="level4">
+<h4 class="anchored" data-anchor-id="quality-metrics">Quality Metrics</h4>
+<pre><code>Response quality tracking:
+- User satisfaction scores
+- Task completion rates
+- Error rates and failure modes
+- A/B testing results
+
+Balance: Don't sacrifice quality for speed!</code></pre>
+</section>
+</section>
+<section id="profiling-and-optimization" class="level3">
+<h3 class="anchored" data-anchor-id="profiling-and-optimization">Profiling and Optimization</h3>
+<section id="gpu-profiling-tools" class="level4">
+<h4 class="anchored" data-anchor-id="gpu-profiling-tools">GPU Profiling Tools</h4>
+<pre><code>Essential tools:
+- NVIDIA Nsight: Comprehensive GPU profiling
+- nvprof/ncu: Command-line profiling
+- PyTorch Profiler: Framework-integrated profiling
+- TensorBoard: Visualization and analysis
+
+Key metrics to watch:
+- Kernel execution time
+- Memory bandwidth utilization
+- Occupancy rates
+- Memory access patterns</code></pre>
+</section>
+<section id="common-performance-issues" class="level4">
+<h4 class="anchored" data-anchor-id="common-performance-issues">Common Performance Issues</h4>
+<pre><code>Bottleneck identification:
+
+Memory-bound:
+- Low compute utilization
+- High memory bandwidth usage
+- Solution: Reduce memory access, increase batch size
+
+Compute-bound:
+- High GPU utilization
+- Low memory bandwidth
+- Solution: Optimize kernels, reduce precision
+
+I/O bound:
+- Low GPU utilization overall
+- High queue times
+- Solution: Improve data loading, increase parallelism</code></pre>
+<hr>
+</section>
+</section>
+</section>
+<section id="real-world-optimization-case-studies" class="level2">
+<h2 class="anchored" data-anchor-id="real-world-optimization-case-studies">13.8 Real-World Optimization Case Studies 🌍</h2>
+<section id="case-study-1-chatgpt-optimization" class="level3">
+<h3 class="anchored" data-anchor-id="case-study-1-chatgpt-optimization">Case Study 1: ChatGPT Optimization</h3>
+<section id="scaling-challenges" class="level4">
+<h4 class="anchored" data-anchor-id="scaling-challenges">Scaling Challenges</h4>
+<pre><code>OpenAI's journey:
+- Initial launch: Frequent overload and long response times
+- Peak usage: Millions of concurrent users
+- Response time target: &lt; 2 seconds
+
+Optimization strategies:
+✅ Model size optimization (different models for different use cases)
+✅ Advanced batching and request routing
+✅ Geographic distribution of inference clusters
+✅ Aggressive caching and preprocessing
+✅ Custom silicon development (rumored)
+
+Results: Maintained quality while scaling 100x+ ⚡</code></pre>
+</section>
+</section>
+<section id="case-study-2-code-generation-optimization" class="level3">
+<h3 class="anchored" data-anchor-id="case-study-2-code-generation-optimization">Case Study 2: Code Generation Optimization</h3>
+<section id="github-copilots-approach" class="level4">
+<h4 class="anchored" data-anchor-id="github-copilots-approach">GitHub Copilot’s Approach</h4>
+<pre><code>Unique challenges:
+- Real-time code completion (&lt; 100ms latency)
+- Context-aware suggestions
+- High accuracy requirements
+- Massive scale (millions of developers)
+
+Solutions:
+✅ Specialized smaller models for different languages
+✅ Prefix caching for common code patterns  
+✅ Edge deployment for low latency
+✅ Incremental inference for completion
+
+Trade-offs: Multiple specialized models vs. one large general model</code></pre>
+</section>
+</section>
+<section id="case-study-3-mobile-deployment" class="level3">
+<h3 class="anchored" data-anchor-id="case-study-3-mobile-deployment">Case Study 3: Mobile Deployment</h3>
+<section id="on-device-llm-optimization" class="level4">
+<h4 class="anchored" data-anchor-id="on-device-llm-optimization">On-Device LLM Optimization</h4>
+<pre><code>Constraints:
+- Limited memory (4-8GB total)
+- Battery life considerations  
+- No internet dependency
+- Acceptable performance on mobile CPUs
+
+Techniques used:
+✅ Aggressive quantization (4-bit, 3-bit)
+✅ Knowledge distillation to very small models
+✅ Pruning and sparsity
+✅ Mobile-optimized frameworks (Core ML, TensorFlow Lite)
+
+Results: 1-3B parameter models running on phones! 📱</code></pre>
+<hr>
+</section>
+</section>
+</section>
+<section id="key-takeaways" class="level2">
+<h2 class="anchored" data-anchor-id="key-takeaways">Key Takeaways 🎯</h2>
+<ol type="1">
+<li><p><strong>Inference optimization is crucial for production</strong> - raw models are too slow and expensive for real-world use</p></li>
+<li><p><strong>Memory bandwidth is often the bottleneck</strong> - moving data costs more than computing with it</p></li>
+<li><p><strong>Multiple compression techniques can be combined</strong> - quantization + pruning + distillation for maximum efficiency</p></li>
+<li><p><strong>Specialized serving frameworks matter</strong> - vLLM, TensorRT-LLM provide significant speedups over naive implementations</p></li>
+<li><p><strong>Hardware choice impacts performance significantly</strong> - match workload characteristics to hardware strengths</p></li>
+<li><p><strong>Cost optimization requires holistic thinking</strong> - consider model selection, caching, routing, and scaling together</p></li>
+<li><p><strong>Monitoring and profiling are essential</strong> - you can’t optimize what you don’t measure</p></li>
+</ol>
+<hr>
+</section>
+<section id="fun-exercises" class="level2">
+<h2 class="anchored" data-anchor-id="fun-exercises">Fun Exercises 🎮</h2>
+<section id="exercise-1-optimization-strategy-design" class="level3">
+<h3 class="anchored" data-anchor-id="exercise-1-optimization-strategy-design">Exercise 1: Optimization Strategy Design</h3>
+<pre><code>You need to deploy a customer service chatbot with these requirements:
+- &lt; 1 second response time
+- Handle 1000 concurrent users
+- Budget: $1000/month
+- Quality: Must handle 90% of questions correctly
+
+Design your optimization strategy:
+1. What model size would you choose?
+2. What compression techniques would you apply?
+3. What serving framework and hardware?
+4. How would you implement caching?</code></pre>
+</section>
+<section id="exercise-2-quantization-analysis" class="level3">
+<h3 class="anchored" data-anchor-id="exercise-2-quantization-analysis">Exercise 2: Quantization Analysis</h3>
+<pre><code>A 7B parameter model uses:
+- FP16: 14GB memory
+- INT8: 7GB memory  
+- INT4: 3.5GB memory
+
+If your GPU has 16GB memory and you need 4GB for KV cache:
+1. Which quantization levels fit?
+2. How would batch size change with each?
+3. What quality vs. speed trade-offs would you expect?</code></pre>
+</section>
+<section id="exercise-3-cost-optimization" class="level3">
+<h3 class="anchored" data-anchor-id="exercise-3-cost-optimization">Exercise 3: Cost Optimization</h3>
+<pre><code>Calculate the cost savings:
+
+Baseline: Large model, $0.02 per 1K tokens
+Optimizations available:
+- Smaller model: 50% cost, 10% quality loss
+- Caching: 40% fewer requests to model
+- Request routing: 30% requests to small model
+
+What's the total cost reduction?
+When might this optimization not be worth it?</code></pre>
+<hr>
+</section>
+</section>
+<section id="whats-next" class="level2">
+<h2 class="anchored" data-anchor-id="whats-next">What’s Next? 📚</h2>
+<p>In Chapter 14, we’ll explore production deployment - taking optimized models and building robust, scalable systems!</p>
+<p><strong>Preview:</strong> We’ll learn about: - Infrastructure design and architecture patterns - Monitoring, logging, and observability - A/B testing and gradual rollouts - Security, privacy, and compliance considerations</p>
+<p>From fast models to bulletproof systems! 🛡️🏗️</p>
+<hr>
+</section>
+<section id="final-thought" class="level2">
+<h2 class="anchored" data-anchor-id="final-thought">Final Thought 💭</h2>
+<pre><code>"Optimization is where the magic of LLMs meets the reality of production:
+- Amazing research models become practical applications
+- Theoretical capabilities become accessible to millions
+- Expensive experiments become cost-effective services
+- Impressive demos become reliable products
+
+The goal isn't just to make it work - it's to make it work well,
+fast, affordably, and at scale. That's the art of ML engineering!" 🎨⚙️</code></pre>
+
+
+</section>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

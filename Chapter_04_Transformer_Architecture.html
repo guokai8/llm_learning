@@ -1,0 +1,1481 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.8.25">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>chapter_04_transformer_architecture – Large Language Models 教程</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<script src="site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="site_libs/quarto-html/axe/axe-check.js" type="module"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-7b89279ff1a6dce999919e0e67d4d9ec.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap-a8976c3e89df70b272bdfba3d2fda974.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+
+</head>
+
+<body class="nav-fixed quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a href="./index.html" class="navbar-brand navbar-brand-logo">
+    </a>
+    <a class="navbar-brand" href="./index.html">
+    <span class="navbar-title">Large Language Models 教程</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="./index.html"> 
+<span class="menu-text">首页</span></a>
+  </li>  
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">章节</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-">    
+        <li>
+    <a class="dropdown-item" href="./Chapter_01_Introduction_LLMs.html">
+ <span class="dropdown-text">01 - LLM 介绍</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./Chapter_02_Math_Foundations.html">
+ <span class="dropdown-text">02 - 数学基础</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./Chapter_03_NLP_Fundamentals.html">
+ <span class="dropdown-text">03 - NLP 基础</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./Chapter_04_Transformer_Architecture.html">
+ <span class="dropdown-text">04 - Transformer 架构</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./Chapter_05_Modern_Transformer_Variants_Complete.html">
+ <span class="dropdown-text">05 - 现代 Transformer</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./Chapter_08_Fine_Tuning.html">
+ <span class="dropdown-text">08 - 微调</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./Chapter_09_Alignment_RLHF.html">
+ <span class="dropdown-text">09 - 对齐与 RLHF</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./Chapter_10_Prompting_InContext_Learning.html">
+ <span class="dropdown-text">10 - Prompt 工程</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./Chapter_11_RAG.html">
+ <span class="dropdown-text">11 - RAG</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./Chapter_12_LLM_Agents_Tool_Use.html">
+ <span class="dropdown-text">12 - LLM Agents</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./Chapter_13_Optimization_Inference.html">
+ <span class="dropdown-text">13 - 优化推理</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./Chapter_14_Production_Deployment.html">
+ <span class="dropdown-text">14 - 生产部署</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./Chapter_15_Multimodal_LLMs.html">
+ <span class="dropdown-text">15 - 多模态 LLM</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./Chapter_16_Evaluation_Benchmarking.html">
+ <span class="dropdown-text">16 - 评估基准</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./Chapter_17_Cutting_Edge_Research_Future.html">
+ <span class="dropdown-text">17 - 前沿研究</span></a>
+  </li>  
+    </ul>
+  </li>
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#chapter-4-the-transformer-architecture" id="toc-chapter-4-the-transformer-architecture" class="nav-link active" data-scroll-target="#chapter-4-the-transformer-architecture">Chapter 4: The Transformer Architecture</a>
+  <ul class="collapse">
+  <li><a href="#what-well-learn-today" id="toc-what-well-learn-today" class="nav-link" data-scroll-target="#what-well-learn-today">What We’ll Learn Today 🎯</a></li>
+  <li><a href="#the-problem-that-started-it-all" id="toc-the-problem-that-started-it-all" class="nav-link" data-scroll-target="#the-problem-that-started-it-all">4.1 The Problem That Started It All 🤔</a>
+  <ul class="collapse">
+  <li><a href="#the-rnn-limitation" id="toc-the-rnn-limitation" class="nav-link" data-scroll-target="#the-rnn-limitation">The RNN Limitation</a></li>
+  <li><a href="#what-we-really-needed" id="toc-what-we-really-needed" class="nav-link" data-scroll-target="#what-we-really-needed">What We Really Needed 💡</a></li>
+  </ul></li>
+  <li><a href="#attention-the-game-changer" id="toc-attention-the-game-changer" class="nav-link" data-scroll-target="#attention-the-game-changer">4.2 Attention: The Game Changer 🔍</a>
+  <ul class="collapse">
+  <li><a href="#attention-in-everyday-life" id="toc-attention-in-everyday-life" class="nav-link" data-scroll-target="#attention-in-everyday-life">Attention in Everyday Life</a></li>
+  <li><a href="#attention-in-neural-networks" id="toc-attention-in-neural-networks" class="nav-link" data-scroll-target="#attention-in-neural-networks">Attention in Neural Networks</a></li>
+  <li><a href="#the-attention-formula-dont-panic" id="toc-the-attention-formula-dont-panic" class="nav-link" data-scroll-target="#the-attention-formula-dont-panic">The Attention Formula (Don’t Panic!) 📝</a></li>
+  </ul></li>
+  <li><a href="#self-attention-words-talking-to-words" id="toc-self-attention-words-talking-to-words" class="nav-link" data-scroll-target="#self-attention-words-talking-to-words">4.3 Self-Attention: Words Talking to Words 💬</a>
+  <ul class="collapse">
+  <li><a href="#what-is-self-attention" id="toc-what-is-self-attention" class="nav-link" data-scroll-target="#what-is-self-attention">What is Self-Attention?</a></li>
+  <li><a href="#how-self-attention-works" id="toc-how-self-attention-works" class="nav-link" data-scroll-target="#how-self-attention-works">How Self-Attention Works</a></li>
+  <li><a href="#self-attention-visualization" id="toc-self-attention-visualization" class="nav-link" data-scroll-target="#self-attention-visualization">Self-Attention Visualization 🎨</a></li>
+  </ul></li>
+  <li><a href="#multi-head-attention-multiple-perspectives" id="toc-multi-head-attention-multiple-perspectives" class="nav-link" data-scroll-target="#multi-head-attention-multiple-perspectives">4.4 Multi-Head Attention: Multiple Perspectives 👁️‍🗨️</a>
+  <ul class="collapse">
+  <li><a href="#why-multiple-heads" id="toc-why-multiple-heads" class="nav-link" data-scroll-target="#why-multiple-heads">Why Multiple Heads?</a></li>
+  <li><a href="#how-multi-head-attention-works" id="toc-how-multi-head-attention-works" class="nav-link" data-scroll-target="#how-multi-head-attention-works">How Multi-Head Attention Works</a></li>
+  <li><a href="#what-different-heads-learn" id="toc-what-different-heads-learn" class="nav-link" data-scroll-target="#what-different-heads-learn">What Different Heads Learn 🔍</a></li>
+  </ul></li>
+  <li><a href="#position-encoding-teaching-order" id="toc-position-encoding-teaching-order" class="nav-link" data-scroll-target="#position-encoding-teaching-order">4.5 Position Encoding: Teaching Order 📍</a>
+  <ul class="collapse">
+  <li><a href="#the-position-problem" id="toc-the-position-problem" class="nav-link" data-scroll-target="#the-position-problem">The Position Problem</a></li>
+  <li><a href="#solution-position-encoding" id="toc-solution-position-encoding" class="nav-link" data-scroll-target="#solution-position-encoding">Solution: Position Encoding</a></li>
+  <li><a href="#sinusoidal-position-encoding-original-transformer" id="toc-sinusoidal-position-encoding-original-transformer" class="nav-link" data-scroll-target="#sinusoidal-position-encoding-original-transformer">Sinusoidal Position Encoding (Original Transformer)</a></li>
+  <li><a href="#modern-alternatives" id="toc-modern-alternatives" class="nav-link" data-scroll-target="#modern-alternatives">Modern Alternatives</a></li>
+  </ul></li>
+  <li><a href="#the-complete-transformer-architecture" id="toc-the-complete-transformer-architecture" class="nav-link" data-scroll-target="#the-complete-transformer-architecture">4.6 The Complete Transformer Architecture 🏗️</a>
+  <ul class="collapse">
+  <li><a href="#building-blocks-overview" id="toc-building-blocks-overview" class="nav-link" data-scroll-target="#building-blocks-overview">Building Blocks Overview</a></li>
+  <li><a href="#feed-forward-network-the-thinking-layer" id="toc-feed-forward-network-the-thinking-layer" class="nav-link" data-scroll-target="#feed-forward-network-the-thinking-layer">Feed-Forward Network: The Thinking Layer 🧠</a></li>
+  <li><a href="#layer-normalization-keeping-things-stable" id="toc-layer-normalization-keeping-things-stable" class="nav-link" data-scroll-target="#layer-normalization-keeping-things-stable">Layer Normalization: Keeping Things Stable ⚖️</a></li>
+  <li><a href="#residual-connections-information-highways" id="toc-residual-connections-information-highways" class="nav-link" data-scroll-target="#residual-connections-information-highways">Residual Connections: Information Highways 🛣️</a></li>
+  <li><a href="#putting-it-all-together-the-transformer-block" id="toc-putting-it-all-together-the-transformer-block" class="nav-link" data-scroll-target="#putting-it-all-together-the-transformer-block">Putting It All Together: The Transformer Block</a></li>
+  </ul></li>
+  <li><a href="#different-transformer-architectures" id="toc-different-transformer-architectures" class="nav-link" data-scroll-target="#different-transformer-architectures">4.7 Different Transformer Architectures 🏛️</a>
+  <ul class="collapse">
+  <li><a href="#encoder-only-bert-style" id="toc-encoder-only-bert-style" class="nav-link" data-scroll-target="#encoder-only-bert-style">Encoder-Only (BERT Style)</a></li>
+  <li><a href="#decoder-only-gpt-style" id="toc-decoder-only-gpt-style" class="nav-link" data-scroll-target="#decoder-only-gpt-style">Decoder-Only (GPT Style)</a></li>
+  <li><a href="#encoder-decoder-t5-style" id="toc-encoder-decoder-t5-style" class="nav-link" data-scroll-target="#encoder-decoder-t5-style">Encoder-Decoder (T5 Style)</a></li>
+  <li><a href="#architecture-comparison" id="toc-architecture-comparison" class="nav-link" data-scroll-target="#architecture-comparison">Architecture Comparison 📊</a></li>
+  </ul></li>
+  <li><a href="#why-transformers-were-revolutionary" id="toc-why-transformers-were-revolutionary" class="nav-link" data-scroll-target="#why-transformers-were-revolutionary">4.8 Why Transformers Were Revolutionary 🚀</a>
+  <ul class="collapse">
+  <li><a href="#before-transformers-the-struggles" id="toc-before-transformers-the-struggles" class="nav-link" data-scroll-target="#before-transformers-the-struggles">Before Transformers: The Struggles</a></li>
+  <li><a href="#transformer-breakthroughs" id="toc-transformer-breakthroughs" class="nav-link" data-scroll-target="#transformer-breakthroughs">Transformer Breakthroughs</a></li>
+  <li><a href="#the-impact" id="toc-the-impact" class="nav-link" data-scroll-target="#the-impact">The Impact</a></li>
+  </ul></li>
+  <li><a href="#practical-insights" id="toc-practical-insights" class="nav-link" data-scroll-target="#practical-insights">Practical Insights 💡</a>
+  <ul class="collapse">
+  <li><a href="#when-to-use-which-architecture" id="toc-when-to-use-which-architecture" class="nav-link" data-scroll-target="#when-to-use-which-architecture">When to Use Which Architecture?</a></li>
+  <li><a href="#training-considerations" id="toc-training-considerations" class="nav-link" data-scroll-target="#training-considerations">Training Considerations</a></li>
+  </ul></li>
+  <li><a href="#common-student-questions" id="toc-common-student-questions" class="nav-link" data-scroll-target="#common-student-questions">Common Student Questions 🙋‍♀️</a>
+  <ul class="collapse">
+  <li><a href="#q-why-is-attention-better-than-rnns" id="toc-q-why-is-attention-better-than-rnns" class="nav-link" data-scroll-target="#q-why-is-attention-better-than-rnns">Q: “Why is attention better than RNNs?”</a></li>
+  <li><a href="#q-how-many-attention-heads-should-i-use" id="toc-q-how-many-attention-heads-should-i-use" class="nav-link" data-scroll-target="#q-how-many-attention-heads-should-i-use">Q: “How many attention heads should I use?”</a></li>
+  <li><a href="#q-whats-the-difference-between-bert-and-gpt" id="toc-q-whats-the-difference-between-bert-and-gpt" class="nav-link" data-scroll-target="#q-whats-the-difference-between-bert-and-gpt">Q: “What’s the difference between BERT and GPT?”</a></li>
+  <li><a href="#q-why-do-we-need-position-encoding" id="toc-q-why-do-we-need-position-encoding" class="nav-link" data-scroll-target="#q-why-do-we-need-position-encoding">Q: “Why do we need position encoding?”</a></li>
+  <li><a href="#q-is-the-transformer-perfect" id="toc-q-is-the-transformer-perfect" class="nav-link" data-scroll-target="#q-is-the-transformer-perfect">Q: “Is the transformer perfect?”</a></li>
+  </ul></li>
+  <li><a href="#key-takeaways" id="toc-key-takeaways" class="nav-link" data-scroll-target="#key-takeaways">Key Takeaways 🎯</a></li>
+  <li><a href="#fun-exercises" id="toc-fun-exercises" class="nav-link" data-scroll-target="#fun-exercises">Fun Exercises 🎮</a>
+  <ul class="collapse">
+  <li><a href="#exercise-1-attention-visualization" id="toc-exercise-1-attention-visualization" class="nav-link" data-scroll-target="#exercise-1-attention-visualization">Exercise 1: Attention Visualization</a></li>
+  <li><a href="#exercise-2-architecture-choice" id="toc-exercise-2-architecture-choice" class="nav-link" data-scroll-target="#exercise-2-architecture-choice">Exercise 2: Architecture Choice</a></li>
+  <li><a href="#exercise-3-position-encoding" id="toc-exercise-3-position-encoding" class="nav-link" data-scroll-target="#exercise-3-position-encoding">Exercise 3: Position Encoding</a></li>
+  </ul></li>
+  <li><a href="#whats-next" id="toc-whats-next" class="nav-link" data-scroll-target="#whats-next">What’s Next? 📚</a></li>
+  <li><a href="#final-thought" id="toc-final-thought" class="nav-link" data-scroll-target="#final-thought">Final Thought 💭</a></li>
+  </ul></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content"><header id="title-block-header" class="quarto-title-block"></header>
+
+
+
+
+<section id="chapter-4-the-transformer-architecture" class="level1">
+<h1>Chapter 4: The Transformer Architecture</h1>
+<p><em>The Revolutionary Breakthrough That Changed Everything</em></p>
+<section id="what-well-learn-today" class="level2">
+<h2 class="anchored" data-anchor-id="what-well-learn-today">What We’ll Learn Today 🎯</h2>
+<ul>
+<li>Why attention is like a spotlight for AI</li>
+<li>How self-attention lets words “talk” to each other</li>
+<li>The complete transformer architecture (demystified!)</li>
+<li>Why this breakthrough was so revolutionary</li>
+<li>Different types of transformers and when to use them</li>
+</ul>
+<p><strong>Big Reveal:</strong> The transformer is the secret sauce behind ChatGPT, BERT, and virtually every modern LLM!</p>
+<hr>
+</section>
+<section id="the-problem-that-started-it-all" class="level2">
+<h2 class="anchored" data-anchor-id="the-problem-that-started-it-all">4.1 The Problem That Started It All 🤔</h2>
+<section id="the-rnn-limitation" class="level3">
+<h3 class="anchored" data-anchor-id="the-rnn-limitation">The RNN Limitation</h3>
+<section id="imagine-reading-a-long-book" class="level4">
+<h4 class="anchored" data-anchor-id="imagine-reading-a-long-book">Imagine Reading a Long Book… 📚</h4>
+<pre><code>Traditional RNNs were like trying to summarize a 500-page book, but:
+- You can only remember the last few pages clearly
+- Earlier chapters become fuzzy memories
+- You process one page at a time (very slow!)
+- By the end, you've forgotten the beginning</code></pre>
+</section>
+<section id="the-technical-problem" class="level4">
+<h4 class="anchored" data-anchor-id="the-technical-problem">The Technical Problem</h4>
+<pre><code>Sentence: "The cat that lived in the house that Jack built sat on the mat"
+
+RNN processing:
+Step 1: Process "The" → remember something
+Step 2: Process "cat" → update memory (forget a bit of "The")
+Step 3: Process "that" → update memory (forget more)
+...
+Step 10: Process "mat" → what cat? 🤔
+
+Problem: By the time we get to "mat", we've forgotten about "cat"!</code></pre>
+</section>
+</section>
+<section id="what-we-really-needed" class="level3">
+<h3 class="anchored" data-anchor-id="what-we-really-needed">What We Really Needed 💡</h3>
+<pre><code>Ideal solution:
+✅ Every word can directly connect to every other word
+✅ Process all words simultaneously (parallel processing)
+✅ No forgetting problem
+✅ Capture both short and long-range relationships
+
+Enter: The Attention Mechanism! 🎉</code></pre>
+<hr>
+</section>
+</section>
+<section id="attention-the-game-changer" class="level2">
+<h2 class="anchored" data-anchor-id="attention-the-game-changer">4.2 Attention: The Game Changer 🔍</h2>
+<section id="attention-in-everyday-life" class="level3">
+<h3 class="anchored" data-anchor-id="attention-in-everyday-life">Attention in Everyday Life</h3>
+<section id="human-attention-analogy" class="level4">
+<h4 class="anchored" data-anchor-id="human-attention-analogy">Human Attention Analogy</h4>
+<pre><code>You're at a noisy party:
+- 🎵 Background music
+- 💬 Multiple conversations  
+- 📱 Phone notifications
+- 🍕 Food smells
+
+But you FOCUS on your friend's voice when they're talking to you.
+That's attention! You selectively focus on what's important.</code></pre>
+</section>
+<section id="reading-comprehension-example" class="level4">
+<h4 class="anchored" data-anchor-id="reading-comprehension-example">Reading Comprehension Example</h4>
+<pre><code>Question: "What did Sarah eat for breakfast?"
+Text: "Sarah woke up early. She went to the kitchen. 
+       She made eggs and toast. Later, she went to work."
+
+Your brain automatically pays HIGH attention to:
+- "Sarah" (who we're asking about)
+- "eggs and toast" (what she ate)
+- "made" (the eating action)
+
+And LOW attention to:
+- "woke up early" (not relevant to breakfast)
+- "went to work" (not relevant to breakfast)</code></pre>
+</section>
+</section>
+<section id="attention-in-neural-networks" class="level3">
+<h3 class="anchored" data-anchor-id="attention-in-neural-networks">Attention in Neural Networks</h3>
+<section id="the-core-idea" class="level4">
+<h4 class="anchored" data-anchor-id="the-core-idea">The Core Idea</h4>
+<pre><code>When processing each word, let the model decide:
+"Which other words should I pay attention to?"
+
+For the word "it" in "The cat sat on the mat because it was comfortable":
+- Pay HIGH attention to "mat" (it refers to the mat)
+- Pay MEDIUM attention to "cat" (could refer to cat)  
+- Pay LOW attention to "sat", "on", "because" (not relevant)</code></pre>
+</section>
+<section id="mathematical-intuition-made-simple" class="level4">
+<h4 class="anchored" data-anchor-id="mathematical-intuition-made-simple">Mathematical Intuition (Made Simple!)</h4>
+<pre><code>Attention mechanism asks three questions:
+
+1. QUERY: "What am I looking for?"
+2. KEY: "What information is available?"  
+3. VALUE: "What is the actual information content?"
+
+It's like a library search:
+- Query: "I want books about cats" 
+- Key: "Book titles and descriptions"
+- Value: "The actual books"
+- Attention: "How relevant is each book to my query?"</code></pre>
+</section>
+</section>
+<section id="the-attention-formula-dont-panic" class="level3">
+<h3 class="anchored" data-anchor-id="the-attention-formula-dont-panic">The Attention Formula (Don’t Panic!) 📝</h3>
+<section id="step-by-step-breakdown" class="level4">
+<h4 class="anchored" data-anchor-id="step-by-step-breakdown">Step-by-Step Breakdown</h4>
+<pre><code>Step 1: Calculate similarity scores
+similarity = Query · Key  (dot product = how similar?)
+
+Step 2: Apply softmax to get probabilities  
+attention_weights = softmax(similarity)  (sum to 1)
+
+Step 3: Weighted sum of values
+output = attention_weights · Values  (focus on important stuff)</code></pre>
+</section>
+<section id="concrete-example" class="level4">
+<h4 class="anchored" data-anchor-id="concrete-example">Concrete Example</h4>
+<pre><code>Sentence: "The cat sat"
+Processing word: "sat"
+
+Query (what sat is looking for): [0.2, 0.8, 0.1]
+Keys (what's available):
+- "The": [0.1, 0.2, 0.3]  
+- "cat": [0.7, 0.9, 0.2]
+- "sat": [0.2, 0.8, 0.1]
+
+Similarities:
+- sat·The = 0.2×0.1 + 0.8×0.2 + 0.1×0.3 = 0.21
+- sat·cat = 0.2×0.7 + 0.8×0.9 + 0.1×0.2 = 0.88  ← HIGH!
+- sat·sat = 0.2×0.2 + 0.8×0.8 + 0.1×0.1 = 0.69
+
+After softmax: cat gets highest attention weight!</code></pre>
+<hr>
+</section>
+</section>
+</section>
+<section id="self-attention-words-talking-to-words" class="level2">
+<h2 class="anchored" data-anchor-id="self-attention-words-talking-to-words">4.3 Self-Attention: Words Talking to Words 💬</h2>
+<section id="what-is-self-attention" class="level3">
+<h3 class="anchored" data-anchor-id="what-is-self-attention">What is Self-Attention?</h3>
+<section id="the-revolutionary-idea" class="level4">
+<h4 class="anchored" data-anchor-id="the-revolutionary-idea">The Revolutionary Idea</h4>
+<pre><code>Traditional attention: Decoder attends to encoder
+Self-attention: Sequence attends to ITSELF!
+
+Every word can directly connect to every other word in the same sequence.</code></pre>
+</section>
+<section id="analogy-group-discussion" class="level4">
+<h4 class="anchored" data-anchor-id="analogy-group-discussion">Analogy: Group Discussion 👥</h4>
+<pre><code>Imagine a group meeting where:
+- Everyone can talk to everyone else directly
+- No need to pass messages through a moderator
+- Everyone hears everyone else simultaneously
+- People pay more attention to relevant speakers
+
+That's self-attention in action!</code></pre>
+</section>
+</section>
+<section id="how-self-attention-works" class="level3">
+<h3 class="anchored" data-anchor-id="how-self-attention-works">How Self-Attention Works</h3>
+<section id="step-1-create-q-k-v-for-each-word" class="level4">
+<h4 class="anchored" data-anchor-id="step-1-create-q-k-v-for-each-word">Step 1: Create Q, K, V for Each Word</h4>
+<pre><code>For each word, we create three vectors:
+- Query: "What am I looking for?"
+- Key: "What do I represent?"  
+- Value: "What information do I contain?"
+
+Word "cat":
+Q_cat = cat_embedding × W_Q  (learnable matrix)
+K_cat = cat_embedding × W_K  (learnable matrix)  
+V_cat = cat_embedding × W_V  (learnable matrix)</code></pre>
+</section>
+<section id="step-2-every-word-attends-to-every-word" class="level4">
+<h4 class="anchored" data-anchor-id="step-2-every-word-attends-to-every-word">Step 2: Every Word Attends to Every Word</h4>
+<pre><code>For word "sat":
+- Compare Q_sat with K_the, K_cat, K_on, K_mat...
+- Get attention weights for each word
+- Compute weighted sum of all V vectors</code></pre>
+</section>
+<section id="step-3-parallel-processing" class="level4">
+<h4 class="anchored" data-anchor-id="step-3-parallel-processing">Step 3: Parallel Processing! ⚡</h4>
+<pre><code>Beautiful insight: We can do this for ALL words simultaneously!
+
+Matrix operations:
+Q = [Q_the, Q_cat, Q_sat, ...]  (all queries)
+K = [K_the, K_cat, K_sat, ...]  (all keys)
+V = [V_the, V_cat, V_sat, ...]  (all values)
+
+Attention = softmax(Q·K^T / √d_k) · V</code></pre>
+</section>
+</section>
+<section id="self-attention-visualization" class="level3">
+<h3 class="anchored" data-anchor-id="self-attention-visualization">Self-Attention Visualization 🎨</h3>
+<section id="example-the-cat-sat-on-the-mat" class="level4">
+<h4 class="anchored" data-anchor-id="example-the-cat-sat-on-the-mat">Example: “The cat sat on the mat”</h4>
+<pre><code>When processing "cat":
+Strong connections to:
+- "sat" (subject-verb relationship)
+- "mat" (cat is related to where it sits)
+
+When processing "mat":  
+Strong connections to:
+- "sat" (location of sitting)
+- "cat" (what sits on the mat)
+- "on" (preposition connecting to mat)</code></pre>
+<hr>
+</section>
+</section>
+</section>
+<section id="multi-head-attention-multiple-perspectives" class="level2">
+<h2 class="anchored" data-anchor-id="multi-head-attention-multiple-perspectives">4.4 Multi-Head Attention: Multiple Perspectives 👁️‍🗨️</h2>
+<section id="why-multiple-heads" class="level3">
+<h3 class="anchored" data-anchor-id="why-multiple-heads">Why Multiple Heads?</h3>
+<section id="the-limitation-of-single-attention" class="level4">
+<h4 class="anchored" data-anchor-id="the-limitation-of-single-attention">The Limitation of Single Attention</h4>
+<pre><code>Single attention head might focus on one type of relationship:
+- Maybe it learns syntactic relationships (subject-verb)
+- But misses semantic relationships (synonyms)
+- Or misses positional relationships (word order)</code></pre>
+</section>
+<section id="the-multi-head-solution" class="level4">
+<h4 class="anchored" data-anchor-id="the-multi-head-solution">The Multi-Head Solution</h4>
+<pre><code>Have multiple attention heads, each learning different patterns:
+- Head 1: Syntactic relationships  
+- Head 2: Semantic relationships
+- Head 3: Positional relationships
+- Head 4: Coreference relationships
+- ... and so on</code></pre>
+</section>
+<section id="analogy-multiple-experts" class="level4">
+<h4 class="anchored" data-anchor-id="analogy-multiple-experts">Analogy: Multiple Experts 🧑‍💼</h4>
+<pre><code>Imagine analyzing a business report with different experts:
+- Financial expert: Focuses on numbers and costs
+- Marketing expert: Focuses on customer insights  
+- Technical expert: Focuses on implementation details
+- Legal expert: Focuses on compliance issues
+
+Each expert sees different important patterns!</code></pre>
+</section>
+</section>
+<section id="how-multi-head-attention-works" class="level3">
+<h3 class="anchored" data-anchor-id="how-multi-head-attention-works">How Multi-Head Attention Works</h3>
+<section id="step-1-create-multiple-q-k-v-sets" class="level4">
+<h4 class="anchored" data-anchor-id="step-1-create-multiple-q-k-v-sets">Step 1: Create Multiple Q, K, V Sets</h4>
+<pre><code>For h=8 heads:
+Head 1: Q₁ = X·W₁ᵠ, K₁ = X·W₁ᴷ, V₁ = X·W₁ⱽ
+Head 2: Q₂ = X·W₂ᵠ, K₂ = X·W₂ᴷ, V₂ = X·W₂ⱽ
+...
+Head 8: Q₈ = X·W₈ᵠ, K₈ = X·W₈ᴷ, V₈ = X·W₈ⱽ</code></pre>
+</section>
+<section id="step-2-parallel-attention-computation" class="level4">
+<h4 class="anchored" data-anchor-id="step-2-parallel-attention-computation">Step 2: Parallel Attention Computation</h4>
+<pre><code>head₁ = Attention(Q₁, K₁, V₁)
+head₂ = Attention(Q₂, K₂, V₂)  
+...
+head₈ = Attention(Q₈, K₈, V₈)</code></pre>
+</section>
+<section id="step-3-combine-all-heads" class="level4">
+<h4 class="anchored" data-anchor-id="step-3-combine-all-heads">Step 3: Combine All Heads</h4>
+<pre><code>Concatenate: [head₁ || head₂ || ... || head₈]
+Project: MultiHead = Concat(heads) × W_O</code></pre>
+</section>
+</section>
+<section id="what-different-heads-learn" class="level3">
+<h3 class="anchored" data-anchor-id="what-different-heads-learn">What Different Heads Learn 🔍</h3>
+<section id="real-examples-from-research" class="level4">
+<h4 class="anchored" data-anchor-id="real-examples-from-research">Real Examples from Research</h4>
+<pre><code>Head 1: Subject-verb relationships
+- "The cat sat" → strong connection between "cat" and "sat"
+
+Head 2: Object relationships  
+- "sat on mat" → strong connection between "sat" and "mat"
+
+Head 3: Modifier relationships
+- "big red car" → connections between adjectives and nouns
+
+Head 4: Coreference
+- "John went home. He was tired." → "He" connects to "John"</code></pre>
+<hr>
+</section>
+</section>
+</section>
+<section id="position-encoding-teaching-order" class="level2">
+<h2 class="anchored" data-anchor-id="position-encoding-teaching-order">4.5 Position Encoding: Teaching Order 📍</h2>
+<section id="the-position-problem" class="level3">
+<h3 class="anchored" data-anchor-id="the-position-problem">The Position Problem</h3>
+<section id="self-attention-is-order-blind" class="level4">
+<h4 class="anchored" data-anchor-id="self-attention-is-order-blind">Self-Attention is Order-Blind! 😱</h4>
+<pre><code>Problem: Self-attention treats these as identical:
+- "The cat sat on the mat"  
+- "The mat sat on the cat"
+- "Cat the on sat mat the"
+
+All have same attention connections, just reordered!</code></pre>
+</section>
+<section id="why-this-matters" class="level4">
+<h4 class="anchored" data-anchor-id="why-this-matters">Why This Matters</h4>
+<pre><code>Word order is crucial in language:
+- "Dog bites man" vs "Man bites dog" (very different!)
+- "Not good" vs "Good not" (opposite meanings!)
+- "I will go" vs "Will I go?" (statement vs question)</code></pre>
+</section>
+</section>
+<section id="solution-position-encoding" class="level3">
+<h3 class="anchored" data-anchor-id="solution-position-encoding">Solution: Position Encoding</h3>
+<section id="the-big-idea" class="level4">
+<h4 class="anchored" data-anchor-id="the-big-idea">The Big Idea</h4>
+<pre><code>Add position information to word embeddings:
+word_representation = word_embedding + position_encoding</code></pre>
+</section>
+<section id="analogy-house-addresses" class="level4">
+<h4 class="anchored" data-anchor-id="analogy-house-addresses">Analogy: House Addresses 🏠</h4>
+<pre><code>Without addresses: "There's a blue house, red house, green house"
+With addresses: "Blue house at 123 Main St, red house at 125 Main St..."
+
+Position encoding is like giving each word a unique address!</code></pre>
+</section>
+</section>
+<section id="sinusoidal-position-encoding-original-transformer" class="level3">
+<h3 class="anchored" data-anchor-id="sinusoidal-position-encoding-original-transformer">Sinusoidal Position Encoding (Original Transformer)</h3>
+<section id="the-formula-visualized" class="level4">
+<h4 class="anchored" data-anchor-id="the-formula-visualized">The Formula (Visualized!)</h4>
+<pre><code>For position pos and dimension i:
+PE(pos, 2i) = sin(pos / 10000^(2i/d_model))
+PE(pos, 2i+1) = cos(pos / 10000^(2i/d_model))</code></pre>
+</section>
+<section id="intuitive-understanding" class="level4">
+<h4 class="anchored" data-anchor-id="intuitive-understanding">Intuitive Understanding</h4>
+<pre><code>Think of it as a unique "barcode" for each position:
+- Position 0: [sin(0), cos(0), sin(0), cos(0), ...]
+- Position 1: [sin(1/1), cos(1/1), sin(1/100), cos(1/100), ...]  
+- Position 2: [sin(2/1), cos(2/1), sin(2/100), cos(2/100), ...]
+
+Each position gets a unique pattern!</code></pre>
+</section>
+<section id="why-sine-and-cosine" class="level4">
+<h4 class="anchored" data-anchor-id="why-sine-and-cosine">Why Sine and Cosine? 🌊</h4>
+<pre><code>Beautiful properties:
+✅ Each position has unique encoding
+✅ Model can learn relative positions: PE(pos+k) relates to PE(pos)
+✅ Works for any sequence length (even longer than training!)
+✅ Smooth transitions between nearby positions</code></pre>
+</section>
+</section>
+<section id="modern-alternatives" class="level3">
+<h3 class="anchored" data-anchor-id="modern-alternatives">Modern Alternatives</h3>
+<section id="rope-rotary-position-embedding" class="level4">
+<h4 class="anchored" data-anchor-id="rope-rotary-position-embedding">RoPE (Rotary Position Embedding) 🔄</h4>
+<pre><code>Used in: LLaMA, GPT-NeoX, many modern models
+
+Key idea: Rotate embeddings based on position
+- Better extrapolation to longer sequences
+- More intuitive geometric interpretation
+- Excellent empirical performance</code></pre>
+</section>
+<section id="alibi-attention-with-linear-biases" class="level4">
+<h4 class="anchored" data-anchor-id="alibi-attention-with-linear-biases">ALiBi (Attention with Linear Biases) 📏</h4>
+<pre><code>Used in: BLOOM, some recent models
+
+Key idea: Add linear bias to attention scores
+- Very simple: just subtract distance × slope
+- Amazing extrapolation properties
+- No extra parameters needed!</code></pre>
+<hr>
+</section>
+</section>
+</section>
+<section id="the-complete-transformer-architecture" class="level2">
+<h2 class="anchored" data-anchor-id="the-complete-transformer-architecture">4.6 The Complete Transformer Architecture 🏗️</h2>
+<section id="building-blocks-overview" class="level3">
+<h3 class="anchored" data-anchor-id="building-blocks-overview">Building Blocks Overview</h3>
+<section id="the-transformer-layer-recipe" class="level4">
+<h4 class="anchored" data-anchor-id="the-transformer-layer-recipe">The Transformer Layer Recipe</h4>
+<pre><code>1. Multi-Head Self-Attention
+2. Add &amp; Norm (residual connection + layer normalization)
+3. Feed-Forward Network  
+4. Add &amp; Norm (residual connection + layer normalization)</code></pre>
+</section>
+</section>
+<section id="feed-forward-network-the-thinking-layer" class="level3">
+<h3 class="anchored" data-anchor-id="feed-forward-network-the-thinking-layer">Feed-Forward Network: The Thinking Layer 🧠</h3>
+<section id="what-it-does" class="level4">
+<h4 class="anchored" data-anchor-id="what-it-does">What It Does</h4>
+<pre><code>After attention figures out "what to pay attention to",
+feed-forward network does the actual "thinking":
+
+FFN(x) = ReLU(x·W₁ + b₁)·W₂ + b₂
+
+Think of it as:
+1. Expand to higher dimension (more thinking space)
+2. Apply non-linearity (actual thinking/computation)  
+3. Project back to original dimension (final answer)</code></pre>
+</section>
+<section id="analogy-processing-information" class="level4">
+<h4 class="anchored" data-anchor-id="analogy-processing-information">Analogy: Processing Information 📊</h4>
+<pre><code>Attention: "These are the important facts from the meeting"
+Feed-forward: "Let me think about what these facts mean and what to do"
+
+Like having a research assistant (attention) gather relevant info,
+then an expert (FFN) analyzes and draws conclusions.</code></pre>
+</section>
+</section>
+<section id="layer-normalization-keeping-things-stable" class="level3">
+<h3 class="anchored" data-anchor-id="layer-normalization-keeping-things-stable">Layer Normalization: Keeping Things Stable ⚖️</h3>
+<section id="what-it-does-1" class="level4">
+<h4 class="anchored" data-anchor-id="what-it-does-1">What It Does</h4>
+<pre><code>Normalizes inputs to each layer:
+- Mean = 0, standard deviation = 1
+- Helps with training stability
+- Allows higher learning rates</code></pre>
+</section>
+<section id="analogy-equalizing-audio" class="level4">
+<h4 class="anchored" data-anchor-id="analogy-equalizing-audio">Analogy: Equalizing Audio 🎵</h4>
+<pre><code>Like an audio equalizer that keeps volume levels consistent:
+- Prevents some instruments from being too loud/quiet
+- Maintains balance across all frequencies
+- Makes the whole system more stable</code></pre>
+</section>
+</section>
+<section id="residual-connections-information-highways" class="level3">
+<h3 class="anchored" data-anchor-id="residual-connections-information-highways">Residual Connections: Information Highways 🛣️</h3>
+<section id="the-skip-connection" class="level4">
+<h4 class="anchored" data-anchor-id="the-skip-connection">The Skip Connection</h4>
+<pre><code>Instead of: output = Layer(input)
+We use: output = input + Layer(input)
+
+The "input +" part is the residual connection.</code></pre>
+</section>
+<section id="why-this-matters-1" class="level4">
+<h4 class="anchored" data-anchor-id="why-this-matters-1">Why This Matters</h4>
+<pre><code>Problems with deep networks:
+- Information gets lost as it passes through many layers
+- Gradients vanish during training
+- Hard to train very deep models
+
+Residual connections:
+✅ Preserve original information
+✅ Enable gradient flow
+✅ Allow training of 100+ layer models</code></pre>
+</section>
+<section id="analogy-highway-with-exits" class="level4">
+<h4 class="anchored" data-anchor-id="analogy-highway-with-exits">Analogy: Highway with Exits 🚗</h4>
+<pre><code>Regular network: Must drive through every town (layer)
+Residual network: Highway with exits (skip connections)
+
+If a layer doesn't help, information can skip it!</code></pre>
+</section>
+</section>
+<section id="putting-it-all-together-the-transformer-block" class="level3">
+<h3 class="anchored" data-anchor-id="putting-it-all-together-the-transformer-block">Putting It All Together: The Transformer Block</h3>
+<section id="information-flow" class="level4">
+<h4 class="anchored" data-anchor-id="information-flow">Information Flow</h4>
+<pre><code>Input embeddings + Position encoding
+    ↓
+Multi-Head Attention  
+    ↓
+Add &amp; Norm (residual connection)
+    ↓  
+Feed-Forward Network
+    ↓
+Add &amp; Norm (residual connection)
+    ↓
+Output to next layer</code></pre>
+</section>
+<section id="stack-multiple-blocks" class="level4">
+<h4 class="anchored" data-anchor-id="stack-multiple-blocks">Stack Multiple Blocks</h4>
+<pre><code>Modern transformers stack many blocks:
+- GPT-3: 96 layers  
+- BERT-Large: 24 layers
+- T5-11B: 24 layers
+
+Each layer can learn increasingly complex patterns!</code></pre>
+<hr>
+</section>
+</section>
+</section>
+<section id="different-transformer-architectures" class="level2">
+<h2 class="anchored" data-anchor-id="different-transformer-architectures">4.7 Different Transformer Architectures 🏛️</h2>
+<section id="encoder-only-bert-style" class="level3">
+<h3 class="anchored" data-anchor-id="encoder-only-bert-style">Encoder-Only (BERT Style)</h3>
+<section id="architecture" class="level4">
+<h4 class="anchored" data-anchor-id="architecture">Architecture</h4>
+<pre><code>Input: "The cat sat on the mat"
+       ↓
+Bidirectional Self-Attention (can see all words)
+       ↓  
+Output: Contextual representations for each word</code></pre>
+</section>
+<section id="when-to-use" class="level4">
+<h4 class="anchored" data-anchor-id="when-to-use">When to Use</h4>
+<pre><code>✅ Classification tasks (sentiment, topic, etc.)
+✅ Understanding tasks (question answering)
+✅ When you need bidirectional context
+✅ When input length is fixed/manageable
+
+Examples: BERT, RoBERTa, DeBERTa</code></pre>
+</section>
+<section id="training-masked-language-modeling" class="level4">
+<h4 class="anchored" data-anchor-id="training-masked-language-modeling">Training: Masked Language Modeling</h4>
+<pre><code>Input: "The [MASK] sat on the mat"
+Task: Predict the masked word ("cat")
+Benefit: Learns bidirectional representations</code></pre>
+</section>
+</section>
+<section id="decoder-only-gpt-style" class="level3">
+<h3 class="anchored" data-anchor-id="decoder-only-gpt-style">Decoder-Only (GPT Style)</h3>
+<section id="architecture-1" class="level4">
+<h4 class="anchored" data-anchor-id="architecture-1">Architecture</h4>
+<pre><code>Input: "The cat sat on the"
+       ↓
+Masked Self-Attention (can only see previous words)
+       ↓
+Output: Probability distribution for next word</code></pre>
+</section>
+<section id="when-to-use-1" class="level4">
+<h4 class="anchored" data-anchor-id="when-to-use-1">When to Use</h4>
+<pre><code>✅ Text generation tasks
+✅ Conversational AI
+✅ Any autoregressive task
+✅ When you want one model for many tasks
+
+Examples: GPT series, LLaMA, ChatGPT</code></pre>
+</section>
+<section id="training-causal-language-modeling" class="level4">
+<h4 class="anchored" data-anchor-id="training-causal-language-modeling">Training: Causal Language Modeling</h4>
+<pre><code>Input: "The cat sat on the"
+Task: Predict next word ("mat")
+Benefit: Learns to generate coherent text</code></pre>
+</section>
+</section>
+<section id="encoder-decoder-t5-style" class="level3">
+<h3 class="anchored" data-anchor-id="encoder-decoder-t5-style">Encoder-Decoder (T5 Style)</h3>
+<section id="architecture-2" class="level4">
+<h4 class="anchored" data-anchor-id="architecture-2">Architecture</h4>
+<pre><code>Encoder: "Translate to French: Hello"
+         ↓ (bidirectional attention)
+Cross-Attention: Decoder attends to encoder
+         ↓  
+Decoder: "Bonjour" (autoregressive)</code></pre>
+</section>
+<section id="when-to-use-2" class="level4">
+<h4 class="anchored" data-anchor-id="when-to-use-2">When to Use</h4>
+<pre><code>✅ Translation tasks
+✅ Summarization  
+✅ Any input→output transformation
+✅ When input and output are different domains
+
+Examples: T5, BART, mT5</code></pre>
+</section>
+<section id="training-text-to-text" class="level4">
+<h4 class="anchored" data-anchor-id="training-text-to-text">Training: Text-to-Text</h4>
+<pre><code>Everything as text generation:
+- Translation: "translate: Hello" → "Bonjour"
+- Summary: "summarize: [text]" → "[summary]"
+- Classification: "sentiment: I love it" → "positive"</code></pre>
+</section>
+</section>
+<section id="architecture-comparison" class="level3">
+<h3 class="anchored" data-anchor-id="architecture-comparison">Architecture Comparison 📊</h3>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 22%">
+<col style="width: 16%">
+<col style="width: 16%">
+<col style="width: 27%">
+<col style="width: 16%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Architecture</th>
+<th>Use Case</th>
+<th>Training</th>
+<th>Bidirectional?</th>
+<th>Examples</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Encoder-Only</td>
+<td>Understanding</td>
+<td>MLM</td>
+<td>✅ Yes</td>
+<td>BERT, RoBERTa</td>
+</tr>
+<tr class="even">
+<td>Decoder-Only</td>
+<td>Generation</td>
+<td>CLM</td>
+<td>❌ No</td>
+<td>GPT, LLaMA</td>
+</tr>
+<tr class="odd">
+<td>Encoder-Decoder</td>
+<td>Transformation</td>
+<td>Seq2Seq</td>
+<td>✅ Encoder only</td>
+<td>T5, BART</td>
+</tr>
+</tbody>
+</table>
+<hr>
+</section>
+</section>
+<section id="why-transformers-were-revolutionary" class="level2">
+<h2 class="anchored" data-anchor-id="why-transformers-were-revolutionary">4.8 Why Transformers Were Revolutionary 🚀</h2>
+<section id="before-transformers-the-struggles" class="level3">
+<h3 class="anchored" data-anchor-id="before-transformers-the-struggles">Before Transformers: The Struggles</h3>
+<section id="rnn-problems" class="level4">
+<h4 class="anchored" data-anchor-id="rnn-problems">RNN Problems</h4>
+<pre><code>❌ Sequential processing (slow)
+❌ Vanishing gradients (forgets long-term info)  
+❌ Hard to parallelize
+❌ Complex architectures (LSTM/GRU gates)</code></pre>
+</section>
+<section id="cnn-problems-for-nlp" class="level4">
+<h4 class="anchored" data-anchor-id="cnn-problems-for-nlp">CNN Problems for NLP</h4>
+<pre><code>❌ Fixed window size
+❌ Hard to capture long-range dependencies
+❌ Not naturally suited for sequential data</code></pre>
+</section>
+</section>
+<section id="transformer-breakthroughs" class="level3">
+<h3 class="anchored" data-anchor-id="transformer-breakthroughs">Transformer Breakthroughs</h3>
+<section id="parallelization" class="level4">
+<h4 class="anchored" data-anchor-id="parallelization">1. Parallelization 🏃‍♂️💨</h4>
+<pre><code>RNN: Process word 1 → word 2 → word 3... (sequential)
+Transformer: Process ALL words simultaneously! (parallel)
+
+Result: 10-100x faster training!</code></pre>
+</section>
+<section id="direct-connections" class="level4">
+<h4 class="anchored" data-anchor-id="direct-connections">2. Direct Connections 🔗</h4>
+<pre><code>RNN: Word 1 connects to word 100 through 99 steps
+Transformer: Word 1 directly connects to word 100
+
+Result: No more vanishing gradients!</code></pre>
+</section>
+<section id="scalability" class="level4">
+<h4 class="anchored" data-anchor-id="scalability">3. Scalability 📈</h4>
+<pre><code>RNNs struggled to scale beyond certain sizes
+Transformers scale beautifully:
+- More layers → better performance
+- More data → better performance  
+- More compute → better performance</code></pre>
+</section>
+<section id="transfer-learning" class="level4">
+<h4 class="anchored" data-anchor-id="transfer-learning">4. Transfer Learning 🎯</h4>
+<pre><code>Pre-train on massive text → Fine-tune for specific tasks
+This recipe works amazingly well!
+
+One model can handle:
+- Translation, summarization, QA, classification...</code></pre>
+</section>
+</section>
+<section id="the-impact" class="level3">
+<h3 class="anchored" data-anchor-id="the-impact">The Impact</h3>
+<section id="what-transformers-enabled" class="level4">
+<h4 class="anchored" data-anchor-id="what-transformers-enabled">What Transformers Enabled</h4>
+<pre><code>✅ BERT: Breakthrough in language understanding
+✅ GPT: Breakthrough in language generation  
+✅ T5: Unified text-to-text framework
+✅ Modern chatbots: ChatGPT, Claude, etc.
+✅ Multimodal models: GPT-4V, DALL-E
+✅ Code generation: GitHub Copilot</code></pre>
+</section>
+<section id="the-scaling-era" class="level4">
+<h4 class="anchored" data-anchor-id="the-scaling-era">The Scaling Era</h4>
+<pre><code>Transformers revealed: "Bigger models trained on more data are better"
+
+This led to the race for larger and larger models:
+2018: BERT (340M parameters)
+2019: GPT-2 (1.5B parameters)  
+2020: GPT-3 (175B parameters)
+2023: GPT-4 (~1T parameters)</code></pre>
+<hr>
+</section>
+</section>
+</section>
+<section id="practical-insights" class="level2">
+<h2 class="anchored" data-anchor-id="practical-insights">Practical Insights 💡</h2>
+<section id="when-to-use-which-architecture" class="level3">
+<h3 class="anchored" data-anchor-id="when-to-use-which-architecture">When to Use Which Architecture?</h3>
+<section id="quick-decision-guide" class="level4">
+<h4 class="anchored" data-anchor-id="quick-decision-guide">Quick Decision Guide</h4>
+<pre><code>Need to understand text? → Encoder-only (BERT-style)
+Need to generate text? → Decoder-only (GPT-style)  
+Need to transform text? → Encoder-decoder (T5-style)
+Not sure? → Decoder-only (most versatile)</code></pre>
+</section>
+</section>
+<section id="training-considerations" class="level3">
+<h3 class="anchored" data-anchor-id="training-considerations">Training Considerations</h3>
+<section id="memory-requirements" class="level4">
+<h4 class="anchored" data-anchor-id="memory-requirements">Memory Requirements</h4>
+<pre><code>Attention memory scales O(sequence_length²)
+
+For sequence length 1000:
+- Attention matrix: 1000×1000 = 1M values
+For sequence length 10000:  
+- Attention matrix: 10000×10000 = 100M values
+
+Solution: Various efficient attention mechanisms</code></pre>
+</section>
+<section id="compute-requirements" class="level4">
+<h4 class="anchored" data-anchor-id="compute-requirements">Compute Requirements</h4>
+<pre><code>Transformer training is compute-intensive:
+- Matrix multiplications everywhere
+- Attention computation  
+- Many parameters to update
+
+But: Highly parallelizable (great for GPUs!)</code></pre>
+<hr>
+</section>
+</section>
+</section>
+<section id="common-student-questions" class="level2">
+<h2 class="anchored" data-anchor-id="common-student-questions">Common Student Questions 🙋‍♀️</h2>
+<section id="q-why-is-attention-better-than-rnns" class="level3">
+<h3 class="anchored" data-anchor-id="q-why-is-attention-better-than-rnns">Q: “Why is attention better than RNNs?”</h3>
+<p><strong>A:</strong> Direct connections! Every word can directly connect to every other word, rather than passing information through a chain. It’s like everyone in a meeting talking directly vs.&nbsp;playing telephone!</p>
+</section>
+<section id="q-how-many-attention-heads-should-i-use" class="level3">
+<h3 class="anchored" data-anchor-id="q-how-many-attention-heads-should-i-use">Q: “How many attention heads should I use?”</h3>
+<p><strong>A:</strong> Common choices: 8, 12, 16. More heads = more capacity but also more computation. It’s a trade-off!</p>
+</section>
+<section id="q-whats-the-difference-between-bert-and-gpt" class="level3">
+<h3 class="anchored" data-anchor-id="q-whats-the-difference-between-bert-and-gpt">Q: “What’s the difference between BERT and GPT?”</h3>
+<p><strong>A:</strong> BERT sees the whole sentence (bidirectional, good for understanding). GPT only sees previous words (unidirectional, good for generation).</p>
+</section>
+<section id="q-why-do-we-need-position-encoding" class="level3">
+<h3 class="anchored" data-anchor-id="q-why-do-we-need-position-encoding">Q: “Why do we need position encoding?”</h3>
+<p><strong>A:</strong> Without it, “dog bites man” and “man bites dog” look identical to the transformer! Position encoding teaches word order.</p>
+</section>
+<section id="q-is-the-transformer-perfect" class="level3">
+<h3 class="anchored" data-anchor-id="q-is-the-transformer-perfect">Q: “Is the transformer perfect?”</h3>
+<p><strong>A:</strong> No! Main limitation: O(n²) memory scaling with sequence length. But it’s the best general architecture we have!</p>
+<hr>
+</section>
+</section>
+<section id="key-takeaways" class="level2">
+<h2 class="anchored" data-anchor-id="key-takeaways">Key Takeaways 🎯</h2>
+<ol type="1">
+<li><p><strong>Attention mechanism</strong> allows models to focus on relevant information, solving the information bottleneck problem</p></li>
+<li><p><strong>Self-attention</strong> enables every word to directly connect to every other word, capturing complex relationships</p></li>
+<li><p><strong>Multi-head attention</strong> allows learning different types of relationships simultaneously</p></li>
+<li><p><strong>Position encoding</strong> is crucial for understanding word order in sequences</p></li>
+<li><p><strong>The transformer architecture</strong> combines these innovations into a powerful, scalable framework</p></li>
+<li><p><strong>Different transformer variants</strong> (encoder-only, decoder-only, encoder-decoder) are suited for different tasks</p></li>
+</ol>
+<hr>
+</section>
+<section id="fun-exercises" class="level2">
+<h2 class="anchored" data-anchor-id="fun-exercises">Fun Exercises 🎮</h2>
+<section id="exercise-1-attention-visualization" class="level3">
+<h3 class="anchored" data-anchor-id="exercise-1-attention-visualization">Exercise 1: Attention Visualization</h3>
+<pre><code>Sentence: "The cat that I saw yesterday was sleeping"
+When processing "cat", which words should get high attention?
+- Subject-verb: "cat" → "was"
+- Relative clause: "cat" → "saw"  
+- Adjective: "cat" → "sleeping"</code></pre>
+</section>
+<section id="exercise-2-architecture-choice" class="level3">
+<h3 class="anchored" data-anchor-id="exercise-2-architecture-choice">Exercise 2: Architecture Choice</h3>
+<pre><code>For these tasks, which transformer architecture would you choose?
+a) Email spam classification
+b) Language translation  
+c) Text completion
+d) Document summarization</code></pre>
+</section>
+<section id="exercise-3-position-encoding" class="level3">
+<h3 class="anchored" data-anchor-id="exercise-3-position-encoding">Exercise 3: Position Encoding</h3>
+<pre><code>Why would these sentences need different representations?
+- "Not bad" vs "Bad not"
+- "I can fly" vs "Can I fly"
+How does position encoding help?</code></pre>
+<hr>
+</section>
+</section>
+<section id="whats-next" class="level2">
+<h2 class="anchored" data-anchor-id="whats-next">What’s Next? 📚</h2>
+<p>In Chapter 5, we’ll explore modern transformer variants and efficiency improvements!</p>
+<p><strong>Preview:</strong> We’ll learn about: - How GPT, BERT, and T5 differ in detail - Efficiency innovations (FlashAttention, sparse attention) - Mixture of Experts (MoE) architectures - Latest architectural innovations</p>
+<p>The transformer revolution is just getting started! 🚀</p>
+<hr>
+</section>
+<section id="final-thought" class="level2">
+<h2 class="anchored" data-anchor-id="final-thought">Final Thought 💭</h2>
+<pre><code>"The transformer didn't just improve existing methods - 
+it fundamentally changed how we think about sequence modeling.
+
+Instead of processing sequences step by step,
+we can now let every element directly interact with every other element.
+
+This simple insight unleashed a revolution that's still ongoing!" 🌟</code></pre>
+
+
+</section>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

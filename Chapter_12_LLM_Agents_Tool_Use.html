@@ -1,0 +1,1643 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.8.25">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>chapter_12_llm_agents_tool_use – Large Language Models 教程</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<script src="site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="site_libs/quarto-html/axe/axe-check.js" type="module"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-7b89279ff1a6dce999919e0e67d4d9ec.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap-a8976c3e89df70b272bdfba3d2fda974.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+
+</head>
+
+<body class="nav-fixed quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a href="./index.html" class="navbar-brand navbar-brand-logo">
+    </a>
+    <a class="navbar-brand" href="./index.html">
+    <span class="navbar-title">Large Language Models 教程</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="./index.html"> 
+<span class="menu-text">首页</span></a>
+  </li>  
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">章节</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-">    
+        <li>
+    <a class="dropdown-item" href="./Chapter_01_Introduction_LLMs.html">
+ <span class="dropdown-text">01 - LLM 介绍</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./Chapter_02_Math_Foundations.html">
+ <span class="dropdown-text">02 - 数学基础</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./Chapter_03_NLP_Fundamentals.html">
+ <span class="dropdown-text">03 - NLP 基础</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./Chapter_04_Transformer_Architecture.html">
+ <span class="dropdown-text">04 - Transformer 架构</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./Chapter_05_Modern_Transformer_Variants_Complete.html">
+ <span class="dropdown-text">05 - 现代 Transformer</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./Chapter_08_Fine_Tuning.html">
+ <span class="dropdown-text">08 - 微调</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./Chapter_09_Alignment_RLHF.html">
+ <span class="dropdown-text">09 - 对齐与 RLHF</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./Chapter_10_Prompting_InContext_Learning.html">
+ <span class="dropdown-text">10 - Prompt 工程</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./Chapter_11_RAG.html">
+ <span class="dropdown-text">11 - RAG</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./Chapter_12_LLM_Agents_Tool_Use.html">
+ <span class="dropdown-text">12 - LLM Agents</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./Chapter_13_Optimization_Inference.html">
+ <span class="dropdown-text">13 - 优化推理</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./Chapter_14_Production_Deployment.html">
+ <span class="dropdown-text">14 - 生产部署</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./Chapter_15_Multimodal_LLMs.html">
+ <span class="dropdown-text">15 - 多模态 LLM</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./Chapter_16_Evaluation_Benchmarking.html">
+ <span class="dropdown-text">16 - 评估基准</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./Chapter_17_Cutting_Edge_Research_Future.html">
+ <span class="dropdown-text">17 - 前沿研究</span></a>
+  </li>  
+    </ul>
+  </li>
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#chapter-12-llm-agents-and-tool-use" id="toc-chapter-12-llm-agents-and-tool-use" class="nav-link active" data-scroll-target="#chapter-12-llm-agents-and-tool-use">Chapter 12: LLM Agents and Tool Use</a>
+  <ul class="collapse">
+  <li><a href="#what-well-learn-today" id="toc-what-well-learn-today" class="nav-link" data-scroll-target="#what-well-learn-today">What We’ll Learn Today 🎯</a></li>
+  <li><a href="#from-language-models-to-agents" id="toc-from-language-models-to-agents" class="nav-link" data-scroll-target="#from-language-models-to-agents">12.1 From Language Models to Agents 🎭</a>
+  <ul class="collapse">
+  <li><a href="#what-is-an-ai-agent" id="toc-what-is-an-ai-agent" class="nav-link" data-scroll-target="#what-is-an-ai-agent">What is an AI Agent?</a></li>
+  <li><a href="#the-agent-architecture" id="toc-the-agent-architecture" class="nav-link" data-scroll-target="#the-agent-architecture">The Agent Architecture</a></li>
+  </ul></li>
+  <li><a href="#function-calling-giving-llms-superpowers" id="toc-function-calling-giving-llms-superpowers" class="nav-link" data-scroll-target="#function-calling-giving-llms-superpowers">12.2 Function Calling: Giving LLMs Superpowers 🦸‍♂️</a>
+  <ul class="collapse">
+  <li><a href="#what-is-function-calling" id="toc-what-is-function-calling" class="nav-link" data-scroll-target="#what-is-function-calling">What is Function Calling?</a></li>
+  <li><a href="#function-definition-and-schema" id="toc-function-definition-and-schema" class="nav-link" data-scroll-target="#function-definition-and-schema">Function Definition and Schema</a></li>
+  <li><a href="#function-call-examples" id="toc-function-call-examples" class="nav-link" data-scroll-target="#function-call-examples">Function Call Examples</a></li>
+  </ul></li>
+  <li><a href="#agent-reasoning-patterns" id="toc-agent-reasoning-patterns" class="nav-link" data-scroll-target="#agent-reasoning-patterns">12.3 Agent Reasoning Patterns 🧠</a>
+  <ul class="collapse">
+  <li><a href="#react-reasoning-and-acting" id="toc-react-reasoning-and-acting" class="nav-link" data-scroll-target="#react-reasoning-and-acting">ReAct: Reasoning and Acting</a></li>
+  <li><a href="#plan-and-execute-agents" id="toc-plan-and-execute-agents" class="nav-link" data-scroll-target="#plan-and-execute-agents">Plan-and-Execute Agents</a></li>
+  <li><a href="#self-reflection-and-error-correction" id="toc-self-reflection-and-error-correction" class="nav-link" data-scroll-target="#self-reflection-and-error-correction">Self-Reflection and Error Correction</a></li>
+  </ul></li>
+  <li><a href="#multi-agent-systems" id="toc-multi-agent-systems" class="nav-link" data-scroll-target="#multi-agent-systems">12.4 Multi-Agent Systems 👥</a>
+  <ul class="collapse">
+  <li><a href="#when-one-agent-isnt-enough" id="toc-when-one-agent-isnt-enough" class="nav-link" data-scroll-target="#when-one-agent-isnt-enough">When One Agent Isn’t Enough</a></li>
+  <li><a href="#agent-communication-patterns" id="toc-agent-communication-patterns" class="nav-link" data-scroll-target="#agent-communication-patterns">Agent Communication Patterns</a></li>
+  <li><a href="#collaborative-problem-solving" id="toc-collaborative-problem-solving" class="nav-link" data-scroll-target="#collaborative-problem-solving">Collaborative Problem Solving</a></li>
+  </ul></li>
+  <li><a href="#memory-and-state-management" id="toc-memory-and-state-management" class="nav-link" data-scroll-target="#memory-and-state-management">12.5 Memory and State Management 🧠💾</a>
+  <ul class="collapse">
+  <li><a href="#the-memory-challenge" id="toc-the-memory-challenge" class="nav-link" data-scroll-target="#the-memory-challenge">The Memory Challenge</a></li>
+  <li><a href="#types-of-agent-memory" id="toc-types-of-agent-memory" class="nav-link" data-scroll-target="#types-of-agent-memory">Types of Agent Memory</a></li>
+  <li><a href="#memory-implementation-strategies" id="toc-memory-implementation-strategies" class="nav-link" data-scroll-target="#memory-implementation-strategies">Memory Implementation Strategies</a></li>
+  <li><a href="#memory-management" id="toc-memory-management" class="nav-link" data-scroll-target="#memory-management">Memory Management</a></li>
+  </ul></li>
+  <li><a href="#real-world-agent-applications" id="toc-real-world-agent-applications" class="nav-link" data-scroll-target="#real-world-agent-applications">12.6 Real-World Agent Applications 🌍</a>
+  <ul class="collapse">
+  <li><a href="#personal-productivity-agent" id="toc-personal-productivity-agent" class="nav-link" data-scroll-target="#personal-productivity-agent">Personal Productivity Agent</a></li>
+  <li><a href="#customer-service-agent" id="toc-customer-service-agent" class="nav-link" data-scroll-target="#customer-service-agent">Customer Service Agent</a></li>
+  <li><a href="#research-and-analysis-agent" id="toc-research-and-analysis-agent" class="nav-link" data-scroll-target="#research-and-analysis-agent">Research and Analysis Agent</a></li>
+  <li><a href="#creative-collaboration-agent" id="toc-creative-collaboration-agent" class="nav-link" data-scroll-target="#creative-collaboration-agent">Creative Collaboration Agent</a></li>
+  </ul></li>
+  <li><a href="#building-your-first-agent" id="toc-building-your-first-agent" class="nav-link" data-scroll-target="#building-your-first-agent">12.7 Building Your First Agent 🛠️</a>
+  <ul class="collapse">
+  <li><a href="#simple-task-execution-agent" id="toc-simple-task-execution-agent" class="nav-link" data-scroll-target="#simple-task-execution-agent">Simple Task-Execution Agent</a></li>
+  <li><a href="#advanced-agent-framework" id="toc-advanced-agent-framework" class="nav-link" data-scroll-target="#advanced-agent-framework">Advanced Agent Framework</a></li>
+  </ul></li>
+  <li><a href="#key-takeaways" id="toc-key-takeaways" class="nav-link" data-scroll-target="#key-takeaways">Key Takeaways 🎯</a></li>
+  <li><a href="#fun-exercises" id="toc-fun-exercises" class="nav-link" data-scroll-target="#fun-exercises">Fun Exercises 🎮</a>
+  <ul class="collapse">
+  <li><a href="#exercise-1-agent-design-challenge" id="toc-exercise-1-agent-design-challenge" class="nav-link" data-scroll-target="#exercise-1-agent-design-challenge">Exercise 1: Agent Design Challenge</a></li>
+  <li><a href="#exercise-2-multi-agent-collaboration" id="toc-exercise-2-multi-agent-collaboration" class="nav-link" data-scroll-target="#exercise-2-multi-agent-collaboration">Exercise 2: Multi-Agent Collaboration</a></li>
+  <li><a href="#exercise-3-function-definition" id="toc-exercise-3-function-definition" class="nav-link" data-scroll-target="#exercise-3-function-definition">Exercise 3: Function Definition</a></li>
+  </ul></li>
+  <li><a href="#whats-next" id="toc-whats-next" class="nav-link" data-scroll-target="#whats-next">What’s Next? 📚</a></li>
+  <li><a href="#final-thought" id="toc-final-thought" class="nav-link" data-scroll-target="#final-thought">Final Thought 💭</a></li>
+  </ul></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content"><header id="title-block-header" class="quarto-title-block"></header>
+
+
+
+
+<section id="chapter-12-llm-agents-and-tool-use" class="level1">
+<h1>Chapter 12: LLM Agents and Tool Use</h1>
+<p><em>From Chatbots to Action-Taking AI</em></p>
+<section id="what-well-learn-today" class="level2">
+<h2 class="anchored" data-anchor-id="what-well-learn-today">What We’ll Learn Today 🎯</h2>
+<ul>
+<li>How to transform LLMs from conversationalists into action-takers</li>
+<li>Agent architectures and reasoning loops</li>
+<li>Function calling and tool integration</li>
+<li>Multi-agent systems and collaboration</li>
+<li>Memory and state management for persistent agents</li>
+</ul>
+<p><strong>Big Leap:</strong> We’re going from AI that just talks to AI that can actually DO things! 🤖⚡</p>
+<hr>
+</section>
+<section id="from-language-models-to-agents" class="level2">
+<h2 class="anchored" data-anchor-id="from-language-models-to-agents">12.1 From Language Models to Agents 🎭</h2>
+<section id="what-is-an-ai-agent" class="level3">
+<h3 class="anchored" data-anchor-id="what-is-an-ai-agent">What is an AI Agent?</h3>
+<section id="the-evolution-from-chatbot-to-agent" class="level4">
+<h4 class="anchored" data-anchor-id="the-evolution-from-chatbot-to-agent">The Evolution from Chatbot to Agent</h4>
+<pre><code>Traditional Chatbot:
+User: "What's the weather like?"
+Bot: "I don't have access to current weather data."
+
+AI Agent:
+User: "What's the weather like?"
+Agent: 
+1. "Let me check the weather for you."
+2. [Calls weather API]
+3. [Gets current weather data]
+4. "It's currently 72°F and sunny in your location."
+
+The agent can take actions, not just generate text! 🌤️</code></pre>
+</section>
+<section id="key-characteristics-of-ai-agents" class="level4">
+<h4 class="anchored" data-anchor-id="key-characteristics-of-ai-agents">Key Characteristics of AI Agents</h4>
+<pre><code>✅ Autonomy: Can make decisions and take actions independently
+✅ Goal-oriented: Works toward specific objectives
+✅ Tool use: Can interact with external systems and APIs
+✅ Planning: Can break down complex tasks into steps
+✅ Memory: Maintains state across interactions
+✅ Adaptability: Learns from feedback and adjusts approach</code></pre>
+</section>
+<section id="the-agent-analogy-personal-assistant" class="level4">
+<h4 class="anchored" data-anchor-id="the-agent-analogy-personal-assistant">The Agent Analogy: Personal Assistant 👨‍💼</h4>
+<pre><code>Think of an AI agent like a highly capable personal assistant:
+
+Human assistant capabilities:
+- Answer questions (knowledge)
+- Make phone calls (communication)
+- Schedule meetings (calendar management)
+- Research information (web browsing)
+- Send emails (correspondence)
+- Book travel (planning and execution)
+
+AI agent capabilities:
+- Answer questions (LLM reasoning)
+- Call APIs (function calling)
+- Update databases (data management)
+- Search the web (information retrieval)
+- Send notifications (system integration)
+- Execute workflows (task automation)</code></pre>
+</section>
+</section>
+<section id="the-agent-architecture" class="level3">
+<h3 class="anchored" data-anchor-id="the-agent-architecture">The Agent Architecture</h3>
+<section id="basic-agent-loop" class="level4">
+<h4 class="anchored" data-anchor-id="basic-agent-loop">Basic Agent Loop</h4>
+<pre><code>1. PERCEIVE: Understand the current situation
+   - Read user input
+   - Check current state/context
+   - Assess available tools and resources
+
+2. PLAN: Decide what to do
+   - Break down the goal into steps
+   - Choose appropriate tools and actions
+   - Consider potential obstacles
+
+3. ACT: Execute the plan
+   - Call functions and APIs
+   - Interact with external systems
+   - Modify state or environment
+
+4. OBSERVE: Check the results
+   - Evaluate success/failure
+   - Update understanding
+   - Decide if more action is needed
+
+5. REPEAT: Continue until goal is achieved</code></pre>
+</section>
+<section id="example-booking-a-restaurant-reservation" class="level4">
+<h4 class="anchored" data-anchor-id="example-booking-a-restaurant-reservation">Example: Booking a Restaurant Reservation</h4>
+<pre><code>User: "Book me a table for 2 at a good Italian restaurant tonight at 7 PM"
+
+Agent reasoning:
+1. PERCEIVE: User wants dinner reservation, 2 people, Italian food, tonight, 7 PM
+2. PLAN: Need to find Italian restaurants → check availability → make reservation
+3. ACT: Search restaurants API → filter by cuisine and rating → check availability
+4. OBSERVE: Found 3 restaurants with availability
+5. PLAN: Choose best option → make reservation
+6. ACT: Call reservation API → confirm booking
+7. OBSERVE: Reservation confirmed
+8. RESPOND: "I've booked you a table for 2 at Luigi's Italian Restaurant tonight at 7 PM. Confirmation number: ABC123"</code></pre>
+<hr>
+</section>
+</section>
+</section>
+<section id="function-calling-giving-llms-superpowers" class="level2">
+<h2 class="anchored" data-anchor-id="function-calling-giving-llms-superpowers">12.2 Function Calling: Giving LLMs Superpowers 🦸‍♂️</h2>
+<section id="what-is-function-calling" class="level3">
+<h3 class="anchored" data-anchor-id="what-is-function-calling">What is Function Calling?</h3>
+<section id="the-breakthrough-innovation" class="level4">
+<h4 class="anchored" data-anchor-id="the-breakthrough-innovation">The Breakthrough Innovation</h4>
+<pre><code>Function calling allows LLMs to:
+- Call external APIs and services
+- Execute code and scripts
+- Interact with databases
+- Control other software systems
+- Perform real-world actions
+
+It's like giving the AI "hands" to manipulate the digital world! 🙌</code></pre>
+</section>
+<section id="how-function-calling-works" class="level4">
+<h4 class="anchored" data-anchor-id="how-function-calling-works">How Function Calling Works</h4>
+<pre><code>1. Define Available Functions:
+   - Describe what each function does
+   - Specify required parameters
+   - Include examples of usage
+
+2. LLM Decides When to Call:
+   - Analyzes user request
+   - Determines if external action needed
+   - Chooses appropriate function
+
+3. Function Execution:
+   - System executes the function call
+   - Returns results to the LLM
+   - LLM incorporates results into response
+
+4. Response Generation:
+   - LLM uses function results
+   - Generates natural language response
+   - May trigger additional function calls</code></pre>
+</section>
+</section>
+<section id="function-definition-and-schema" class="level3">
+<h3 class="anchored" data-anchor-id="function-definition-and-schema">Function Definition and Schema</h3>
+<section id="json-schema-for-functions" class="level4">
+<h4 class="anchored" data-anchor-id="json-schema-for-functions">JSON Schema for Functions</h4>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb8"><pre class="sourceCode json code-with-copy"><code class="sourceCode json"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">"name"</span><span class="fu">:</span> <span class="st">"get_weather"</span><span class="fu">,</span></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">"description"</span><span class="fu">:</span> <span class="st">"Get current weather information for a location"</span><span class="fu">,</span></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>  <span class="dt">"parameters"</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>    <span class="dt">"type"</span><span class="fu">:</span> <span class="st">"object"</span><span class="fu">,</span></span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>    <span class="dt">"properties"</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>      <span class="dt">"location"</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"type"</span><span class="fu">:</span> <span class="st">"string"</span><span class="fu">,</span></span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"description"</span><span class="fu">:</span> <span class="st">"The city and state, e.g. San Francisco, CA"</span></span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a>      <span class="fu">},</span></span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a>      <span class="dt">"unit"</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"type"</span><span class="fu">:</span> <span class="st">"string"</span><span class="fu">,</span></span>
+<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"enum"</span><span class="fu">:</span> <span class="ot">[</span><span class="st">"celsius"</span><span class="ot">,</span> <span class="st">"fahrenheit"</span><span class="ot">]</span><span class="fu">,</span></span>
+<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"description"</span><span class="fu">:</span> <span class="st">"The temperature unit to use"</span></span>
+<span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a>      <span class="fu">}</span></span>
+<span id="cb8-16"><a href="#cb8-16" aria-hidden="true" tabindex="-1"></a>    <span class="fu">},</span></span>
+<span id="cb8-17"><a href="#cb8-17" aria-hidden="true" tabindex="-1"></a>    <span class="dt">"required"</span><span class="fu">:</span> <span class="ot">[</span><span class="st">"location"</span><span class="ot">]</span></span>
+<span id="cb8-18"><a href="#cb8-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">}</span></span>
+<span id="cb8-19"><a href="#cb8-19" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</section>
+<section id="more-complex-function-examples" class="level4">
+<h4 class="anchored" data-anchor-id="more-complex-function-examples">More Complex Function Examples</h4>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb9"><pre class="sourceCode json code-with-copy"><code class="sourceCode json"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">"name"</span><span class="fu">:</span> <span class="st">"send_email"</span><span class="fu">,</span></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">"description"</span><span class="fu">:</span> <span class="st">"Send an email to specified recipients"</span><span class="fu">,</span></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>  <span class="dt">"parameters"</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>    <span class="dt">"type"</span><span class="fu">:</span> <span class="st">"object"</span><span class="fu">,</span></span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>    <span class="dt">"properties"</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>      <span class="dt">"to"</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"type"</span><span class="fu">:</span> <span class="st">"array"</span><span class="fu">,</span></span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"items"</span><span class="fu">:</span> <span class="fu">{</span><span class="dt">"type"</span><span class="fu">:</span> <span class="st">"string"</span><span class="fu">},</span></span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"description"</span><span class="fu">:</span> <span class="st">"List of recipient email addresses"</span></span>
+<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a>      <span class="fu">},</span></span>
+<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a>      <span class="dt">"subject"</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb9-13"><a href="#cb9-13" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"type"</span><span class="fu">:</span> <span class="st">"string"</span><span class="fu">,</span></span>
+<span id="cb9-14"><a href="#cb9-14" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"description"</span><span class="fu">:</span> <span class="st">"Email subject line"</span></span>
+<span id="cb9-15"><a href="#cb9-15" aria-hidden="true" tabindex="-1"></a>      <span class="fu">},</span></span>
+<span id="cb9-16"><a href="#cb9-16" aria-hidden="true" tabindex="-1"></a>      <span class="dt">"body"</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb9-17"><a href="#cb9-17" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"type"</span><span class="fu">:</span> <span class="st">"string"</span><span class="fu">,</span></span>
+<span id="cb9-18"><a href="#cb9-18" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"description"</span><span class="fu">:</span> <span class="st">"Email content"</span></span>
+<span id="cb9-19"><a href="#cb9-19" aria-hidden="true" tabindex="-1"></a>      <span class="fu">},</span></span>
+<span id="cb9-20"><a href="#cb9-20" aria-hidden="true" tabindex="-1"></a>      <span class="dt">"attachments"</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb9-21"><a href="#cb9-21" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"type"</span><span class="fu">:</span> <span class="st">"array"</span><span class="fu">,</span></span>
+<span id="cb9-22"><a href="#cb9-22" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"items"</span><span class="fu">:</span> <span class="fu">{</span><span class="dt">"type"</span><span class="fu">:</span> <span class="st">"string"</span><span class="fu">},</span></span>
+<span id="cb9-23"><a href="#cb9-23" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"description"</span><span class="fu">:</span> <span class="st">"List of file paths to attach"</span></span>
+<span id="cb9-24"><a href="#cb9-24" aria-hidden="true" tabindex="-1"></a>      <span class="fu">}</span></span>
+<span id="cb9-25"><a href="#cb9-25" aria-hidden="true" tabindex="-1"></a>    <span class="fu">},</span></span>
+<span id="cb9-26"><a href="#cb9-26" aria-hidden="true" tabindex="-1"></a>    <span class="dt">"required"</span><span class="fu">:</span> <span class="ot">[</span><span class="st">"to"</span><span class="ot">,</span> <span class="st">"subject"</span><span class="ot">,</span> <span class="st">"body"</span><span class="ot">]</span></span>
+<span id="cb9-27"><a href="#cb9-27" aria-hidden="true" tabindex="-1"></a>  <span class="fu">}</span></span>
+<span id="cb9-28"><a href="#cb9-28" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</section>
+</section>
+<section id="function-call-examples" class="level3">
+<h3 class="anchored" data-anchor-id="function-call-examples">Function Call Examples</h3>
+<section id="simple-weather-query" class="level4">
+<h4 class="anchored" data-anchor-id="simple-weather-query">Simple Weather Query</h4>
+<pre><code>User: "What's the weather like in Tokyo?"
+
+LLM reasoning:
+"I need to get weather information for Tokyo. I'll use the get_weather function."
+
+Function call:
+{
+  "name": "get_weather",
+  "arguments": {
+    "location": "Tokyo, Japan",
+    "unit": "celsius"
+  }
+}
+
+Function result:
+{
+  "temperature": 22,
+  "condition": "partly cloudy",
+  "humidity": 65,
+  "wind_speed": 8
+}
+
+LLM response:
+"The weather in Tokyo is currently 22°C with partly cloudy conditions. The humidity is 65% and wind speed is 8 km/h."</code></pre>
+</section>
+<section id="complex-multi-step-task" class="level4">
+<h4 class="anchored" data-anchor-id="complex-multi-step-task">Complex Multi-Step Task</h4>
+<pre><code>User: "Schedule a meeting with John for tomorrow at 2 PM and send him a calendar invite"
+
+LLM reasoning:
+"I need to: 1) Check calendar availability 2) Create meeting 3) Send invite"
+
+Step 1 - Check availability:
+Function call: check_calendar_availability("tomorrow", "2:00 PM", "1 hour")
+Result: Available
+
+Step 2 - Create meeting:
+Function call: create_meeting({
+  "title": "Meeting with John",
+  "date": "2024-01-15",
+  "time": "14:00",
+  "duration": 60,
+  "attendees": ["john@email.com"]
+})
+Result: Meeting created with ID: meet_123
+
+Step 3 - Send invite:
+Function call: send_calendar_invite("meet_123", ["john@email.com"])
+Result: Invite sent successfully
+
+LLM response:
+"I've scheduled a meeting with John for tomorrow at 2 PM and sent him a calendar invite. The meeting is confirmed for January 15th, 2024 at 2:00 PM."</code></pre>
+<hr>
+</section>
+</section>
+</section>
+<section id="agent-reasoning-patterns" class="level2">
+<h2 class="anchored" data-anchor-id="agent-reasoning-patterns">12.3 Agent Reasoning Patterns 🧠</h2>
+<section id="react-reasoning-and-acting" class="level3">
+<h3 class="anchored" data-anchor-id="react-reasoning-and-acting">ReAct: Reasoning and Acting</h3>
+<section id="the-react-framework" class="level4">
+<h4 class="anchored" data-anchor-id="the-react-framework">The ReAct Framework</h4>
+<pre><code>ReAct = Reasoning + Acting in an interleaved manner
+
+Pattern:
+Thought: [Reasoning about what to do]
+Action: [Execute function/tool]
+Observation: [Result of the action]
+Thought: [Reason about the result]
+Action: [Next action if needed]
+...
+Final Answer: [Complete response]</code></pre>
+</section>
+<section id="react-example-research-task" class="level4">
+<h4 class="anchored" data-anchor-id="react-example-research-task">ReAct Example: Research Task</h4>
+<pre><code>User: "What's the population of the largest city in Japan?"
+
+Thought: I need to find the largest city in Japan first, then get its population.
+
+Action: search_web("largest city in Japan")
+
+Observation: Tokyo is the largest city in Japan with over 13 million people in the city proper and about 37 million in the metropolitan area.
+
+Thought: Tokyo is the largest city. Let me get more recent and precise population data.
+
+Action: get_city_statistics("Tokyo, Japan", "population")
+
+Observation: {"city": "Tokyo", "population_city": 13964000, "population_metro": 37435000, "year": 2023}
+
+Thought: I have the current population data for Tokyo. The city proper has about 14 million people.
+
+Final Answer: The largest city in Japan is Tokyo, with a population of approximately 13.96 million people in the city proper (as of 2023). The greater metropolitan area has about 37.4 million people.</code></pre>
+</section>
+</section>
+<section id="plan-and-execute-agents" class="level3">
+<h3 class="anchored" data-anchor-id="plan-and-execute-agents">Plan-and-Execute Agents</h3>
+<section id="high-level-planning-approach" class="level4">
+<h4 class="anchored" data-anchor-id="high-level-planning-approach">High-Level Planning Approach</h4>
+<pre><code>Step 1: PLAN
+- Break down complex task into subtasks
+- Create ordered sequence of steps
+- Identify required tools for each step
+
+Step 2: EXECUTE
+- Execute each step in sequence
+- Use tools and functions as needed
+- Monitor progress and adapt plan
+
+Step 3: VERIFY
+- Check if goal was achieved
+- Evaluate quality of results
+- Re-plan if necessary</code></pre>
+</section>
+<section id="example-travel-planning-agent" class="level4">
+<h4 class="anchored" data-anchor-id="example-travel-planning-agent">Example: Travel Planning Agent</h4>
+<pre><code>User: "Plan a 3-day trip to Paris for 2 people, budget $2000"
+
+PLANNING PHASE:
+Plan:
+1. Research flights to Paris
+2. Find accommodation for 3 nights
+3. Research popular attractions and activities
+4. Create daily itinerary
+5. Calculate total costs
+6. Make reservations if approved
+
+EXECUTION PHASE:
+
+Step 1: Research flights
+Action: search_flights("current_location", "Paris", "departure_date", 2)
+Result: Found flights $600 per person round trip
+
+Step 2: Find accommodation
+Action: search_hotels("Paris", "check_in_date", 3, 2, max_price=200)
+Result: Found hotel $150 per night
+
+Step 3: Research attractions
+Action: get_attraction_info("Paris", top_attractions=true)
+Result: List of must-see places with prices
+
+Step 4: Create itinerary
+Action: create_itinerary(attractions, 3_days, preferences)
+Result: Day-by-day schedule
+
+Step 5: Calculate costs
+Total: Flights $1200 + Hotel $450 + Activities $300 = $1950 (within budget!)
+
+Final Answer: "I've planned a 3-day Paris trip for 2 people within your $2000 budget..."</code></pre>
+</section>
+</section>
+<section id="self-reflection-and-error-correction" class="level3">
+<h3 class="anchored" data-anchor-id="self-reflection-and-error-correction">Self-Reflection and Error Correction</h3>
+<section id="learning-from-mistakes" class="level4">
+<h4 class="anchored" data-anchor-id="learning-from-mistakes">Learning from Mistakes</h4>
+<pre><code>When actions fail or produce unexpected results:
+
+1. ANALYZE: What went wrong?
+2. ADAPT: How can I adjust my approach?
+3. RETRY: Execute with improved strategy
+
+Example:
+Action: book_restaurant("Luigi's", "tonight", 8_people)
+Observation: Error - Restaurant fully booked
+
+Thought: Luigi's is full. Let me try alternative approaches.
+
+Action: search_restaurants("Italian", "tonight", 8_people, "available")
+Observation: Found 3 restaurants with availability
+
+Thought: Good, I have alternatives. Let me book the highest-rated one.
+
+Action: book_restaurant("Mama Mia's", "tonight", 8_people)
+Observation: Booking confirmed for 8 PM
+
+Self-reflection improves success rates! 🎯</code></pre>
+<hr>
+</section>
+</section>
+</section>
+<section id="multi-agent-systems" class="level2">
+<h2 class="anchored" data-anchor-id="multi-agent-systems">12.4 Multi-Agent Systems 👥</h2>
+<section id="when-one-agent-isnt-enough" class="level3">
+<h3 class="anchored" data-anchor-id="when-one-agent-isnt-enough">When One Agent Isn’t Enough</h3>
+<section id="scenarios-for-multi-agent-systems" class="level4">
+<h4 class="anchored" data-anchor-id="scenarios-for-multi-agent-systems">Scenarios for Multi-Agent Systems</h4>
+<pre><code>✅ Complex tasks requiring diverse expertise
+✅ Parallel processing of independent subtasks
+✅ Specialized roles (researcher, writer, reviewer)
+✅ Collaborative problem-solving
+✅ Quality control through multiple perspectives</code></pre>
+</section>
+<section id="agent-specialization-example" class="level4">
+<h4 class="anchored" data-anchor-id="agent-specialization-example">Agent Specialization Example</h4>
+<pre><code>Task: "Create a comprehensive marketing report for our new product"
+
+RESEARCH AGENT:
+- Gathers market data and competitor information
+- Analyzes industry trends
+- Collects customer feedback
+
+DATA ANALYSIS AGENT:
+- Processes numerical data
+- Creates charts and visualizations
+- Calculates statistics and projections
+
+WRITING AGENT:
+- Synthesizes information into coherent report
+- Ensures proper structure and flow
+- Adapts tone for target audience
+
+REVIEW AGENT:
+- Fact-checks information
+- Ensures consistency and quality
+- Suggests improvements
+
+Each agent has specialized tools and expertise! 🎭</code></pre>
+</section>
+</section>
+<section id="agent-communication-patterns" class="level3">
+<h3 class="anchored" data-anchor-id="agent-communication-patterns">Agent Communication Patterns</h3>
+<section id="hierarchical-communication" class="level4">
+<h4 class="anchored" data-anchor-id="hierarchical-communication">Hierarchical Communication</h4>
+<pre><code>COORDINATOR AGENT (Manager)
+├── Research Agent
+├── Analysis Agent
+└── Writing Agent
+
+Communication flow:
+1. Coordinator delegates tasks to specialist agents
+2. Specialists complete their work independently
+3. Results flow back to coordinator
+4. Coordinator synthesizes final output
+
+Benefits: Clear organization, efficient delegation</code></pre>
+</section>
+<section id="peer-to-peer-communication" class="level4">
+<h4 class="anchored" data-anchor-id="peer-to-peer-communication">Peer-to-Peer Communication</h4>
+<pre><code>Agent A ↔ Agent B
+    ↕       ↕
+Agent C ↔ Agent D
+
+Communication flow:
+- Agents communicate directly with each other
+- Share information and coordinate actions
+- Collective decision-making
+- Emergent behaviors and solutions
+
+Benefits: Flexibility, robustness, creativity</code></pre>
+</section>
+<section id="message-passing-example" class="level4">
+<h4 class="anchored" data-anchor-id="message-passing-example">Message Passing Example</h4>
+<pre><code>Research Agent → Data Agent:
+{
+  "type": "data_request",
+  "content": "I found that competitor X launched a similar product. Can you analyze their sales data?",
+  "data": {"competitor": "X", "product": "similar_product"},
+  "priority": "high"
+}
+
+Data Agent → Research Agent:
+{
+  "type": "data_response", 
+  "content": "Analysis complete. Competitor X's product captured 15% market share in 6 months.",
+  "data": {"market_share": 0.15, "timeframe": "6_months"},
+  "confidence": 0.85
+}</code></pre>
+</section>
+</section>
+<section id="collaborative-problem-solving" class="level3">
+<h3 class="anchored" data-anchor-id="collaborative-problem-solving">Collaborative Problem Solving</h3>
+<section id="debate-and-consensus" class="level4">
+<h4 class="anchored" data-anchor-id="debate-and-consensus">Debate and Consensus</h4>
+<pre><code>Scenario: Choosing the best marketing strategy
+
+OPTIMIST AGENT: "We should pursue aggressive growth strategy"
+- Presents benefits and opportunities
+- Highlights potential for high returns
+
+PESSIMIST AGENT: "We should focus on risk mitigation"  
+- Identifies potential problems and risks
+- Suggests conservative approaches
+
+ANALYST AGENT: "Let me evaluate both perspectives with data"
+- Weighs pros and cons objectively
+- Provides quantitative analysis
+
+COORDINATOR: "Based on all inputs, here's the balanced recommendation"
+- Synthesizes different viewpoints
+- Makes final decision with rationale
+
+Multiple perspectives lead to better decisions! ⚖️</code></pre>
+<hr>
+</section>
+</section>
+</section>
+<section id="memory-and-state-management" class="level2">
+<h2 class="anchored" data-anchor-id="memory-and-state-management">12.5 Memory and State Management 🧠💾</h2>
+<section id="the-memory-challenge" class="level3">
+<h3 class="anchored" data-anchor-id="the-memory-challenge">The Memory Challenge</h3>
+<section id="why-agents-need-memory" class="level4">
+<h4 class="anchored" data-anchor-id="why-agents-need-memory">Why Agents Need Memory</h4>
+<pre><code>Without memory, agents are like having amnesia:
+❌ Can't learn from past interactions
+❌ Lose context between sessions
+❌ Repeat the same mistakes
+❌ Can't build on previous work
+❌ No personalization or adaptation
+
+With memory, agents become truly intelligent:
+✅ Learn user preferences over time
+✅ Remember past conversations and decisions
+✅ Build on previous work and knowledge
+✅ Avoid repeating failed approaches
+✅ Provide personalized experiences</code></pre>
+</section>
+</section>
+<section id="types-of-agent-memory" class="level3">
+<h3 class="anchored" data-anchor-id="types-of-agent-memory">Types of Agent Memory</h3>
+<section id="short-term-memory-working-memory" class="level4">
+<h4 class="anchored" data-anchor-id="short-term-memory-working-memory">Short-Term Memory (Working Memory)</h4>
+<pre><code>Scope: Current conversation or task
+Duration: Until task completion or session end
+Contents:
+- Current conversation history
+- Intermediate results and calculations
+- Active goals and plans
+- Recently accessed information
+
+Example:
+User: "Find flights to Paris"
+Agent: [Stores: destination=Paris, task=flight_search]
+User: "Make it for next Tuesday"
+Agent: [Updates: date=next_Tuesday, maintains context]</code></pre>
+</section>
+<section id="long-term-memory-persistent-memory" class="level4">
+<h4 class="anchored" data-anchor-id="long-term-memory-persistent-memory">Long-Term Memory (Persistent Memory)</h4>
+<pre><code>Scope: Across multiple sessions and interactions
+Duration: Indefinite (with management policies)
+Contents:
+- User preferences and history
+- Learned facts and relationships
+- Successful strategies and patterns
+- Personal information (with permission)
+
+Example:
+Session 1: User prefers aisle seats, budget airlines
+Session 2: Agent remembers preferences automatically
+Session 3: Proactively suggests based on past behavior</code></pre>
+</section>
+<section id="episodic-memory" class="level4">
+<h4 class="anchored" data-anchor-id="episodic-memory">Episodic Memory</h4>
+<pre><code>What: Specific events and experiences
+Structure: Time-stamped episodes with context
+
+Example episode:
+{
+  "timestamp": "2024-01-15T14:30:00Z",
+  "type": "task_completion",
+  "task": "book_restaurant_reservation",
+  "context": {
+    "user_request": "Italian restaurant for anniversary",
+    "chosen_restaurant": "Luigi's",
+    "outcome": "success",
+    "user_satisfaction": "high"
+  },
+  "lessons_learned": "User prefers upscale Italian for special occasions"
+}</code></pre>
+</section>
+<section id="semantic-memory" class="level4">
+<h4 class="anchored" data-anchor-id="semantic-memory">Semantic Memory</h4>
+<pre><code>What: General knowledge and facts
+Structure: Concept networks and relationships
+
+Example knowledge:
+- User works in tech industry
+- Prefers vegetarian restaurants
+- Lives in San Francisco
+- Usually travels for business on Tuesdays
+- Budget conscious but willing to spend on special occasions
+
+This knowledge informs future recommendations and decisions.</code></pre>
+</section>
+</section>
+<section id="memory-implementation-strategies" class="level3">
+<h3 class="anchored" data-anchor-id="memory-implementation-strategies">Memory Implementation Strategies</h3>
+<section id="vector-based-memory" class="level4">
+<h4 class="anchored" data-anchor-id="vector-based-memory">Vector-Based Memory</h4>
+<pre><code>Store memories as embeddings in vector database:
+
+1. Convert experiences to text descriptions
+2. Generate embeddings for semantic search
+3. Retrieve relevant memories based on current context
+4. Use retrieved memories to inform decisions
+
+Benefits:
+✅ Semantic similarity matching
+✅ Scalable storage and retrieval
+✅ Natural integration with RAG systems</code></pre>
+</section>
+<section id="structured-memory" class="level4">
+<h4 class="anchored" data-anchor-id="structured-memory">Structured Memory</h4>
+<pre><code>Store memories in structured format (database/knowledge graph):
+
+User Profile:
+- name: "John Smith"
+- preferences: {"cuisine": ["Italian", "Japanese"], "budget": "moderate"}
+- history: [list of past interactions]
+
+Task Memory:
+- completed_tasks: [successful strategies and outcomes]
+- failed_attempts: [what didn't work and why]
+
+Benefits:
+✅ Precise querying and filtering
+✅ Complex relationships and constraints
+✅ Efficient updates and maintenance</code></pre>
+</section>
+</section>
+<section id="memory-management" class="level3">
+<h3 class="anchored" data-anchor-id="memory-management">Memory Management</h3>
+<section id="forgetting-and-pruning" class="level4">
+<h4 class="anchored" data-anchor-id="forgetting-and-pruning">Forgetting and Pruning</h4>
+<pre><code>Challenge: Memory can't grow indefinitely
+
+Strategies:
+1. Time-based decay: Older memories become less accessible
+2. Importance-based retention: Keep only significant events
+3. Compression: Summarize old detailed memories
+4. User-controlled: Let users decide what to remember/forget
+
+Example policy:
+- Keep detailed memory for last 30 days
+- Summarize and compress 30-90 day memories  
+- Keep only major events/preferences beyond 90 days
+- Never forget explicit user preferences without permission</code></pre>
+</section>
+<section id="privacy-and-security" class="level4">
+<h4 class="anchored" data-anchor-id="privacy-and-security">Privacy and Security</h4>
+<pre><code>Memory privacy considerations:
+✅ Explicit consent for personal data storage
+✅ User control over memory deletion
+✅ Secure storage and access controls
+✅ Transparency about what's remembered
+✅ Data minimization principles
+
+Example user controls:
+- "Forget everything about my medical information"
+- "Remember my work preferences but not personal details"
+- "Show me what you know about me"
+- "Delete all memories older than 6 months"</code></pre>
+<hr>
+</section>
+</section>
+</section>
+<section id="real-world-agent-applications" class="level2">
+<h2 class="anchored" data-anchor-id="real-world-agent-applications">12.6 Real-World Agent Applications 🌍</h2>
+<section id="personal-productivity-agent" class="level3">
+<h3 class="anchored" data-anchor-id="personal-productivity-agent">Personal Productivity Agent</h3>
+<section id="capabilities" class="level4">
+<h4 class="anchored" data-anchor-id="capabilities">Capabilities</h4>
+<pre><code>Daily Tasks:
+- Schedule management and optimization
+- Email sorting and response drafting
+- Task prioritization and reminders
+- Meeting preparation and follow-up
+
+Advanced Features:
+- Learn personal work patterns
+- Predict scheduling conflicts
+- Suggest efficiency improvements
+- Integrate with all productivity tools
+
+Example interaction:
+User: "I have a busy week coming up"
+Agent: "I see you have 12 meetings scheduled. I've identified 3 potential conflicts and drafted a rescheduling proposal. I also noticed you haven't blocked time for the Johnson report that's due Friday - shall I schedule 2 hours tomorrow afternoon?"</code></pre>
+</section>
+</section>
+<section id="customer-service-agent" class="level3">
+<h3 class="anchored" data-anchor-id="customer-service-agent">Customer Service Agent</h3>
+<section id="multi-channel-support" class="level4">
+<h4 class="anchored" data-anchor-id="multi-channel-support">Multi-Channel Support</h4>
+<pre><code>Capabilities:
+- Handle inquiries across email, chat, phone
+- Access customer history and preferences
+- Escalate complex issues intelligently
+- Follow up on unresolved issues
+
+Tools Integration:
+- CRM system access
+- Knowledge base search
+- Ticketing system updates
+- Payment processing
+
+Example resolution:
+Customer: "My order hasn't arrived and I need it for tomorrow"
+Agent: 
+1. Looks up order history
+2. Checks shipping status
+3. Identifies delay in transit
+4. Offers expedited replacement
+5. Processes refund for shipping
+6. Schedules follow-up
+7. Updates customer record</code></pre>
+</section>
+</section>
+<section id="research-and-analysis-agent" class="level3">
+<h3 class="anchored" data-anchor-id="research-and-analysis-agent">Research and Analysis Agent</h3>
+<section id="scientific-research-assistant" class="level4">
+<h4 class="anchored" data-anchor-id="scientific-research-assistant">Scientific Research Assistant</h4>
+<pre><code>Research Workflow:
+1. Literature search and screening
+2. Data collection and validation
+3. Statistical analysis and visualization
+4. Hypothesis generation
+5. Report writing and citation
+
+Tools:
+- Academic database access (PubMed, arXiv)
+- Statistical analysis software
+- Citation management
+- Data visualization tools
+- Collaboration platforms
+
+Example project:
+Research question: "What are the latest developments in quantum computing?"
+Agent:
+1. Searches recent papers (last 12 months)
+2. Identifies key trends and breakthroughs
+3. Analyzes citation networks
+4. Summarizes findings by category
+5. Generates comprehensive report with proper citations</code></pre>
+</section>
+</section>
+<section id="creative-collaboration-agent" class="level3">
+<h3 class="anchored" data-anchor-id="creative-collaboration-agent">Creative Collaboration Agent</h3>
+<section id="content-creation-assistant" class="level4">
+<h4 class="anchored" data-anchor-id="content-creation-assistant">Content Creation Assistant</h4>
+<pre><code>Creative Process:
+1. Brainstorming and idea generation
+2. Research and fact-checking
+3. Draft creation and iteration
+4. Style and tone optimization
+5. Review and quality control
+
+Collaborative Features:
+- Multiple writing styles and voices
+- Real-time collaboration with humans
+- Version control and change tracking
+- Feedback incorporation
+
+Example project:
+Task: "Create a marketing campaign for eco-friendly product"
+Agent:
+1. Researches target audience and market trends
+2. Generates multiple campaign concepts
+3. Creates copy for different channels
+4. Designs A/B testing scenarios
+5. Prepares implementation timeline</code></pre>
+<hr>
+</section>
+</section>
+</section>
+<section id="building-your-first-agent" class="level2">
+<h2 class="anchored" data-anchor-id="building-your-first-agent">12.7 Building Your First Agent 🛠️</h2>
+<section id="simple-task-execution-agent" class="level3">
+<h3 class="anchored" data-anchor-id="simple-task-execution-agent">Simple Task-Execution Agent</h3>
+<section id="basic-architecture" class="level4">
+<h4 class="anchored" data-anchor-id="basic-architecture">Basic Architecture</h4>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb36"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Conceptual implementation - simplified for teaching</span></span>
+<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-3"><a href="#cb36-3" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> SimpleAgent:</span>
+<span id="cb36-4"><a href="#cb36-4" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> <span class="fu">__init__</span>(<span class="va">self</span>):</span>
+<span id="cb36-5"><a href="#cb36-5" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.tools <span class="op">=</span> {</span>
+<span id="cb36-6"><a href="#cb36-6" aria-hidden="true" tabindex="-1"></a>            <span class="st">"web_search"</span>: <span class="va">self</span>.web_search,</span>
+<span id="cb36-7"><a href="#cb36-7" aria-hidden="true" tabindex="-1"></a>            <span class="st">"calculator"</span>: <span class="va">self</span>.calculator,</span>
+<span id="cb36-8"><a href="#cb36-8" aria-hidden="true" tabindex="-1"></a>            <span class="st">"send_email"</span>: <span class="va">self</span>.send_email</span>
+<span id="cb36-9"><a href="#cb36-9" aria-hidden="true" tabindex="-1"></a>        }</span>
+<span id="cb36-10"><a href="#cb36-10" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.memory <span class="op">=</span> []</span>
+<span id="cb36-11"><a href="#cb36-11" aria-hidden="true" tabindex="-1"></a>        </span>
+<span id="cb36-12"><a href="#cb36-12" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> process_request(<span class="va">self</span>, user_input):</span>
+<span id="cb36-13"><a href="#cb36-13" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Simple reasoning loop</span></span>
+<span id="cb36-14"><a href="#cb36-14" aria-hidden="true" tabindex="-1"></a>        thoughts <span class="op">=</span> []</span>
+<span id="cb36-15"><a href="#cb36-15" aria-hidden="true" tabindex="-1"></a>        </span>
+<span id="cb36-16"><a href="#cb36-16" aria-hidden="true" tabindex="-1"></a>        <span class="cf">while</span> <span class="kw">not</span> <span class="va">self</span>.is_task_complete():</span>
+<span id="cb36-17"><a href="#cb36-17" aria-hidden="true" tabindex="-1"></a>            <span class="co"># Decide what to do next</span></span>
+<span id="cb36-18"><a href="#cb36-18" aria-hidden="true" tabindex="-1"></a>            next_action <span class="op">=</span> <span class="va">self</span>.choose_action(user_input, thoughts)</span>
+<span id="cb36-19"><a href="#cb36-19" aria-hidden="true" tabindex="-1"></a>            </span>
+<span id="cb36-20"><a href="#cb36-20" aria-hidden="true" tabindex="-1"></a>            <span class="cf">if</span> next_action[<span class="st">"type"</span>] <span class="op">==</span> <span class="st">"tool_use"</span>:</span>
+<span id="cb36-21"><a href="#cb36-21" aria-hidden="true" tabindex="-1"></a>                <span class="co"># Execute tool</span></span>
+<span id="cb36-22"><a href="#cb36-22" aria-hidden="true" tabindex="-1"></a>                result <span class="op">=</span> <span class="va">self</span>.execute_tool(next_action[<span class="st">"tool"</span>], next_action[<span class="st">"args"</span>])</span>
+<span id="cb36-23"><a href="#cb36-23" aria-hidden="true" tabindex="-1"></a>                thoughts.append(<span class="ss">f"Used </span><span class="sc">{</span>next_action[<span class="st">'tool'</span>]<span class="sc">}</span><span class="ss">: </span><span class="sc">{</span>result<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb36-24"><a href="#cb36-24" aria-hidden="true" tabindex="-1"></a>                </span>
+<span id="cb36-25"><a href="#cb36-25" aria-hidden="true" tabindex="-1"></a>            <span class="cf">elif</span> next_action[<span class="st">"type"</span>] <span class="op">==</span> <span class="st">"response"</span>:</span>
+<span id="cb36-26"><a href="#cb36-26" aria-hidden="true" tabindex="-1"></a>                <span class="co"># Generate final response</span></span>
+<span id="cb36-27"><a href="#cb36-27" aria-hidden="true" tabindex="-1"></a>                <span class="cf">return</span> <span class="va">self</span>.generate_response(thoughts)</span>
+<span id="cb36-28"><a href="#cb36-28" aria-hidden="true" tabindex="-1"></a>                </span>
+<span id="cb36-29"><a href="#cb36-29" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> choose_action(<span class="va">self</span>, user_input, context):</span>
+<span id="cb36-30"><a href="#cb36-30" aria-hidden="true" tabindex="-1"></a>        <span class="co"># LLM decides what to do next</span></span>
+<span id="cb36-31"><a href="#cb36-31" aria-hidden="true" tabindex="-1"></a>        prompt <span class="op">=</span> <span class="ss">f"""</span></span>
+<span id="cb36-32"><a href="#cb36-32" aria-hidden="true" tabindex="-1"></a><span class="ss">        User request: </span><span class="sc">{</span>user_input<span class="sc">}</span></span>
+<span id="cb36-33"><a href="#cb36-33" aria-hidden="true" tabindex="-1"></a><span class="ss">        Previous actions: </span><span class="sc">{</span>context<span class="sc">}</span></span>
+<span id="cb36-34"><a href="#cb36-34" aria-hidden="true" tabindex="-1"></a><span class="ss">        Available tools: </span><span class="sc">{</span><span class="bu">list</span>(<span class="va">self</span>.tools.keys())<span class="sc">}</span></span>
+<span id="cb36-35"><a href="#cb36-35" aria-hidden="true" tabindex="-1"></a><span class="ss">        </span></span>
+<span id="cb36-36"><a href="#cb36-36" aria-hidden="true" tabindex="-1"></a><span class="ss">        What should I do next? Respond with either:</span></span>
+<span id="cb36-37"><a href="#cb36-37" aria-hidden="true" tabindex="-1"></a><span class="ss">        1. </span><span class="ch">{{</span><span class="ss">"type": "tool_use", "tool": "tool_name", "args": </span><span class="sc">{...}</span><span class="ch">}}</span></span>
+<span id="cb36-38"><a href="#cb36-38" aria-hidden="true" tabindex="-1"></a><span class="ss">        2. </span><span class="ch">{{</span><span class="ss">"type": "response", "content": "final answer"</span><span class="ch">}}</span></span>
+<span id="cb36-39"><a href="#cb36-39" aria-hidden="true" tabindex="-1"></a><span class="ss">        """</span></span>
+<span id="cb36-40"><a href="#cb36-40" aria-hidden="true" tabindex="-1"></a>        </span>
+<span id="cb36-41"><a href="#cb36-41" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Get LLM decision (simplified)</span></span>
+<span id="cb36-42"><a href="#cb36-42" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> <span class="va">self</span>.llm_call(prompt)</span>
+<span id="cb36-43"><a href="#cb36-43" aria-hidden="true" tabindex="-1"></a>        </span>
+<span id="cb36-44"><a href="#cb36-44" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> execute_tool(<span class="va">self</span>, tool_name, args):</span>
+<span id="cb36-45"><a href="#cb36-45" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> <span class="va">self</span>.tools[tool_name](<span class="op">**</span>args)</span>
+<span id="cb36-46"><a href="#cb36-46" aria-hidden="true" tabindex="-1"></a>        </span>
+<span id="cb36-47"><a href="#cb36-47" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> web_search(<span class="va">self</span>, query):</span>
+<span id="cb36-48"><a href="#cb36-48" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Implement web search</span></span>
+<span id="cb36-49"><a href="#cb36-49" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> <span class="ss">f"Search results for: </span><span class="sc">{</span>query<span class="sc">}</span><span class="ss">"</span></span>
+<span id="cb36-50"><a href="#cb36-50" aria-hidden="true" tabindex="-1"></a>        </span>
+<span id="cb36-51"><a href="#cb36-51" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> calculator(<span class="va">self</span>, expression):</span>
+<span id="cb36-52"><a href="#cb36-52" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Safe math evaluation</span></span>
+<span id="cb36-53"><a href="#cb36-53" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> <span class="bu">eval</span>(expression)  <span class="co"># Use safe_eval in production!</span></span>
+<span id="cb36-54"><a href="#cb36-54" aria-hidden="true" tabindex="-1"></a>        </span>
+<span id="cb36-55"><a href="#cb36-55" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> send_email(<span class="va">self</span>, to, subject, body):</span>
+<span id="cb36-56"><a href="#cb36-56" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Email sending logic</span></span>
+<span id="cb36-57"><a href="#cb36-57" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> <span class="ss">f"Email sent to </span><span class="sc">{</span>to<span class="sc">}</span><span class="ss">"</span></span>
+<span id="cb36-58"><a href="#cb36-58" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-59"><a href="#cb36-59" aria-hidden="true" tabindex="-1"></a><span class="co"># Usage</span></span>
+<span id="cb36-60"><a href="#cb36-60" aria-hidden="true" tabindex="-1"></a>agent <span class="op">=</span> SimpleAgent()</span>
+<span id="cb36-61"><a href="#cb36-61" aria-hidden="true" tabindex="-1"></a>response <span class="op">=</span> agent.process_request(<span class="st">"What's 15</span><span class="sc">% o</span><span class="st">f 150 and email the result to john@example.com"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</section>
+</section>
+<section id="advanced-agent-framework" class="level3">
+<h3 class="anchored" data-anchor-id="advanced-agent-framework">Advanced Agent Framework</h3>
+<section id="production-considerations" class="level4">
+<h4 class="anchored" data-anchor-id="production-considerations">Production Considerations</h4>
+<pre><code>Key Components for Production Agents:
+
+1. Robust Error Handling:
+   - Tool failures and timeouts
+   - Invalid inputs and edge cases
+   - Graceful degradation strategies
+
+2. Security and Safety:
+   - Input validation and sanitization
+   - Rate limiting and abuse prevention
+   - Audit logging and monitoring
+
+3. Scalability:
+   - Asynchronous execution
+   - Load balancing and queuing
+   - Caching and optimization
+
+4. Observability:
+   - Detailed logging and metrics
+   - Performance monitoring
+   - Success/failure tracking
+
+5. User Experience:
+   - Clear progress indicators
+   - Intuitive error messages
+   - Customizable preferences</code></pre>
+<hr>
+</section>
+</section>
+</section>
+<section id="key-takeaways" class="level2">
+<h2 class="anchored" data-anchor-id="key-takeaways">Key Takeaways 🎯</h2>
+<ol type="1">
+<li><p><strong>Agents transform LLMs from passive to active</strong> - they can take real-world actions, not just generate text</p></li>
+<li><p><strong>Function calling is the key enabler</strong> - it gives LLMs the ability to interact with external systems and APIs</p></li>
+<li><p><strong>Reasoning patterns like ReAct improve reliability</strong> - structured thinking leads to better decision-making</p></li>
+<li><p><strong>Multi-agent systems handle complex tasks</strong> - specialization and collaboration often outperform single agents</p></li>
+<li><p><strong>Memory systems enable learning and personalization</strong> - agents become more useful over time</p></li>
+<li><p><strong>Real-world applications are diverse and powerful</strong> - from productivity to research to creative collaboration</p></li>
+<li><p><strong>Implementation requires careful design</strong> - error handling, security, and user experience are crucial</p></li>
+</ol>
+<hr>
+</section>
+<section id="fun-exercises" class="level2">
+<h2 class="anchored" data-anchor-id="fun-exercises">Fun Exercises 🎮</h2>
+<section id="exercise-1-agent-design-challenge" class="level3">
+<h3 class="anchored" data-anchor-id="exercise-1-agent-design-challenge">Exercise 1: Agent Design Challenge</h3>
+<pre><code>Design an AI agent for a specific domain:
+
+Choose one:
+a) Personal fitness coach
+b) Home automation controller
+c) Financial planning assistant
+d) Travel itinerary planner
+
+For your chosen domain:
+1. What tools/APIs would the agent need?
+2. What memory would it need to maintain?
+3. What are the key safety considerations?
+4. How would you handle failures and edge cases?</code></pre>
+</section>
+<section id="exercise-2-multi-agent-collaboration" class="level3">
+<h3 class="anchored" data-anchor-id="exercise-2-multi-agent-collaboration">Exercise 2: Multi-Agent Collaboration</h3>
+<pre><code>Design a multi-agent system for restaurant management:
+
+Agents needed:
+- Reservation manager
+- Kitchen coordinator  
+- Customer service
+- Inventory tracker
+
+Define:
+1. Each agent's responsibilities and tools
+2. How they communicate and coordinate
+3. How they handle conflicts (e.g., overbooking)
+4. What information they share vs. keep private</code></pre>
+</section>
+<section id="exercise-3-function-definition" class="level3">
+<h3 class="anchored" data-anchor-id="exercise-3-function-definition">Exercise 3: Function Definition</h3>
+<pre><code>Create function schemas for a travel agent:
+
+Design 3 functions:
+1. search_flights(origin, destination, date, passengers)
+2. book_hotel(location, checkin, checkout, rooms, budget)
+3. get_local_attractions(city, interests, budget)
+
+Include:
+- Complete JSON schema
+- Parameter descriptions
+- Error handling considerations
+- Example usage scenarios</code></pre>
+<hr>
+</section>
+</section>
+<section id="whats-next" class="level2">
+<h2 class="anchored" data-anchor-id="whats-next">What’s Next? 📚</h2>
+<p>In Chapter 13, we’ll explore optimization and inference - making LLMs fast and efficient for production!</p>
+<p><strong>Preview:</strong> We’ll learn about: - Model quantization and compression techniques - Efficient serving frameworks and architectures - Latency optimization and throughput maximization - Cost optimization strategies</p>
+<p>From intelligent agents to efficient deployment! 🚀💨</p>
+<hr>
+</section>
+<section id="final-thought" class="level2">
+<h2 class="anchored" data-anchor-id="final-thought">Final Thought 💭</h2>
+<pre><code>"AI agents represent the next frontier of AI applications:
+- From answering questions to taking action
+- From isolated conversations to persistent relationships
+- From single capabilities to orchestrated expertise
+- From reactive responses to proactive assistance
+
+We're moving from AI that thinks to AI that acts.
+The future is agents working alongside humans as capable partners!" 🤖🤝👨‍💼</code></pre>
+
+
+</section>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>
