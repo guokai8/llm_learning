@@ -1,0 +1,91 @@
+/* Custom styling for the LLM tutorial */
+
+:root {
+  --primary-color: #2c3e50;
+  --accent-color: #3498db;
+  --success-color: #27ae60;
+}
+
+/* Enhanced navbar */
+.navbar {
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+/* Better heading styles */
+h1, h2, h3 {
+  font-weight: 600;
+  margin-top: 1.5rem;
+  margin-bottom: 0.8rem;
+}
+
+h1 {
+  border-bottom: 3px solid var(--accent-color);
+  padding-bottom: 0.5rem;
+}
+
+/* Code block styling */
+pre {
+  background-color: #f8f9fa;
+  border-left: 4px solid var(--accent-color);
+  border-radius: 4px;
+}
+
+code {
+  background-color: #f4f4f4;
+  padding: 2px 6px;
+  border-radius: 3px;
+}
+
+/* Improved table styling */
+table {
+  border-collapse: collapse;
+  width: 100%;
+  margin: 1rem 0;
+}
+
+table thead {
+  background-color: var(--accent-color);
+  color: white;
+}
+
+table th, table td {
+  padding: 0.75rem;
+  text-align: left;
+  border-bottom: 1px solid #ddd;
+}
+
+table tbody tr:hover {
+  background-color: #f0f8ff;
+}
+
+/* Search styling */
+.quarto-search-box {
+  border-radius: 4px;
+  border: 2px solid var(--accent-color);
+}
+
+/* TOC enhancement */
+.sidebar-navigation {
+  border-right: 2px solid var(--accent-color);
+}
+
+/* Better link styling */
+a {
+  color: var(--accent-color);
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+  color: var(--primary-color);
+}
+
+/* Footer */
+footer {
+  border-top: 2px solid var(--accent-color);
+  padding-top: 2rem;
+  margin-top: 3rem;
+  text-align: center;
+  color: #666;
+}
+
